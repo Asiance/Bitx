@@ -1,0 +1,31 @@
+{
+  "manifest_version": 2,
+
+  "name": "basecampExtension",
+  "description": "Display Todos in Chrome",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "icon.ico",
+    "default_popup": "index.html"
+  },
+  "permissions": [
+    "tabs",
+    "https://*/*"
+  ],
+  "web_accessible_resources": [
+    "css/*",
+    "img/*",
+    "js/*",
+    "lib/*",
+    "views/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://github.com/37signals/bcx-api*"],
+      "js": ["js/injection.js"],
+      "run_at": "document_start"
+    }
+  ]
+}
+  
