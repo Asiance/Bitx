@@ -1,0 +1,19 @@
+<h2><small>Test buttons</small></h2>
+<button class="btn" ng-click="getBasecampAccount()">getBasecampAccount()</button>
+<button class="btn" ng-click="getUser()">getUser()</button>
+<button class="btn" ng-click="getAssignedTodolists()">getAssignedTodos()</button></div>
+
+<h2><small>Test buttons</small></h2>
+<button class="btn btn-primary" ng-click="getAssignedTodolistsHARD()">getAssignedTodolistsHARD()</button>
+
+<h2><small>Fetched Todolists & Todos</small></h2>
+<ul class="unstyled">
+	<li ng-repeat="assignedTodolist in assignedTodolists">
+		<p class="text-info">{{assignedTodolist.name}}</p>
+		<ul>
+			<li ng-repeat="assignedTodo in assignedTodolist.assigned_todos | orderBy: sortByDate">
+				<p><strong>{{assignedTodo.content}}</strong> <span class="label label-warning">{{assignedTodo.due_at}}</span></p>
+			</li>
+		</ul>
+	</li>
+</ul>
