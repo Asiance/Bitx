@@ -3,15 +3,20 @@
 angular
 	.module("basecampExtension.controllers", ['ngResource'])
 
-	.controller('TodosController', function($scope, $resource, $http, Projects, User, AssignedTodolists, AssignedTodos) {
+	.controller('TodosController', function($scope, $resource, $http, Projects, User, AssignedTodolists) {
+
+        $scope.basecampId = localStorage['basecampId'] ? localStorage['basecampId'] : null;
+        $scope.userId = localStorage['userId'] ? localStorage['userId'] : null;
+        $scope.assignedTodos = localStorage['assignedTodos'] ? JSON.parse(localStorage['assignedTodos']) : null;
 
 		/**
 		*	After OAuth2 signin, retrieve a Basecamp Account
 		*/
 		$scope.getBasecampAccount = function() {
 			Projects.query(function(data) {
-		 		$scope.basecampId = data.accounts[0].id;	// Fetch only the 'first' Basecamp Account linked to the user
-			});
+                $scope.basecampId = data.accounts[0].id;    // Fetch only the 'first' Basecamp Account linked to the user
+                localStorage['basecampId'] = $scope.basecampId;
+            });
 		};
 
 		/**
@@ -20,6 +25,7 @@ angular
 		$scope.getUser = function() {
 	 		User.query({basecampId: $scope.basecampId}, function(data) {
 				$scope.userId = data.id;
+                localStorage['userId'] = $scope.userId;
 			});
 		};		
 
@@ -33,12 +39,18 @@ angular
 		};
 
         /**
-        *   Fetch Todos (not Totolists) assigned to the user
-        *   @ToDo Remove the 'Todolist-level'
+        *   Fetch Todolists assigned to the user
+        *   and remove the 'Todolist level' to keep only remaining Todos
         */
         $scope.getAssignedTodos = function() {
             AssignedTodolists.query({basecampId: $scope.basecampId, userId: $scope.userId}, function(data) {
-                $scope.assignedTodos = data;
+                $scope.assignedTodos = new Array(); 
+                for (var i = 0; i < data.length; i++) { 
+                    for (var j = 0; j < data[i].assigned_todos.length; j++) { 
+                        $scope.assignedTodos.push(data[i].assigned_todos[j]);
+                    }
+                }
+               localStorage['assignedTodos'] = JSON.stringify($scope.assignedTodos);
             });
         };
 
@@ -46,8 +58,18 @@ angular
 		*	Custom sort function
 		*/
 		$scope.sortByDate = function(assignedTodo) {
-		   return assignedTodo.due_at.replace(/-/g, "");
+          if (assignedTodo.due_at != null)
+		    return assignedTodo.due_at.replace(/-/g, "");
+          else return "99999999"; // Default value for undefined due date
 		};
+
+
+        /**
+        *   Fetch upcoming Todos with one click
+        */
+        $scope.AIO = function() {
+            $scope.getBasecampAccount($scope.getUser($scope.getAssignedTodos()));
+        };
 
 		/**
 		*	Fetch Todolists (including Todos) assigned to the user
@@ -111,7 +133,7 @@ angular
                 "updated_at": "2016-02-20T16:32:45+09:00",
                 "comments_count": 0,
                 "due_on": "2013-03-06",
-                "due_at": "2018-03-06",
+                "due_at": "2013-02-25",
                 "creator": {
                     "id": 2527441,
                     "name": "Adrien Desbiaux",

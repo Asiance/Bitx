@@ -1,15 +1,7 @@
-<h1><small>Token stored in locale storage!</small></h1>
-<button ng-click="getBasecampAccount()">getBasecampAccount()</button>
-<button ng-click="getUser()">getUser()</button>
-<button ng-click="getAssignedTodolists()">getAssignedTodos()</button>
-
+<h2><small>Assigned Todos</small></h2>
 <ul>
-  <li ng-repeat="assignedTodolist in assignedTodolists">
-		<ul>
-	  	<li><p>{{assignedTodolist.name}}</p></li>
-		  <li ng-repeat="assignedTodo in assignedTodolist.assigned_todos">
-		  	<p>{{assignedTodo.content}}</p>
-		  </li>
-		</ul>
-  </li>
+	<li ng-repeat="assignedTodo in assignedTodos | orderBy: sortByDate">
+		<p>{{assignedTodo.content}}
+		<span class="label label-{{assignedTodo.due_at | date }}">{{assignedTodo.due_at}}</span></p>
+	</li>
 </ul>

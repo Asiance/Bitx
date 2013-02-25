@@ -16,9 +16,4 @@ angular
 		return $resource('https://basecamp.com/:basecampId/api/v1/people/:userId/assigned_todos.json', {}, {
     	query: {method:'GET', isArray:true}
     });
-	})
-	.factory('AssignedTodos', function($resource) {
-		return $resource('https://basecamp.com/:basecampId/api/v1/people/:userId/assigned_todos.json', {}, {
-    	query: {method:'GET', isArray:true}
-    });
 	});

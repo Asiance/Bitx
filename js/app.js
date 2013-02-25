@@ -5,7 +5,7 @@ var basecampExtension = angular.module('basecampExtension',
 	'basecampExtension.controllers',
 	//'basecampExtension.directives', 
 	'basecampExtension.services', 
-	//'basecampExtension.filters'
+	'basecampExtension.filters'
 	])
 .config([
     '$routeProvider', '$locationProvider', '$httpProvider', '$resourceProvider', function($routeProvider) {
