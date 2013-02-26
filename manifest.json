@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "basecampExtension",
-  "description": "Display Todos in Chrome",
+  "description": "Connect to a Basecamp account and display all Todos",
   "version": "1.0",
 
   "browser_action": {
@@ -26,5 +26,9 @@
       "js": ["js/injection.js"],
       "run_at": "document_start"
     }
-  ]
+  ],
+  "background": {
+    "page": "index.html"
+  }
+}
   

@@ -2,7 +2,7 @@
 <html lang="en" ng-app="basecampExtension" ng-csp>
 <head>
   <meta charset="utf-8">
-  <title>Practicing Extension</title>
+  <title>basecampExtension</title>
   <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 </head>
 <body>
@@ -11,21 +11,21 @@
     <ng-view></ng-view>
   </div>
 
+  <canvas style="display:none;" id="badgeIcon" width="19" height="19"></canvas>
+
   <script src="lib/angular.min.js"></script>
   <script src="lib/angular-resource-1.0.1.min.js"></script>
   <script src="lib/jquery-1.9.1.min.js"></script>
   <script src="lib/bootstrap.min.js"></script>
 
-  <script src="oauth.js"></script>
+  <script src="js/onload.js"></script>
   <script src="js/oauth2.js"></script>
 
   <script src="js/app.js"></script>
   <script src="js/controllers.js"></script>
   <script src="js/config.js"></script>
-  <script src="js/directives.js"></script>
   <script src="js/filters.js"></script>
   <script src="js/services.js"></script>
-
 
 </body>
 </html>
