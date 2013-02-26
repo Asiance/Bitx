@@ -9,9 +9,14 @@ angular
   
   .config([
     '$routeProvider', '$locationProvider', '$httpProvider', '$resourceProvider', function($routeProvider) {
-      $routeProvider.when('/', {
-        controller: 'TodosController',
-        templateUrl: 'views/todos.html'
-      });
+      $routeProvider
+        .when('/', {
+          controller: 'TodosController',
+          templateUrl: 'views/todos.html'
+        })
+        .when('/todolists', {
+          controller: 'TodolistsController',
+          templateUrl: 'views/todolists.html'          
+        });
     }
   ]);

@@ -8,8 +8,9 @@ window.onload = function () {
   /**
   * Count Todos in one category
   * @param {string} status Count overdue, today, upcoming or undefined Todos
+  * @param {string} input JSON string containing all assignedTodos
   */
-  function countTodos(status) {
+  function countTodos(input, status) {
 	  var currentDate = new Date();
 		var yyyy = currentDate.getFullYear().toString();
 		var mm = (currentDate.getMonth()+1).toString();
@@ -18,7 +19,6 @@ window.onload = function () {
 		var inputYYYYMMDD = "";
 	  var count = 0; 
 
-		var input = JSON.parse(localStorage.getItem('assignedTodos'));
     for (var i = 0; i < input.length; i++) {
     		if (input[i].due_at != null && status != '4') {
     			inputYYYYMMDD = parseInt(input[i].due_at.replace(/-/g, ""));
@@ -33,29 +33,35 @@ window.onload = function () {
 
   /**
   * Draw the extension badge in Chrome base on the Todos counter
+  * localStorage['assignedTodos'] must to be set
   */
 	function draw() {
-    var canvas = document.getElementById('badgeIcon');
-    if (canvas.getContext) {
-      var ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-		  ctx.font = "bold 11px Helvetica";
+    try {
+      var jsonTodos = JSON.parse(localStorage.getItem('assignedTodos'));
+      var canvas = document.getElementById('badgeIcon');
+      if (canvas.getContext) {
+        var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+  		  ctx.font = "bold 11px Helvetica";
 
-      ctx.fillStyle = "red";
-		  ctx.fillText(countTodos('overdue'), 0, 9);
+        ctx.fillStyle = "red";
+  		  ctx.fillText(countTodos(jsonTodos, 'overdue'), 0, 9);
 
-      ctx.fillStyle = "green";
-		  ctx.fillText(countTodos('today'), 12, 9);
+        ctx.fillStyle = "green";
+  		  ctx.fillText(countTodos(jsonTodos, 'today'), 12, 9);
 
-      ctx.fillStyle = "blue";
-		  ctx.fillText(countTodos('upcoming'), 0, 19);
+        ctx.fillStyle = "blue";
+  		  ctx.fillText(countTodos(jsonTodos, 'upcoming'), 0, 19);
 
-      ctx.fillStyle = "black";
-		  ctx.fillText(countTodos('undefined'), 12, 19);
+        ctx.fillStyle = "black";
+  		  ctx.fillText(countTodos(jsonTodos, 'undefined'), 12, 19);
 
-      var imageData = ctx.getImageData(0, 0, 19, 19);
+        var imageData = ctx.getImageData(0, 0, 19, 19);
+      }
+  		chrome.browserAction.setIcon({imageData: imageData});
+    } catch(e) {
+      console.log(e);
     }
-		chrome.browserAction.setIcon({imageData: imageData});
-  }	setInterval(draw, 5000);
+  }	setInterval(draw, 10000);
 
 }
