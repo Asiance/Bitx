@@ -17,6 +17,10 @@ angular
         .when('/todolists', {
           controller: 'TodolistsController',
           templateUrl: 'views/todolists.html'          
-        });
+        })
+        .when('/projects', {
+          controller: 'ProjectsController',
+          templateUrl: 'views/projects.html'          
+        });     
     }
   ]);

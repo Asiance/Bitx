@@ -22,13 +22,13 @@
   ],
   "content_scripts": [
     {
-      "matches": ["https://github.com/37signals/bcx-api*"],
+      "matches": ["http://www.google.com/basecamp-crx*"],
       "js": ["js/injection.js"],
       "run_at": "document_start"
     }
   ],
   "background": {
-    "page": "index.html"
+    "page": "background.html"
   }
 }
   

@@ -7,14 +7,10 @@ angular
   *	Returning the right class depending on due date
   *	- Not used -
   */
-  .filter('date', function() {
+  .filter('date', function(Utils) {
   	return function(input) {
   		if (input != null) {
-	  		var currentDate = new Date();
-			  var yyyy = currentDate.getFullYear().toString();
-			  var mm = (currentDate.getMonth()+1).toString();
-			  var dd  = currentDate.getDate().toString();
-				var currentDateYYYYMMDD = parseInt(yyyy + (mm[1]?mm:"0"+mm[0]) + (dd[1]?dd:"0"+dd[0]));
+				var currentDateYYYYMMDD = Utils.getTodayDate();
 				var inputYYYYMMDD = parseInt(input.replace(/-/g, ""));
 
 	    	if (inputYYYYMMDD < currentDateYYYYMMDD) 
@@ -37,14 +33,10 @@ angular
   *	'3' - Upcoming
   *	'4' - Undetermined
   */
-	.filter('status', function() {
+	.filter('status', function(Utils) {
 	  return function(input, status) {
 	  	if(input) {
-		  	var currentDate = new Date();
-				var yyyy = currentDate.getFullYear().toString();
-			  var mm = (currentDate.getMonth()+1).toString();
-			  var dd  = currentDate.getDate().toString();
-				var currentDateYYYYMMDD = parseInt(yyyy + (mm[1]?mm:"0"+mm[0]) + (dd[1]?dd:"0"+dd[0]));
+	  		var currentDateYYYYMMDD = Utils.getTodayDate();
 				var inputYYYYMMDD = "";
 		    var out = []; 
 

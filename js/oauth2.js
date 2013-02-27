@@ -50,7 +50,7 @@
 			this._authorization_url = "https://launchpad.37signals.com/authorization/new"; // <------ URL to api where user authorizes extension with
 			this._client_id = "e41e44d7de71a7090bf36260b73dddabfa2f5ab7"; // <----------------------------------------------- Application ID
 			this._client_secret = "c37ff0ef6d9a5cfb788c6977084374bc0ceb74dd"; // <--------------------------------------- Application secret
-			this._redirect_url = "https://github.com/37signals/bcx-api"; // <---------- URL where api will redirect access token request
+			this._redirect_url = "http://www.google.com/basecamp-crx"; // <---------- URL where api will redirect access token request
 			this._scopes = ['']; // <------------------------------- API permissions being requested
 		},
 		

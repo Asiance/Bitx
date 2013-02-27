@@ -3,38 +3,42 @@
 angular
 	.module("basecampExtension.controllers", ['ngResource'])
 
-	.controller('TodosController', function($timeout, $scope, $resource, $http, Authorization, User, AssignedTodolists) {
+	.controller('TodosController', function($timeout, $scope, $resource, $http, $location, Authorization, User, AssignedTodolists) {
 
  		/**
 		*	After OAuth2 signin, retrieve a Basecamp Account
 		*/
 		$scope.getBasecampAccount = function() {
-            console.log('getBasecampAccount');          
-			Authorization.query(function(data) {
-                try {
+            console.log('LOG: getBasecampAccount');
+            try {      
+    			Authorization.query(function(data) {
                     $scope.basecampId = data.accounts[0].id;    // Fetch only the 'first' Basecamp Account linked to the user
                     localStorage['basecampId'] = $scope.basecampId;                    
                     $scope.getUser();
-                } catch(e) {
-                    console.log(e);
-                }
-            });
+                }, function(response) {
+                    console.log('ERROR: Failed to connect!')
+                });
+            } catch(e) {
+                console.log(e);
+            }
 		};
 
 		/**
 		*	Retrieve ID of the authenticated user inside the Basecamp Account
 		*/
 		$scope.getUser = function() {
-            console.log('getUser');      
-	 		User.query({basecampId: $scope.basecampId}, function(data) {
-                try {
+            console.log('LOG: getUser');
+            try {
+    	 		User.query({basecampId: $scope.basecampId}, function(data) {
     				$scope.userId = data.id;
                     localStorage['userId'] = $scope.userId;
                     $scope.getAssignedTodos();
-                } catch(e) {
-                    console.log(e);
-                }
-			});
+    			}, function(response) {
+                    console.log('ERROR: Failed to connect!')
+                });
+            } catch(e) {
+                console.log(e);
+            }                
 		};		
 
         /**
@@ -42,9 +46,9 @@ angular
         *   and remove the 'Todolist level' to keep only remaining Todos
         */
         $scope.getAssignedTodos = function() {
-            console.log('getAssignedTodos');
-            AssignedTodolists.query({basecampId: $scope.basecampId, userId: $scope.userId}, function(data) {
-                try {
+            console.log('LOG: getAssignedTodos');
+            try { 
+                AssignedTodolists.query({basecampId: $scope.basecampId, userId: $scope.userId}, function(data) {
                     $scope.assignedTodos = new Array(); 
                     for (var i = 0; i < data.length; i++) { 
                         for (var j = 0; j < data[i].assigned_todos.length; j++) { 
@@ -52,11 +56,13 @@ angular
                         }
                     }                        
                     localStorage['assignedTodos'] = JSON.stringify($scope.assignedTodos);
-                } catch(e) {
-                    console.log(e);
-                }
-            });       
-            $timeout(pollingTodos, 10000);         
+                }, function(response) {
+                    console.log('ERROR: Failed to connect!')
+                });
+                if ($location.absUrl().indexOf('background.html') != -1) $timeout(pollingTodos, 10000); // polling if controller loaded from background.html
+            } catch(e) {
+                console.log(e);
+            }
         };
 
 		/**
@@ -70,7 +76,7 @@ angular
         /**
         *   Initialization
         */
-        if (!$scope.basecampId) $scope.getBasecampAccount();
+        if (!$scope.basecampId || !localStorage['basecampId'] || !$scope.userId || !localStorage['userId']) $scope.getBasecampAccount();
         if (localStorage['assignedTodos']) $scope.assignedTodos = JSON.parse(localStorage['assignedTodos']);
 
         /**
@@ -88,10 +94,14 @@ angular
         *   Fetch Todolists (including Todos) assigned to the user
         */
         $scope.getAssignedTodolists = function() {
-            AssignedTodolists.query({basecampId: $scope.basecampId, userId: $scope.userId}, function(data) {
-                $scope.assignedTodolists = data;
-                localStorage['assignedTodolists'] = JSON.stringify($scope.assignedTodolists);            
-            });
+            try {
+                AssignedTodolists.query({basecampId: $scope.basecampId, userId: $scope.userId}, function(data) {
+                    $scope.assignedTodolists = data;
+                    localStorage['assignedTodolists'] = JSON.stringify($scope.assignedTodolists);            
+                });
+            } catch(e) {
+                console.log(e);
+            }
         };
 
         /**
@@ -100,7 +110,7 @@ angular
         $scope.userId = localStorage['userId'];
         $scope.basecampId = localStorage['basecampId'];
         if (localStorage['assignedTodolists']) $scope.assignedTodolists = JSON.parse(localStorage['assignedTodolists']);        
-        else $scope.getAssignedTodolists();
+        $scope.getAssignedTodolists();
     })
 
     .controller('ProjectsController', function($scope, $resource, Projects) {
@@ -109,16 +119,20 @@ angular
         *   Fetch Projects where the user is involved
         */
         $scope.getProjects = function() {
-            Projects.query({basecampId: $scope.basecampId, userId: $scope.userId}, function(data) {
-                $scope.projects = data;
-                localStorage['projects'] = JSON.stringify($scope.projects);            
-            });
+            try {
+                Projects.query({basecampId: $scope.basecampId}, function(data) {
+                    $scope.projects = data;
+                    localStorage['projects'] = JSON.stringify($scope.projects);            
+                });
+            } catch(e) {
+                console.log(e);
+            }
         };
 
         /**
         *   Initialization
         */
         if (localStorage['basecampId']) $scope.basecampId = localStorage['basecampId'];
-        if (localStorage['projects']) $scope.assignedTodolists = JSON.parse(localStorage['projects']);        
-        else $scope.getAssignedTodolists();
+        if (localStorage['projects']) $scope.projects = JSON.parse(localStorage['projects']);        
+        $scope.getProjects();
     });
