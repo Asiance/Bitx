@@ -1,11 +1,18 @@
 <h3><span class="badge">{{assignedTodolists.length}}</span><small> Todolists</small></h3>
-<ul class="unstyled">
-	<li ng-repeat="assignedTodolist in assignedTodolists">
-		<p><small><strong>{{assignedTodolist.name}}</strong></small></p>
-		<ul>
-			<li ng-repeat="assignedTodo in assignedTodolist.assigned_todos | orderBy: sortByDate">
-				<p><a href="">{{assignedTodo.content}}</a> <span class="label label-{{assignedTodo.due_at | date}}">{{assignedTodo.due_at}}</span></p>
-			</li>
-		</ul>
-	</li>
-</ul>
+<div class="accordion">
+  <div ng-repeat="assignedTodolist in assignedTodolists" class="accordion-group">
+    <div class="accordion-heading"> 	
+      <span class="label label-success">{{assignedTodolist.bucket.name}}</span>
+      <a style="text-decoration:none;" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" ng-href="#{{assignedTodolist.id}}">{{assignedTodolist.name}}</a>
+    </div>
+    <div id="{{assignedTodolist.id}}" class="accordion-body collapse">
+      <div class="accordion-inner">
+        <ul>
+          <li ng-repeat="assignedTodo in assignedTodolist.assigned_todos | orderBy: sortByDate">
+            {{assignedTodo.content}} <span class="label label-{{assignedTodo.due_at | date}}">{{assignedTodo.due_at}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

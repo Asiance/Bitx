@@ -1,3 +1,3 @@
 window.onload = function () {
-		OAuth2.parseAccessCode(window.location.href);
+  OAuth2.parseAccessCode(window.location.href);
 }

@@ -58,14 +58,9 @@
 		 * Begin
 		 */
 		begin: function() {
-			var url = this._authorization_url + "?type=web_server&client_id=" + this._client_id + "&redirect_uri=" + this._redirect_url;
-			
-			chrome.tabs.create({url: url, selected: true}, function(data) {
-				window.close();
-				chrome.tabs.getCurrent(function(tab) {
-					chrome.tabs.remove(tab.id, function(){});
-				});
-			});
+			console.log('begin');
+			var url = this._authorization_url + "?type=web_server&client_id=" + this._client_id + "&redirect_uri=" + this._redirect_url;			
+			chrome.tabs.create({url: url, selected: true});
 		},
 		
 		/**
@@ -74,6 +69,7 @@
 		 * @param url The url containing the access code.
 		 */	
 		parseAccessCode: function(url) {
+			console.log('parseAccessCode');
 			if(url.match(/\?error=(.+)/)) {
 				chrome.tabs.getCurrent(function(tab) {
 					chrome.tabs.remove(tab.id, function(){});
@@ -92,6 +88,7 @@
 		requestToken: function(code) {
 			var that = this;
 			var xhr = new XMLHttpRequest();
+			console.log('requestToken');
 
 			xhr.addEventListener('readystatechange', function(event) {
 				if(xhr.readyState == 4) {
@@ -100,8 +97,8 @@
 					}
 					else {
 						chrome.tabs.getCurrent(function(tab) {
-							chrome.tabs.remove(tab.id, function(){});
-						});
+						chrome.tabs.remove(tab.id, function(){});
+					});
 					}
 				}
 			});
@@ -115,14 +112,15 @@
 		 * @param token The OAuth2 token given to the application from the provider.
 		 */
 		finish: function(token) {
+			console.log('finish');
 			try {
 				window['localStorage'][this._key] = token;
+				chrome.tabs.create({url:'./views/auth-success.html'});
 			}
 			catch(error) {}
-
-			chrome.tabs.getCurrent(function(tab) {
-				chrome.tabs.remove(tab.id, function() {});
-			});
+				chrome.tabs.getCurrent(function(tab) {
+					chrome.tabs.remove(tab.id, function() {});
+				});
 		},
 		
 		
@@ -159,3 +157,13 @@
 	OAuth2.init();
 
 })();
+
+function initOAuth2() {
+  /**
+  * Open signin page for Basecamp
+  */  
+  if ((token = OAuth2.getToken()) === undefined ) {
+  	window.close();
+  	OAuth2.begin();
+  }
+}

@@ -21,6 +21,10 @@ angular
         .when('/projects', {
           controller: 'ProjectsController',
           templateUrl: 'views/projects.html'          
+        })
+        .when('/logout', {
+          controller: 'MainController',
+          templateUrl: 'views/logout.html'          
         });     
     }
   ]);
