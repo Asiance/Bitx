@@ -11,6 +11,7 @@
   },
   "permissions": [
     "tabs",
+    "notifications",
     "https://*/*"
   ],
   "web_accessible_resources": [
@@ -31,4 +32,3 @@
     "page": "background.html"
   }
 }
-  

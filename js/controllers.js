@@ -3,11 +3,14 @@
 angular
 .module("basecampExtension.controllers", ['ngResource'])
 
-.controller('TodosController', function($timeout, $scope, $resource, $http, $location, Authorization, User, AssignedTodolists, Todo) {
+/**
+ * Controller linked to todos.html
+ */
+.controller('TodosController', function($scope, $resource, $http, $location, Authorization, User, AssignedTodolists, Todo) {
 
   /**
-  *	After OAuth2 signin, retrieve a Basecamp Account
-  */
+   * After OAuth2 signin, retrieve a Basecamp Account
+   */
   $scope.getBasecampAccount = function() {
     console.log('LOG: getBasecampAccount');
     try {
@@ -24,39 +27,15 @@ angular
   };
 
   /**
-  *	Retrieve ID of the authenticated user inside the Basecamp Account
-  */
+   * Retrieve ID of the authenticated user inside the Basecamp Account
+   */
   $scope.getUser = function() {
     console.log('LOG: getUser');
     try {
       User.query({basecampId: $scope.basecampId}, function(data) {
         $scope.userId = data.id;
-        localStorage['userId'] = $scope.userId;
+        localStorage['userId'] = data.id;
         $scope.getAssignedTodos();
-      }, function(response) {
-        console.log('ERROR: Failed to connect!')
-      });
-    } catch(e) {
-      console.log(e);
-    }                
-  };
-
-  /**
-  * Fetch Todolists assigned to the user
-  * and remove the 'Todolist level' to keep only remaining Todos
-  */
-  $scope.getAssignedTodos = function() {
-    console.log('LOG: getAssignedTodos');
-    try { 
-      AssignedTodolists.query({basecampId: $scope.basecampId, userId: $scope.userId}, function(data) {
-        $scope.assignedTodos = new Array(); 
-        for (var i = 0; i < data.length; i++) { 
-          for (var j = 0; j < data[i].assigned_todos.length; j++) { 
-            $scope.assignedTodos.push(data[i].assigned_todos[j]);
-          }
-        }                        
-        localStorage['assignedTodos'] = JSON.stringify($scope.assignedTodos);
-        console.log($scope.assignedTodos);
       }, function(response) {
         console.log('ERROR: Failed to connect!')
       });
@@ -66,16 +45,40 @@ angular
   };
 
   /**
-  *	Custom sort function to compare date in YYYYMMDD format
-  */
+   * Fetch Todolists assigned to the user
+   * and remove the 'Todolist level' to keep only remaining Todos
+   */
+  $scope.getAssignedTodos = function() {
+    console.log('LOG: getAssignedTodos');
+    try { 
+      AssignedTodolists.query({basecampId: $scope.basecampId, userId: $scope.userId}, function(data) {
+        // Flatten data to get only Todos
+        $scope.assignedTodos = new Array(); 
+        for (var i = 0; i < data.length; i++) { 
+          for (var j = 0; j < data[i].assigned_todos.length; j++) { 
+            $scope.assignedTodos.push(data[i].assigned_todos[j]);
+          }
+        }
+        localStorage['assignedTodos'] = JSON.stringify($scope.assignedTodos);
+      }, function(response) {
+        console.log('ERROR: Failed to connect!')
+      });
+    } catch(e) {
+      console.log(e);
+    }
+  };
+
+  /**
+   * Custom sort function to compare date in YYYYMMDD format
+   */
   $scope.sortByDate = function(assignedTodo) {
     if (assignedTodo.due_at != null) return assignedTodo.due_at.replace(/-/g, "");
     else return "99999999"; // Default value for undefined due date
   };
 
   /**
-  * Check Todo when achieved
-  */
+   * Check Todo when achieved
+   */
   $scope.checkTodo = function(projectId, todoId) {
     console.log('LOG: checkTodo');
     try { 
@@ -86,17 +89,20 @@ angular
   };
 
   /**
-  * Initialization
-  */
+   * Initialization
+   */
   if (!$scope.basecampId || !localStorage['basecampId'] || !$scope.userId || !localStorage['userId']) $scope.getBasecampAccount();
   if (localStorage['assignedTodos']) $scope.assignedTodos = JSON.parse(localStorage['assignedTodos']);   
 })
 
+/**
+ * Controller linked to todolists.html
+ */
 .controller('TodolistsController', function($scope, $resource, AssignedTodolists) {
 
   /**
-  * Fetch Todolists (including Todos) assigned to the user
-  */
+   * Fetch ACTIVE Todolists assigned to the user
+   */
   $scope.getAssignedTodolists = function() {
     try {
       AssignedTodolists.query({basecampId: $scope.basecampId, userId: $scope.userId}, function(data) {
@@ -109,19 +115,22 @@ angular
   };
 
   /**
-  * Initialization
-  */
+   * Initialization
+   */
   $scope.userId = localStorage['userId'];
   $scope.basecampId = localStorage['basecampId'];
   if (localStorage['assignedTodolists']) $scope.assignedTodolists = JSON.parse(localStorage['assignedTodolists']);        
   $scope.getAssignedTodolists();
 })
 
+/**
+ * Controller linked to projects.html
+ */
 .controller('ProjectsController', function($scope, $resource, Projects, Project, Todolists, CompletedTodolists, Todolist) {
 
   /**
-  * Fetch Projects where the user is involved
-  */
+   * Fetch all Projects where the user is involved
+   */
   $scope.getProjects = function() {
     try {
       Projects.query({basecampId: $scope.basecampId}, function(data) {
@@ -134,16 +143,16 @@ angular
   };
 
   /**
-  * Fetch a Project
-  */
+   * Fetch details on a Project
+   */
   $scope.getProject = function(projectId) {
     console.log('LOG: getProject');
     try {
       Project.query({basecampId: $scope.basecampId, projectId: projectId}, function(data) {
         $scope.getTodolists(projectId);
         $scope.getCompletedTodolists(projectId);
-          $scope.getPeopleOnTodos(projectId);
-          $scope.project = data;
+        $scope.getPeopleOnTodos(projectId);
+        $scope.project = data;
       });
     } catch(e) {
       console.log(e);
@@ -151,14 +160,14 @@ angular
   };
 
   /**
-  * Fetch Todolists of a Project
-  */
+   * Fetch ACTIVE Todolists of a Project
+   */
   $scope.getTodolists = function(projectId) {
     console.log('LOG: getTodolists');
     try {
       Todolists.query({basecampId: $scope.basecampId, projectId: projectId}, function(data) {
         var completed_count = 0;
-        var remaining_count = 0;                    
+        var remaining_count = 0;
         $scope.todolists = data;
         _.each($scope.todolists, function(item) {
           completed_count += item.completed_count;
@@ -173,8 +182,8 @@ angular
   };
 
   /**
-  * Fetch completed Todolists of a Project
-  */
+   * Fetch COMPLETED Todolists of a Project
+   */
   $scope.getCompletedTodolists = function(projectId) {
     console.log('LOG: getCompletedTodolists');
     try {
@@ -192,8 +201,8 @@ angular
   };
 
   /**
-  * Fetch People working on remaining Todos of a Project
-  */
+   * Fetch People working on remaining Todos of a Project
+   */
   $scope.getPeopleOnTodos = function(projectId) {
     console.log('LOG: getPeopleOnTodos');
     try {
@@ -201,6 +210,7 @@ angular
       var todos_count = [];
       Todolists.query({basecampId: $scope.basecampId, projectId: projectId}, function(data) {
         $scope.todolists = data;
+        // For each todolists, check the assignee of the remaining todos
         _.each($scope.todolists, function(todolist) {
           Todolist.query({basecampId: $scope.basecampId, projectId: projectId, todolistId: todolist.id}, function(data) {
             _.each(data.todos.remaining, function(remaining) {
@@ -224,24 +234,74 @@ angular
     } catch(e) {
       console.log(e);
     }
-  };        
+  };
 
   /**
-  * Initialization
-  */
+   * Initialization
+   */
   if (localStorage['basecampId']) $scope.basecampId = localStorage['basecampId'];
   if (localStorage['projects']) $scope.projects = JSON.parse(localStorage['projects']);
   $scope.getProjects();
 })
 
+/**
+ * Controller linked to completed-todolists.html
+ */
+.controller('CompletedTodolistsController', function($scope, Projects, CompletedTodolists) {
+
+  /**
+   * 
+   */
+  $scope.getProjects = function(projectId) {
+    console.log('LOG: getProjects');
+    try {
+      var completed_todolists = new Array();      
+      Projects.query({basecampId: $scope.basecampId}, function(data) {
+        $scope.projects = data;
+        localStorage['projects'] = JSON.stringify(data);
+      });
+    } catch(e) {
+      console.log(e);
+    }
+  };
+
+  /**
+   * Fetch COMPLETED Todolists of a Project
+   */
+  $scope.getCompletedTodolists = function(projectId) {
+    console.log('LOG: getCompletedTodolists');
+    try {
+      CompletedTodolists.query({basecampId: $scope.basecampId, projectId: projectId}, function(data) {
+        $scope.todolists = data;
+      });
+    } catch(e) {
+      console.log(e);
+    }
+  };
+
+  /**
+   * Initialization
+   */
+  if (localStorage['basecampId']) $scope.basecampId = localStorage['basecampId'];
+  if (localStorage['projects']) $scope.projects = JSON.parse(localStorage['projects']);
+  $scope.getProjects();
+})
+
+/**
+ * Controller linked to all views
+ */
 .controller('MainController', function($scope) {
 
+  /**
+   * Logout by clearing localStorage
+   */
   $scope.logout = function() {
     console.log('LOG: logout');
     localStorage.clear();
     $scope.assignedTodos = [];
     $scope.basecampId = [];
     $scope.userId = [];
-    window.close();            
+    window.close();
   }
+  if (localStorage['basecampToken']) $scope.online = true;
 });

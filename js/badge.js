@@ -1,17 +1,17 @@
 /**
-* Count Todos in one category
-* @param {string} status Count overdue, today, upcoming or undefined Todos
-* @param {string} input JSON string containing all assignedTodos
-*/
+ * Count Todos in one category
+ * @param {string} status Count overdue, today, upcoming or undefined Todos
+ * @param {string} input JSON string containing all assignedTodos
+ */
 function countTodos(input, status) {
 
-	var todayDate = getTodayDate();
-	var inputDate = "";
+  var todayDate = getTodayDate();
+  var inputDate = "";
   var count = 0; 
 
   for (var i = 0; i < input.length; i++) {
-  		if (input[i].due_at != null && status != '4') {
-  			inputDate = parseInt(input[i].due_at.replace(/-/g, ""));
+      if (input[i].due_at != null && status != '4') {
+      	inputDate = parseInt(input[i].due_at.replace(/-/g, ""));
         if ((status == 'overdue') && (inputDate < todayDate)) count++;
         else if ((status == 'today') && (inputDate == todayDate)) count++;
         else if ((status == 'upcoming') && (inputDate > todayDate)) count++;
@@ -22,9 +22,9 @@ function countTodos(input, status) {
 }
 
 /**
-* Draw the extension badge in Chrome base on the Todos counter
-* localStorage['assignedTodos'] must to be set
-*/
+ * Draw the extension badge in Chrome based on the Todos counter
+ * localStorage['assignedTodos'] must to be set
+ */
 function updateBadge() {
   try {
     var jsonTodos = JSON.parse(localStorage.getItem('assignedTodos'));
@@ -32,23 +32,23 @@ function updateBadge() {
     if (canvas.getContext) {
       var ctx = canvas.getContext("2d");
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-		  ctx.font = "bold 11px Helvetica";
+      ctx.font = "bold 11px Helvetica";
 
       ctx.fillStyle = "red";
-		  ctx.fillText(countTodos(jsonTodos, 'overdue'), 0, 9);
+      ctx.fillText(countTodos(jsonTodos, 'overdue'), 0, 9);
 
       ctx.fillStyle = "green";
-		  ctx.fillText(countTodos(jsonTodos, 'today'), 12, 9);
+      ctx.fillText(countTodos(jsonTodos, 'today'), 12, 9);
 
       ctx.fillStyle = "blue";
-		  ctx.fillText(countTodos(jsonTodos, 'upcoming'), 0, 19);
+      ctx.fillText(countTodos(jsonTodos, 'upcoming'), 0, 19);
 
       ctx.fillStyle = "black";
-		  ctx.fillText(countTodos(jsonTodos, 'undefined'), 12, 19);
+      ctx.fillText(countTodos(jsonTodos, 'undefined'), 12, 19);
 
       var imageData = ctx.getImageData(0, 0, 19, 19);
     }
-		chrome.browserAction.setIcon({imageData: imageData});
+    chrome.browserAction.setIcon({imageData: imageData});
     console.log('LOG: updateBadge');
   } catch(e) {
     console.log('ERROR: updateBadge ' + e);
@@ -57,9 +57,9 @@ function updateBadge() {
 }	
 
 /**
-* Give the current date
-* @return {int} date in YYYYMMDD format
-*/
+ * Give the current date
+ * @return {int} date in YYYYMMDD format
+ */
 function getTodayDate() {
   var currentDate = new Date();
   var yyyy = currentDate.getFullYear().toString();

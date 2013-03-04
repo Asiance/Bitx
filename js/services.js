@@ -3,6 +3,9 @@
 angular
 .module('basecampExtension.services', ['ngResource'])
 
+/*
+ * Get all organizations where the User is involved
+ */
 .factory('Authorization', function($resource) {
   return $resource('https://launchpad.37signals.com/authorization.json', {}, {
     query: {
@@ -12,6 +15,9 @@ angular
   });
 })
 
+/*
+ * Get information about a User
+ */
 .factory('User', function($resource) {
   return $resource('https://basecamp.com/:basecampId/api/v1/people/me.json', {}, {
     query: {
@@ -21,6 +27,9 @@ angular
   });
 })
 
+/*
+ * Get all Projects where the User is involved
+ */
 .factory('Projects', function($resource) {
   return $resource('https://basecamp.com/:basecampId/api/v1/projects.json', {}, {
     query: {
@@ -28,8 +37,11 @@ angular
       isArray: 	true,
       headers: 	{'Authorization':'Bearer ' + localStorage['basecampToken']}}
   });
-})	
+})
 
+/*
+ * Get a Project
+ */
 .factory('Project', function($resource) {
   return $resource('https://basecamp.com/:basecampId/api/v1/projects/:projectId.json', {}, {
     query: {
@@ -39,6 +51,9 @@ angular
   });
 })
 
+/*
+ * Get all ACTIVE Todolist of a Project
+ */
 .factory('Todolists', function($resource) {
   return $resource('https://basecamp.com/:basecampId/api/v1/projects/:projectId/todolists.json', {}, {
     query: {
@@ -48,6 +63,9 @@ angular
   });
 })
 
+/*
+ * Get a Todolist of a Project
+ */
 .factory('Todolist', function($resource) {
   return $resource('https://basecamp.com/:basecampId/api/v1/projects/:projectId/todolists/:todolistId.json', {}, {
     query: {
@@ -57,6 +75,9 @@ angular
   });
 })
 
+/*
+ * Get all COMPLETED Todolists of a project
+ */
 .factory('CompletedTodolists', function($resource) {
   return $resource('https://basecamp.com/:basecampId/api/v1/projects/:projectId/todolists/completed.json', {}, {
     query: {
@@ -66,16 +87,33 @@ angular
   });
 })
 
+/*
+ * Get all COMPLETED Todolists of a organization
+ */
+.factory('AllCompletedTodolists', function($resource) {
+  return $resource('https://basecamp.com/:basecampId/api/v1/todolists/completed.json', {}, {
+    query: {
+      method:   'GET',
+      isArray:  true,
+      headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}}
+  });
+})
+
+/*
+ * Get ACTIVE Assigned Todolists of a User
+ */
 .factory('AssignedTodolists', function($resource) {
   return $resource('https://basecamp.com/:basecampId/api/v1/people/:userId/assigned_todos.json', {}, {
     query: {
       method:   'GET', 
       isArray:  true,
-      headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}
-  }
-});
+      headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}}
+  });
 })
 
+/*
+ * Get infos about a Todo
+ */
 .factory('Todo', function($resource) {
   return $resource('https://basecamp.com/:basecampId/api/v1/projects/:projectId/todos/:todoId.json', {}, {
     query: {
@@ -91,7 +129,9 @@ angular
   });
 })
 
-
+/*
+ * Return date following YYYYMMDD format
+ */
 .factory('Utils', function () {
   return {
     getTodayDate: function () {

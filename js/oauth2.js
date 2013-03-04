@@ -39,131 +39,132 @@
  */
 (function() {
 
-	window.OAuth2 = {
-		
-		/**
-		 * Initialize
-		 */
-		init: function() {
-			this._key = "basecampToken";
-			this._access_token_url = "https://launchpad.37signals.com/authorization/token"; // <--------------------- URL to api where token is request
-			this._authorization_url = "https://launchpad.37signals.com/authorization/new"; // <------ URL to api where user authorizes extension with
-			this._client_id = "e41e44d7de71a7090bf36260b73dddabfa2f5ab7"; // <----------------------------------------------- Application ID
-			this._client_secret = "c37ff0ef6d9a5cfb788c6977084374bc0ceb74dd"; // <--------------------------------------- Application secret
-			this._redirect_url = "http://www.google.com/basecamp-crx"; // <---------- URL where api will redirect access token request
-			this._scopes = ['']; // <------------------------------- API permissions being requested
-		},
-		
-		/**
-		 * Begin
-		 */
-		begin: function() {
-			console.log('begin');
-			var url = this._authorization_url + "?type=web_server&client_id=" + this._client_id + "&redirect_uri=" + this._redirect_url;			
-			chrome.tabs.create({url: url, selected: true});
-		},
-		
-		/**
-		 * Parses Access Code
-		 * 
-		 * @param url The url containing the access code.
-		 */	
-		parseAccessCode: function(url) {
-			console.log('parseAccessCode');
-			if(url.match(/\?error=(.+)/)) {
-				chrome.tabs.getCurrent(function(tab) {
-					chrome.tabs.remove(tab.id, function(){});
-				});
-			}
-			else {
-				this.requestToken(url.match(/\?code=([\w\/\-]+)/)[1]);
-			}
-		},
-		
-		/**
-		 * Request Token
-		 * 
-		 * @param code The access code returned by provider.
-		 */
-		requestToken: function(code) {
-			var that = this;
-			var xhr = new XMLHttpRequest();
-			console.log('requestToken');
+  window.OAuth2 = {
 
-			xhr.addEventListener('readystatechange', function(event) {
-				if(xhr.readyState == 4) {
-					if(xhr.status == 200) {
-						that.finish(JSON.parse(xhr.responseText)['access_token']);
-					}
-					else {
-						chrome.tabs.getCurrent(function(tab) {
-						chrome.tabs.remove(tab.id, function(){});
-					});
-					}
-				}
-			});
-			xhr.open('POST', this._access_token_url + "?type=web_server&client_id=" + this._client_id + "&redirect_uri=" + this._redirect_url + "&client_secret=" + this._client_secret + "&code=" + code, true);
-			xhr.send();
-		},
-		
-		/**
-		 * Finish
-		 * 
-		 * @param token The OAuth2 token given to the application from the provider.
-		 */
-		finish: function(token) {
-			console.log('finish');
-			try {
-				window['localStorage'][this._key] = token;
-				chrome.tabs.create({url:'./views/auth-success.html'});
-			}
-			catch(error) {}
-				chrome.tabs.getCurrent(function(tab) {
-					chrome.tabs.remove(tab.id, function() {});
-				});
-		},
-		
-		
-		/**
+    /**
+     * Initialize
+     */
+    init: function() {
+      this._key = "basecampToken";
+      this._access_token_url = "https://launchpad.37signals.com/authorization/token"; // URL to api where token is request
+      this._authorization_url = "https://launchpad.37signals.com/authorization/new"; // URL to api where user authorizes extension with
+      this._client_id = "e41e44d7de71a7090bf36260b73dddabfa2f5ab7"; // Application ID
+      this._client_secret = "c37ff0ef6d9a5cfb788c6977084374bc0ceb74dd"; // Application secret
+      this._redirect_url = "http://www.google.com/basecamp-crx"; // URL where api will redirect access token request
+      this._scopes = ['']; // API permissions being requested
+    },
+
+    /**
+     * Begin
+     */
+    begin: function() {
+      console.log('begin');
+      var url = this._authorization_url + "?type=web_server&client_id=" + this._client_id + "&redirect_uri=" + this._redirect_url;
+      chrome.tabs.create({url: url, selected: true});
+    },
+
+    /**
+     * Parses Access Code
+     * 
+     * @param url The url containing the access code.
+     */
+    parseAccessCode: function(url) {
+      console.log('parseAccessCode');
+      if(url.match(/\?error=(.+)/)) {
+        chrome.tabs.getCurrent(function(tab) {
+          chrome.tabs.remove(tab.id, function(){});
+        });
+      }
+      else {
+        this.requestToken(url.match(/\?code=([\w\/\-]+)/)[1]);
+      }
+    },
+
+    /**
+     * Request Token
+     * 
+     * @param code The access code returned by provider.
+     */
+    requestToken: function(code) {
+      var that = this;
+      var xhr = new XMLHttpRequest();
+      console.log('requestToken');
+
+      xhr.addEventListener('readystatechange', function(event) {
+        if(xhr.readyState == 4) {
+          if(xhr.status == 200) {
+            that.finish(JSON.parse(xhr.responseText)['access_token']);
+          }
+          else {
+            chrome.tabs.getCurrent(function(tab) {
+              chrome.tabs.remove(tab.id, function(){});
+            });
+          }
+        }
+      });
+      xhr.open('POST', this._access_token_url + "?type=web_server&client_id=" + this._client_id + "&redirect_uri=" + this._redirect_url + "&client_secret=" + this._client_secret + "&code=" + code, true);
+      xhr.send();
+    },
+
+    /**
+     * Finish
+     * 
+     * @param token The OAuth2 token given to the application from the provider.
+     */
+    finish: function(token) {
+      console.log('finish');
+      try {
+        window['localStorage'][this._key] = token;
+        chrome.tabs.create({url:'./views/auth-success.html'});
+      }
+      catch(error) {
+        return null;
+      }
+      chrome.tabs.getCurrent(function(tab) {
+        chrome.tabs.remove(tab.id, function() {});
+      });
+    },
+
+
+    /**
 		 * Get Token
 		 * 
 		 * @return OAuth2 access token if it exists, null if not.
 		 */
-		getToken: function() {
-			try {
-				return window['localStorage'][this._key];
-			}
-			catch(error) {
-				return null;
-			}
-		},
-		
-		/**
-		 * Delete Token
-		 * 
-		 * @return True if token is removed from localStorage, false if not.
-		 */
-		deleteToken: function() {
-			try {
-				delete window['localStorage'][this._key];
-				return true;
-			}
-			catch(error) {
-				return false;
-			}
-		}
-	};
-	
-	OAuth2.init();
+    getToken: function() {
+      try {
+        return window['localStorage'][this._key];
+      }
+      catch(error) {
+        return null;
+      }
+    },
+
+    /**
+     * Delete Token
+     * 
+     * @return True if token is removed from localStorage, false if not.
+     */
+    deleteToken: function() {
+      try {
+        delete window['localStorage'][this._key];
+        return true;
+      }
+      catch(error) {
+        return false;
+      }
+    }
+  };
+
+  OAuth2.init();
 
 })();
 
 function initOAuth2() {
   /**
-  * Open signin page for Basecamp
-  */  
+   * Open signin page for Basecamp
+   */  
   if ((token = OAuth2.getToken()) === undefined ) {
-  	window.close();
-  	OAuth2.begin();
+    OAuth2.begin();
   }
 }

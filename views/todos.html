@@ -1,31 +1,39 @@
-<h3><span class="badge">{{filteredOverdue.length}}</span><small> Overdues</small></h3>
-<ul>
-	<li ng-repeat="assignedTodo in filteredOverdue = (assignedTodos | orderBy: sortByDate | status: 1)">
-		<a style="text-decoration:none;" ng-click="checkTodo(assignedTodo.id)" href="">{{assignedTodo.content}}</a>
-		<span class="label label-{{assignedTodo.due_at | date}}">{{assignedTodo.due_at}}</span>
-	</li>
-</ul>
+<div ng-show="filteredOverdue.length">
+  <h3><span class="badge">{{filteredOverdue.length}}</span><small> Overdues</small></h3>
+  <ul>
+  	<li ng-repeat="assignedTodo in filteredOverdue = (assignedTodos | orderBy: sortByDate | status: 1)">
+  		<a style="text-decoration:none;" ng-click="checkTodo(assignedTodo.id)" href="">{{assignedTodo.content}}</a>
+  		<span class="label label-{{assignedTodo.due_at | date}}">{{assignedTodo.due_at}}</span>
+  	</li>
+  </ul>
+</div>
 
-<h3><span class="badge">{{filteredToday.length}}</span><small> Today</small></h3>
-<ul>
-	<li ng-repeat="assignedTodo in filteredToday = (assignedTodos | orderBy: sortByDate | status: 2)">
-		<a style="text-decoration:none;" ng-click="checkTodo(assignedTodo.id)" href="">{{assignedTodo.content}}</a>
-		<span class="label label-{{assignedTodo.due_at | date}}">{{assignedTodo.due_at}}</span>
-	</li>
-</ul>
+<div ng-show="filteredToday.length">
+  <h3><span class="badge">{{filteredToday.length}}</span><small> Today</small></h3>
+  <ul>
+  	<li ng-repeat="assignedTodo in filteredToday = (assignedTodos | orderBy: sortByDate | status: 2)">
+  		<a style="text-decoration:none;" ng-click="checkTodo(assignedTodo.id)" href="">{{assignedTodo.content}}</a>
+  		<span class="label label-{{assignedTodo.due_at | date}}">{{assignedTodo.due_at}}</span>
+  	</li>
+  </ul>
+</div>
 
-<h3><span class="badge">{{filteredUpcoming.length}}</span><small> Upcoming</small></h3>
-<ul>
-	<li ng-repeat="assignedTodo in filteredUpcoming = (assignedTodos | orderBy: sortByDate | status: 3)">
-		<a style="text-decoration:none;" ng-click="checkTodo(assignedTodo.id)" href="">{{assignedTodo.content}}</a>
-		<span class="label label-{{assignedTodo.due_at | date}}">{{assignedTodo.due_at}}</span>
-	</li>
-</ul>
+<div ng-show="filteredUpcoming.length">
+  <h3><span class="badge">{{filteredUpcoming.length}}</span><small> Upcoming</small></h3>
+  <ul>
+  	<li ng-repeat="assignedTodo in filteredUpcoming = (assignedTodos | orderBy: sortByDate | status: 3)">
+  		<a style="text-decoration:none;" ng-click="checkTodo(assignedTodo.id)" href="">{{assignedTodo.content}}</a>
+  		<span class="label label-{{assignedTodo.due_at | date}}">{{assignedTodo.due_at}}</span>
+  	</li>
+  </ul>
+</div>
 
-<h3><span class="badge">{{filteredUndetermined.length}}</span><small> Undetermined</small></h3>
-<ul>
-	<li ng-repeat="assignedTodo in filteredUndetermined = (assignedTodos | orderBy: sortByDate | status: 4)">
-		<a style="text-decoration:none;" ng-click="checkTodo(assignedTodo.id)" href="">{{assignedTodo.content}}</a>
-		<span class="label label-{{assignedTodo.due_at | date}}">{{assignedTodo.due_at}}</span>
-	</li>
-</ul>
+<div ng-show="filteredUndetermined.length">
+  <h3><span class="badge">{{filteredUndetermined.length}}</span><small> Undetermined</small></h3>
+  <ul>
+  	<li ng-repeat="assignedTodo in filteredUndetermined = (assignedTodos | orderBy: sortByDate | status: 4)">
+  		<a style="text-decoration:none;" ng-click="checkTodo(assignedTodo.id)" href="">{{assignedTodo.content}}</a>
+  		<span class="label label-{{assignedTodo.due_at | date}}">{{assignedTodo.due_at}}</span>
+  	</li>
+  </ul>
+</div>

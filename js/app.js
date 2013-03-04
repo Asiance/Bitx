@@ -2,8 +2,7 @@
 
 angular
   .module('basecampExtension', 
-  	['basecampExtension.config', 
-  	'basecampExtension.controllers',
+  	['basecampExtension.controllers',
   	'basecampExtension.services', 
   	'basecampExtension.filters'])
   
@@ -16,15 +15,19 @@ angular
         })
         .when('/todolists', {
           controller: 'TodolistsController',
-          templateUrl: 'views/todolists.html'          
+          templateUrl: 'views/todolists.html'
         })
         .when('/projects', {
           controller: 'ProjectsController',
-          templateUrl: 'views/projects.html'          
+          templateUrl: 'views/projects.html'
+        })
+        .when('/todolists/completed', {
+          controller: 'CompletedTodolistsController',
+          templateUrl: 'views/completed-todolists.html'
         })
         .when('/logout', {
           controller: 'MainController',
-          templateUrl: 'views/logout.html'          
-        });     
+          templateUrl: 'views/logout.html'
+        });
     }
   ]);
