@@ -4,8 +4,9 @@
  */
 window.onload = function () {
   initOAuth2();	
-  setInterval(getAssignedTodos, 5000);
-  setInterval(updateBadge, 5000);  
+  refresh_period = localStorage['refresh_period'] ? localStorage['refresh_period'] : 5000;
+  setInterval(getAssignedTodos, refresh_period);
+  setInterval(updateBadge, refresh_period);  
 }
 
 /*
@@ -24,6 +25,7 @@ function getAuthorization() {
         getUser();
       } else if (xhr.readyState === 4) {
         console.log('ERROR: getAuthorization XHR');
+        localStorage.clear();
       }
     };
     xhr.send();
@@ -47,6 +49,7 @@ function getUser() {
         localStorage['userId'] = data.id;
       } else if (xhr.readyState === 4) {
         console.log('ERROR: getUser XHR');
+        localStorage.clear();        
       }
     };
     xhr.send();
@@ -84,8 +87,8 @@ function getAssignedTodos() {
                 var projectName = _.findWhere(data, {id: item.todolist_id}).bucket.name;
                 var todolistName = _.findWhere(data, {id: item.todolist_id}).name;
                 var notification = webkitNotifications.createNotification(
-                  item.creator.avatar_url,  // Icon
-                  projectName,  // Title
+                  item.creator.avatar_url, // Icon
+                  projectName, // Title
                   todolistName + ': **' + item.content + '**' // Body
                 );
                 notification.show();

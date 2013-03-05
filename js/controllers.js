@@ -98,7 +98,7 @@ angular
 /**
  * Controller linked to todolists.html
  */
-.controller('TodolistsController', function($scope, $resource, AssignedTodolists) {
+.controller('TodolistsController', function($scope, $resource, $location, AssignedTodolists) {
 
   /**
    * Fetch ACTIVE Todolists assigned to the user
@@ -106,9 +106,21 @@ angular
   $scope.getAssignedTodolists = function() {
     try {
       AssignedTodolists.query({basecampId: $scope.basecampId, userId: $scope.userId}, function(data) {
-      $scope.assignedTodolists = data;
-      localStorage['assignedTodolists'] = JSON.stringify($scope.assignedTodolists);
-    });
+        $scope.assignedTodolists = data;     
+        localStorage['assignedTodolists'] = JSON.stringify($scope.assignedTodolists);
+      });
+    } catch(e) {
+      console.log(e);
+    }
+  };
+
+  /**
+   * Redirect to edit a chosen todolist
+   * Since ng-href is not allowed
+   */
+  $scope.gotoTodolist = function(projectId, todolistId) {
+    try {
+      $location.path('/projects/' + projectId + '/todolists/' + todolistId + '/edit').replace();
     } catch(e) {
       console.log(e);
     }
@@ -121,6 +133,87 @@ angular
   $scope.basecampId = localStorage['basecampId'];
   if (localStorage['assignedTodolists']) $scope.assignedTodolists = JSON.parse(localStorage['assignedTodolists']);        
   $scope.getAssignedTodolists();
+})
+
+/**
+ * Controller linked to edit-todolist.html
+ */
+.controller('EditTodolistController', function($scope, $resource, $location, $routeParams, Todolist, Accesses) {
+
+  /**
+   * Fetch a Todolist
+   */
+  $scope.getTodolist = function() {
+    try {
+      Todolist.query({basecampId: $scope.basecampId, projectId: $scope.projectId, todolistId: $scope.todolistId}, function(data) {
+        $scope.todolist = data;  
+      });
+    } catch(e) {
+      console.log(e);
+    }
+  };
+
+  /**
+   * Fetch list of potential assignees
+   */
+  $scope.getAssignees = function() {
+    try {
+      Accesses.query({basecampId: $scope.basecampId, projectId: $scope.projectId}, function(data) {
+        $scope.assignees = data;
+      });
+    } catch(e) {
+      console.log(e);
+    }
+  };
+
+  /**
+   * Find real name of a User ID
+   * ng-model binds only the value when select->option
+   */
+  $scope.retrieveName = function(userId) {
+    try {
+      return _.findWhere($scope.assignees, {id: userId}).name;
+    } catch(e) {
+      console.log(e);
+    }
+  };
+
+  /**
+   * Add a Todo
+   * @Todo
+   */
+  $scope.addTodo = function() {
+    $scope.newTodos.push({
+      content: $scope.contentTodo,
+      due_at: $scope.dueatTodo,
+      assignee: {
+        id: $scope.assigneeIdTodo,
+        name: $scope.retrieveName($scope.assigneeIdTodo),
+        type: 'Person'
+      }
+    });
+    $scope.contentTodo = '';
+    $scope.assigneeTodo = '';
+    $scope.dueatTodo = '';
+    console.log($scope.newTodos);
+  };
+
+  /**
+   * Save Todolist and Todos modifications
+   * @Todo
+   */
+  $scope.saveAll = function() {};
+
+  /**
+   * Initialization
+   */
+  $scope.newTodos = [];
+  $scope.projectId = $routeParams.projectId;
+  $scope.todolistId = $routeParams.todolistId;
+  $scope.basecampId = localStorage['basecampId'];
+  $scope.getAssignees();
+  $scope.getTodolist();
+
 })
 
 /**
@@ -250,7 +343,7 @@ angular
 .controller('CompletedTodolistsController', function($scope, Projects, CompletedTodolists) {
 
   /**
-   * 
+   * Fetch list of Projects
    */
   $scope.getProjects = function(projectId) {
     console.log('LOG: getProjects');

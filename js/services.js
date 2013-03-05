@@ -52,6 +52,18 @@ angular
 })
 
 /*
+ * Get list of people allowed on a Project
+ */
+.factory('Accesses', function($resource) {
+  return $resource('https://basecamp.com/:basecampId/api/v1/projects/:projectId/accesses.json', {}, {
+    query: {
+      method:   'GET',
+      isArray:  true,
+      headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}}
+  });
+})
+
+/*
  * Get all ACTIVE Todolist of a Project
  */
 .factory('Todolists', function($resource) {

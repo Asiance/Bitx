@@ -1,9 +1,10 @@
-<h3><span class="badge">{{assignedTodolists.length}}</span><small> Todolists (<a href="#/todolists/completed">see completed</a>)</small></h3>
+<h3><span class="badge">{{assignedTodolists.length}}</span><small> Todolists (<a href="#/todolists/completed">see completed</a> | <a href="#/todolists/new">add</a>)</small></h3>
 <div class="accordion">
   <div ng-repeat="assignedTodolist in assignedTodolists" class="accordion-group">
     <div class="accordion-heading"> 	
       <span class="label label-success">{{assignedTodolist.bucket.name}}</span>
       <a style="text-decoration:none;" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" ng-href="#{{assignedTodolist.id}}">{{assignedTodolist.name}}</a>
+      (<a ng-click="gotoTodolist(assignedTodolist.bucket.id, assignedTodolist.id)">Edit</a>)
     </div>
     <div id="{{assignedTodolist.id}}" class="accordion-body collapse">
       <div class="accordion-inner">

@@ -2,7 +2,7 @@
   <h3><span class="badge">{{filteredOverdue.length}}</span><small> Overdues</small></h3>
   <ul>
   	<li ng-repeat="assignedTodo in filteredOverdue = (assignedTodos | orderBy: sortByDate | status: 1)">
-  		<a style="text-decoration:none;" ng-click="checkTodo(assignedTodo.id)" href="">{{assignedTodo.content}}</a>
+      <a style="text-decoration:none;" href="#{{assignedTodo.id}}" data-toggle="modal">{{assignedTodo.content}}</a>
   		<span class="label label-{{assignedTodo.due_at | date}}">{{assignedTodo.due_at}}</span>
   	</li>
   </ul>
@@ -12,7 +12,7 @@
   <h3><span class="badge">{{filteredToday.length}}</span><small> Today</small></h3>
   <ul>
   	<li ng-repeat="assignedTodo in filteredToday = (assignedTodos | orderBy: sortByDate | status: 2)">
-  		<a style="text-decoration:none;" ng-click="checkTodo(assignedTodo.id)" href="">{{assignedTodo.content}}</a>
+      <a style="text-decoration:none;" href="#{{assignedTodo.id}}" data-toggle="modal">{{assignedTodo.content}}</a>
   		<span class="label label-{{assignedTodo.due_at | date}}">{{assignedTodo.due_at}}</span>
   	</li>
   </ul>
@@ -22,7 +22,7 @@
   <h3><span class="badge">{{filteredUpcoming.length}}</span><small> Upcoming</small></h3>
   <ul>
   	<li ng-repeat="assignedTodo in filteredUpcoming = (assignedTodos | orderBy: sortByDate | status: 3)">
-  		<a style="text-decoration:none;" ng-click="checkTodo(assignedTodo.id)" href="">{{assignedTodo.content}}</a>
+      <a style="text-decoration:none;" href="#{{assignedTodo.id}}" data-toggle="modal">{{assignedTodo.content}}</a>
   		<span class="label label-{{assignedTodo.due_at | date}}">{{assignedTodo.due_at}}</span>
   	</li>
   </ul>
@@ -32,8 +32,28 @@
   <h3><span class="badge">{{filteredUndetermined.length}}</span><small> Undetermined</small></h3>
   <ul>
   	<li ng-repeat="assignedTodo in filteredUndetermined = (assignedTodos | orderBy: sortByDate | status: 4)">
-  		<a style="text-decoration:none;" ng-click="checkTodo(assignedTodo.id)" href="">{{assignedTodo.content}}</a>
+  		<a style="text-decoration:none;" href="#{{assignedTodo.id}}" data-toggle="modal">{{assignedTodo.content}}</a>
   		<span class="label label-{{assignedTodo.due_at | date}}">{{assignedTodo.due_at}}</span>
   	</li>
   </ul>
 </div>
+
+<div ng-repeat="assignedTodo in assignedTodos" id="{{assignedTodo.id}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Confirmation</h3>
+  </div>
+  <div class="modal-body">
+    <p>{{assignedTodo.content}}</p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+    <button class="btn btn-success" ng-click="checkTodo(assignedTodo.id)">Validate</button>
+  </div>
+</div>
+<style type="text/css">
+  .modal {
+    width: 300px; /* SET THE WIDTH OF THE MODAL */
+    margin-left: -140px;
+  }
+</style>
