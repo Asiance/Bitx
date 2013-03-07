@@ -11,7 +11,7 @@ angular
       $routeProvider
         .when('/', {
           controller: 'TodosController',
-          templateUrl: 'views/todos.html'
+          templateUrl: 'views/todos2.html'
         })
         .when('/todolists', {
           controller: 'TodolistsController',

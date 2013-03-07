@@ -92,7 +92,7 @@ function getAssignedTodos() {
                   todolistName + ': **' + item.content + '**' // Body
                 );
                 notification.show();
-                setTimeout(function(){ notification.cancel(); }, 10000); // Hide notificiation after 10 secondes
+                setTimeout(function(){ notification.cancel(); }, 15000); // Hide notificiation after 15 seconds
               }
             });
           }

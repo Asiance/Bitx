@@ -53,19 +53,39 @@ angular
     try { 
       AssignedTodolists.query({basecampId: $scope.basecampId, userId: $scope.userId}, function(data) {
         // Flatten data to get only Todos
-        $scope.assignedTodos = new Array(); 
+        $scope.assignedTodos = [];
         for (var i = 0; i < data.length; i++) { 
           for (var j = 0; j < data[i].assigned_todos.length; j++) { 
-            $scope.assignedTodos.push(data[i].assigned_todos[j]);
+            var tmp = data[i].assigned_todos[j];
+            tmp.project = data[i].bucket.name;
+            tmp.todolist = data[i].name;
+            $scope.assignedTodos.push(tmp);
           }
         }
         localStorage['assignedTodos'] = JSON.stringify($scope.assignedTodos);
+        $scope.sortByProject();
       }, function(response) {
         console.log('ERROR: Failed to connect!')
       });
     } catch(e) {
       console.log(e);
     }
+  };
+
+  $scope.sortByProject = function() {
+    console.log('LOG: sortByProject');
+    $scope.projects = [];
+    var projectName = 'NO_PROJECT';
+    for (var i = 0; i < $scope.assignedTodos.length; i++) {
+      var assignedTodo = $scope.assignedTodos[i];
+      if (assignedTodo.project !== projectName) {
+        var project = {name: assignedTodo.project, assignedTodos: []};
+        projectName = assignedTodo.project;
+        $scope.projects.push(project);
+      }
+      project.assignedTodos.push(assignedTodo);
+    }
+    localStorage['assignedTodosByProject'] = JSON.stringify($scope.projects);    
   };
 
   /**
@@ -93,6 +113,7 @@ angular
    */
   if (!$scope.basecampId || !localStorage['basecampId'] || !$scope.userId || !localStorage['userId']) $scope.getBasecampAccount();
   if (localStorage['assignedTodos']) $scope.assignedTodos = JSON.parse(localStorage['assignedTodos']);   
+  if (localStorage['assignedTodosByProject']) $scope.projects = JSON.parse(localStorage['assignedTodosByProject']);   
 })
 
 /**

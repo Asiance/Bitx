@@ -3,5 +3,5 @@
  * Loaded when the Chrome extension opens
  */
 window.onload = function () {
-  initOAuth2();	
+  initOAuth2();
 }

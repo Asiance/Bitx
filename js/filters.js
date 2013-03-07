@@ -48,7 +48,7 @@ angular
               else if ((status == '3') && (inputYYYYMMDD > currentDateYYYYMMDD)) out.push(input[i]);
             }
             else if (input[i].due_at == null && status == '4') out.push(input[i])
-        }      
+        }
         return out;
       } else return [];
     };
