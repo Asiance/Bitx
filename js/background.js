@@ -85,11 +85,10 @@ function getAssignedTodos() {
             _.each(assignedTodos, function(item) {
               if (!_.findWhere(JSON.parse(localStorage['assignedTodos']), {id: item.id})) { // Check each todo whether it is new or not
                 var projectName = _.findWhere(data, {id: item.todolist_id}).bucket.name;
-                var todolistName = _.findWhere(data, {id: item.todolist_id}).name;
                 var notification = webkitNotifications.createNotification(
                   item.creator.avatar_url, // Icon
                   projectName, // Title
-                  todolistName + ': **' + item.content + '**' // Body
+                  item.content // Body
                 );
                 notification.show();
                 setTimeout(function(){ notification.cancel(); }, 15000); // Hide notificiation after 15 seconds

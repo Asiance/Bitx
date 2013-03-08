@@ -58,12 +58,13 @@ angular
           for (var j = 0; j < data[i].assigned_todos.length; j++) { 
             var tmp = data[i].assigned_todos[j];
             tmp.project = data[i].bucket.name;
+            tmp.project_id = data[i].bucket.id;
             tmp.todolist = data[i].name;
             $scope.assignedTodos.push(tmp);
           }
         }
         localStorage['assignedTodos'] = JSON.stringify($scope.assignedTodos);
-        $scope.sortByProject();
+        $scope.groupByProject();
       }, function(response) {
         console.log('ERROR: Failed to connect!')
       });
@@ -72,14 +73,14 @@ angular
     }
   };
 
-  $scope.sortByProject = function() {
-    console.log('LOG: sortByProject');
+  $scope.groupByProject = function() {
+    console.log('LOG: groupByProject');
     $scope.projects = [];
     var projectName = 'NO_PROJECT';
     for (var i = 0; i < $scope.assignedTodos.length; i++) {
       var assignedTodo = $scope.assignedTodos[i];
       if (assignedTodo.project !== projectName) {
-        var project = {name: assignedTodo.project, assignedTodos: []};
+        var project = {name: assignedTodo.project, id: assignedTodo.project_id, assignedTodos: []};
         projectName = assignedTodo.project;
         $scope.projects.push(project);
       }
@@ -103,6 +104,19 @@ angular
     console.log('LOG: checkTodo');
     try { 
       Todo.update({basecampId: $scope.basecampId, projectId: projectId, todoId: todoId});
+    } catch(e) {
+      console.log(e);
+    }
+  };
+
+  /**
+   * Open tab to view Todo on bacsecamp.com
+   */
+  $scope.openTodo = function(projectId, todoId) {
+    console.log('LOG: openTodo');
+    try { 
+      console.log(projectId + " " + todoId);
+      chrome.tabs.create({url: "https://basecamp.com/" + $scope.basecampId + "/projects/" + projectId + "/todos/" + todoId});
     } catch(e) {
       console.log(e);
     }
