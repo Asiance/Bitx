@@ -66,7 +66,7 @@ angular
           if (diff/(1000*60*60) < 1) // If last update is less than one hour ago
             return Math.round(diff/(1000*60)) + " minute(s) ago";
           else return Math.round(diff/(1000*60*60)) + " hour(s) ago";
-        else return Math.round(diff) + " day(s) ago";
+        else return Math.round(diff/(1000*60*60*24)) + " day(s) ago";
       } else return "";
     };
   });

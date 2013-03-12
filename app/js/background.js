@@ -23,6 +23,7 @@ function getAuthorization() {
         data = JSON.parse(xhr.responseText);
         localStorage['basecampId'] = _.findWhere(data.accounts, {product: "bcx"}).id;
         getUser();
+        console.log('LOG: getAuthorization XHR');
       } else if (xhr.readyState === 4) {
         console.log('ERROR: getAuthorization XHR');
         localStorage.clear();
@@ -47,6 +48,7 @@ function getUser() {
       if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 304)) {
         data = JSON.parse(xhr.responseText);
         localStorage['userId'] = data.id;
+        console.log('LOG: getUser XHR');        
       } else if (xhr.readyState === 4) {
         console.log('ERROR: getUser XHR');
         localStorage.clear();        
@@ -99,6 +101,8 @@ function getAssignedTodos() {
           // Update localStorage
           localStorage['assignedTodos'] = JSON.stringify(assignedTodos); 
           localStorage['assignedTodolists'] = JSON.stringify(data);
+          
+          console.log('LOG: getAssignedTodos XHR');
         } else if (xhr.readyState === 4) {
           console.log('ERROR: getAssignedTodos XHR');
         }

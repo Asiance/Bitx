@@ -28,30 +28,33 @@ function countTodos(input, status) {
 function updateBadge() {
   try {
     var jsonTodos = JSON.parse(localStorage.getItem('assignedTodos'));
-    var canvas = document.getElementById('badgeIcon');
-    if (canvas.getContext) {
-      var ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.font = "bold 11px Helvetica";
-
-      ctx.fillStyle = "red";
-      ctx.fillText(countTodos(jsonTodos, 'overdue'), 0, 9);
-
-      ctx.fillStyle = "green";
-      ctx.fillText(countTodos(jsonTodos, 'today'), 12, 9);
-
-      ctx.fillStyle = "blue";
-      ctx.fillText(countTodos(jsonTodos, 'upcoming'), 0, 19);
-
-      ctx.fillStyle = "black";
-      ctx.fillText(countTodos(jsonTodos, 'undefined'), 12, 19);
-
-      var imageData = ctx.getImageData(0, 0, 19, 19);
+    var counter = countTodos(jsonTodos, 'overdue');
+    var color;
+    
+    if (countTodos(jsonTodos, 'overdue')) {
+      counter = countTodos(jsonTodos, 'overdue');
+      color = {color: '#FF0000'};
+    }      
+    else if (countTodos(jsonTodos, 'today')) {
+      counter = countTodos(jsonTodos, 'today');
+      color = {color: '#00FF00'};
     }
-    chrome.browserAction.setIcon({imageData: imageData});
+    else if (countTodos(jsonTodos, 'upcoming')) {
+      counter = countTodos(jsonTodos, 'upcoming');
+      color = {color: '#0000FF'};
+    }
+    else if (countTodos(jsonTodos, 'undefined')) {
+      counter = countTodos(jsonTodos, 'undefined');
+      color = {color: '#000000'};
+    }
+    else counter = '';
+    
+    chrome.browserAction.setBadgeBackgroundColor(color);
+    chrome.browserAction.setBadgeText({text: counter.toString()});
     console.log('LOG: updateBadge');
   } catch(e) {
     console.log('ERROR: updateBadge ' + e);
+    chrome.browserAction.setBadgeText({text: ''});
     chrome.browserAction.setIcon({path : '../icon.ico'});
   }
 }	

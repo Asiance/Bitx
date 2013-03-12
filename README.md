@@ -31,10 +31,8 @@ Configuration
 Dependencies
 --------------------
 
-  - [jQuery](http://jquery.com/)
   - [AngularJS](http://angularjs.org/)
   - [Underscore.js](http://underscorejs.org/g/)
-  - [Bootstrap Twitter](http://twitter.github.com/bootstrap/)
   - [OAuth 2.0 library for Chrome Extensions](https://github.com/borismus/oauth2-extensions)
 
 Authors

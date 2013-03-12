@@ -3,27 +3,20 @@
 <head>
   <meta charset="utf-8">
   <title>basecampExtension</title>
-  <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <link href="css/app.css" rel="stylesheet" media="screen">
 </head>
 <body>
   
-  <div ng-controller="MainController" class="container span6">
+  <div ng-controller="MainController">
     <ng-view></ng-view>
-    <div ng-show="online">
-      <a class="btn" href="#/">Todos</a>
-      <a class="btn" href="#/todolists">Todolists</a>
-      <a class="btn" href="#/projects">Projects</a>
-      <a class="btn btn-primary" href="#/logout" ng-click="logout()">Logout</a>
-    </div>
-    <div ng-hide="online" class="alert alert-block">
+    <a ng-show="online" href="#/logout" ng-click="logout()">Logout</a>
+    <div ng-hide="online">
       <h4>Authorization needed!</h4>
     </div>
   </div>
 
   <script src="lib/angular.min.js"></script>
   <script src="lib/angular-resource.min.js"></script>
-  <script src="lib/jquery-1.9.1.min.js"></script>
-  <script src="lib/bootstrap.min.js"></script>
   <script src="lib/underscore-min.js"></script>
 
   <script src="js/oauth2-onload.js"></script>

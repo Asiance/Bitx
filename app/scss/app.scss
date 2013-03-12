@@ -1,0 +1,33 @@
+@import "compass/reset";
+@import "compass/typography/links/unstyled-link";
+@import "compass/typography/links/link-colors";
+
+$color-overdue: "red";
+$color-today: "blue";
+$color-upcoming: "green";
+$color-nodate: "black";
+
+body {
+  @include global-reset;
+  width: 450px;
+  font-family: "Calibri";
+  h1 {
+    font-weight:bold;
+    line-height: 24px;
+  }
+  h2 {
+    color: grey;
+    line-height: 24px;
+  }
+  .todo {
+    display:inline-block;
+    width: 340px; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  a {
+    @include unstyled-link;
+    @include link-colors(#2A75A9, #E95D22, #DFC184, #ccc, #cc0);
+  }
+}
