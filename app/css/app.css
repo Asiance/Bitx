@@ -63,10 +63,20 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   display: block;
 }
 
-/* line 10, ../scss/app.scss */
+@font-face {
+  font-family: "Monserrat";
+  src: url(/fonts/Montserrat-Regular.ttf) format('truetype');
+}
+
+/* line 16, ../scss/app.scss */
 body {
   width: 450px;
-  font-family: "Calibri";
+  font-family: "Monserrat";
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  background: #232323;
+  line-height: 50px;
 }
 /* line 17, c:/Ruby200-x64/lib/ruby/gems/2.0.0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 body html, body body, body div, body span, body applet, body object, body iframe,
@@ -125,48 +135,97 @@ body a img {
 body article, body aside, body details, body figcaption, body figure, body footer, body header, body hgroup, body menu, body nav, body section, body summary {
   display: block;
 }
-/* line 14, ../scss/app.scss */
-body h1 {
-  font-weight: bold;
-  line-height: 24px;
+/* line 26, ../scss/app.scss */
+body input {
+  width: 200px;
+  float: right;
+  margin-top: 15px;
+  background-color: #232323;
+  color: white;
+  border: none;
+  float: right;
 }
-/* line 18, ../scss/app.scss */
-body h2 {
-  color: grey;
-  line-height: 24px;
+/* line 34, ../scss/app.scss */
+body input:focus {
+  outline: none;
 }
-/* line 22, ../scss/app.scss */
-body .todo {
+/* line 39, ../scss/app.scss */
+body .toggle-content {
   display: inline-block;
-  width: 340px;
+  width: 80px;
+  color: white;
+  text-align: center;
+}
+/* line 47, ../scss/app.scss */
+body dt:hover {
+  background: #e56c69;
+}
+/* line 51, ../scss/app.scss */
+body .active {
+  background: #e56c69;
+}
+/* line 55, ../scss/app.scss */
+body h1 {
+  display: inline-block;
+  color: white;
+  width: 320px;
+}
+/* line 60, ../scss/app.scss */
+body .count-todos {
+  display: inline-block;
+  color: white;
+  text-align: center;
+}
+/* line 66, ../scss/app.scss */
+body h2 {
+  color: #e56c69;
+  margin-left: 80px;
+}
+/* line 70, ../scss/app.scss */
+body .date {
+  display: inline-block;
+  width: 80px;
+  color: #e56c69;
+  text-align: center;
+}
+/* line 76, ../scss/app.scss */
+body .check {
+  display: none;
+  width: 80px;
+  text-align: center;
+}
+/* line 81, ../scss/app.scss */
+body .content {
+  background-color: #f4f0e7;
+}
+/* line 85, ../scss/app.scss */
+body li:hover {
+  background-color: #339a63;
+  color: white;
+}
+/* line 88, ../scss/app.scss */
+body li:hover .date {
+  display: none;
+}
+/* line 91, ../scss/app.scss */
+body li:hover .check {
+  display: inline-block;
+}
+/* line 95, ../scss/app.scss */
+body li .todo {
+  display: inline-block;
+  width: 320px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* line 29, ../scss/app.scss */
+/* line 104, ../scss/app.scss */
 body a {
   color: inherit;
   text-decoration: inherit;
   cursor: inherit;
-  color: #2a75a9;
 }
 /* line 6, c:/Ruby200-x64/lib/ruby/gems/2.0.0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/links/_unstyled-link.scss */
 body a:active, body a:focus {
   outline: none;
-}
-/* line 18, c:/Ruby200-x64/lib/ruby/gems/2.0.0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/links/_link-colors.scss */
-body a:visited {
-  color: #cccccc;
-}
-/* line 21, c:/Ruby200-x64/lib/ruby/gems/2.0.0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/links/_link-colors.scss */
-body a:focus {
-  color: #cccc00;
-}
-/* line 24, c:/Ruby200-x64/lib/ruby/gems/2.0.0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/links/_link-colors.scss */
-body a:hover {
-  color: #e95d22;
-}
-/* line 27, c:/Ruby200-x64/lib/ruby/gems/2.0.0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/links/_link-colors.scss */
-body a:active {
-  color: #dfc184;
 }

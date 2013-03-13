@@ -1,33 +1,107 @@
+@import "compass/css3";
 @import "compass/reset";
 @import "compass/typography/links/unstyled-link";
 @import "compass/typography/links/link-colors";
 
-$color-overdue: "red";
-$color-today: "blue";
-$color-upcoming: "green";
-$color-nodate: "black";
+@include font-face("Monserrat", font-files("/fonts/Montserrat-Regular.ttf"));
+
+$color-dark: #232323;
+$color-white: #ffffff;
+$color-beige: #f4f0e7;
+$color-red: #e56c69;
+$color-green: #339a63;
+$line-height: 50px;
+$first-column-width: 80px;
 
 body {
   @include global-reset;
   width: 450px;
-  font-family: "Calibri";
+  font-family: "Monserrat";
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  background: $color-dark;
+  line-height: $line-height;
+
+  input {
+    width: 200px;
+    float:right;
+    margin-top: 15px;
+    background-color: $color-dark;
+    color : $color-white;
+    border: none;
+    float: right;
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .toggle-content {
+    display: inline-block;
+    width: $first-column-width;
+    color:white;
+    text-align: center;      
+  }
+
+  dt {
+    &:hover {
+      background: $color-red;
+    }
+  }
+  .active {
+    background: $color-red;
+  }
+
   h1 {
-    font-weight:bold;
-    line-height: 24px;
+    display: inline-block;
+    color: $color-white;
+    width: 320px;
   }
+  .count-todos {
+    display: inline-block;
+    color: $color-white;
+    text-align: center;
+  }
+
   h2 {
-    color: grey;
-    line-height: 24px;
+    color: $color-red;
+    margin-left: $first-column-width;
   }
-  .todo {
-    display:inline-block;
-    width: 340px; 
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .date {
+    display: inline-block;
+    width: $first-column-width;
+    color: $color-red;
+    text-align: center;      
   }
+  .check {
+    display: none;
+    width: $first-column-width;
+    text-align: center;      
+  }
+  .content {
+    background-color: $color-beige;
+  }
+  li {
+    &:hover {
+      background-color: $color-green;
+      color: $color-white;
+      .date {
+        display: none;
+      }
+      .check {
+        display: inline-block;
+      }  
+    }
+    .todo {
+      display: inline-block;
+      width: 320px; 
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
   a {
     @include unstyled-link;
-    @include link-colors(#2A75A9, #E95D22, #DFC184, #ccc, #cc0);
-  }
+  }  
 }

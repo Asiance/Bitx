@@ -39,7 +39,6 @@ angular
         var currentDateYYYYMMDD = Utils.getTodayDate();
         var inputYYYYMMDD = "";
         var out = []; 
-
         for (var i = 0; i < input.length; i++) {
             if (input[i].due_at != null && status != '4') {
               inputYYYYMMDD = parseInt(input[i].due_at.replace(/-/g, ""));
@@ -69,4 +68,17 @@ angular
         else return Math.round(diff/(1000*60*60*24)) + " day(s) ago";
       } else return "";
     };
-  });
+  })
+
+  /**
+   * Format date
+   */
+  .filter('formatDate', function(Utils) {
+    return function(input) {
+      if(input) {
+        var date = new Date(input);
+        var monthNames = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+        return (monthNames[date.getMonth()] + ". " + date.getDate());
+      }
+    };
+  });  

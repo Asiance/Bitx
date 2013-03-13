@@ -4,9 +4,11 @@
   "name": "basecampExtension",
   "description": "Connect to a Basecamp account and display all Todos",
   "version": "1.0",
-
+  "icons": { "16": "/img/icon.png",
+             "48": "/img/icon.png",
+            "128": "/img/icon.png" },
   "browser_action": {
-    "default_icon": "icon.ico",
+    "default_icon": "icon.png",
     "default_popup": "index.html"
   },
   "permissions": [

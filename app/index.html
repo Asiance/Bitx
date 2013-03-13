@@ -8,8 +8,9 @@
 <body>
   
   <div ng-controller="MainController">
+    <span style="color: #9f9f9f; margin-left: 10px;">BITx</span>
     <ng-view></ng-view>
-    <a ng-show="online" href="#/logout" ng-click="logout()">Logout</a>
+<!--     <a ng-show="online" href="#/logout" ng-click="logout()">Logout</a>-->
     <div ng-hide="online">
       <h4>Authorization needed!</h4>
     </div>
@@ -18,6 +19,7 @@
   <script src="lib/angular.min.js"></script>
   <script src="lib/angular-resource.min.js"></script>
   <script src="lib/underscore-min.js"></script>
+  <script src="lib/jquery-1.9.1.min.js"></script>
 
   <script src="js/oauth2-onload.js"></script>
   <script src="js/oauth2.js"></script>

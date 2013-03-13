@@ -6,7 +6,7 @@ angular
 /**
  * Controller linked to todos.html
  */
-.controller('TodosController', function($scope, $resource, $http, $location, $timeout, Authorization, User, AssignedTodolists, Todo) {
+.controller('TodosController', function($scope, $filter, $resource, $http, $location, $timeout, Authorization, User, AssignedTodolists, Todo) {
 
   /**
    * After OAuth2 signin, retrieve a Basecamp Account
@@ -126,6 +126,24 @@ angular
     }
   };
 
+  $scope.displayCategory = function() {
+    console.log('LOG: displayCategory');
+    try {
+      var status = $filter('status');
+      $scope.overdue = "inactive";
+      $scope.today = "inactive";
+      $scope.upcoming = "inactive";
+      $scope.no_due_date = "inactive"
+      if (status($scope.assignedTodos, 1).length > 0) $scope.overdue = "active";
+      else if (status($scope.assignedTodos, 2).length > 0) $scope.today = "active";
+      else if (status($scope.assignedTodos, 3).length > 0) $scope.upcoming = "active";
+      else if (status($scope.assignedTodos, 4).length > 0) $scope.no_due_date = "active";
+      $('dt.active > a').text('-');
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
   /**
    * Initialization
    */
@@ -134,12 +152,27 @@ angular
     $scope.userId = localStorage['userId'];
   } else $scope.getBasecampAccount();
   if (localStorage['assignedTodos']) {
-    $scope.assignedTodos = JSON.parse(localStorage['assignedTodos'])
+    $scope.assignedTodos = JSON.parse(localStorage['assignedTodos']);
   }
   if (localStorage['assignedTodosByProject']) {
-    $scope.projects = JSON.parse(localStorage['assignedTodosByProject'])
+    $scope.projects = JSON.parse(localStorage['assignedTodosByProject']);
   }
   $scope.getAssignedTodos(); // In any case, trigger a refresh on open
+  $scope.displayCategory();
+
+  /**
+   * Execute JS scripts
+   */
+  $('.todos > dt > a').click(function() {
+    $('.todos > dt').removeClass('active');
+    $('.todos > dt > a').text('+')    
+    $('.todos > dd').slideUp();    
+    $(this).text('-');
+    $(this).parent().next().slideDown();
+    $(this).parent().addClass('active');
+    return false;
+  });
+
 })
 
 /**
