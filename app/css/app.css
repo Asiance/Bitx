@@ -64,14 +64,14 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 }
 
 @font-face {
-  font-family: "Monserrat";
+  font-family: "Montserrat";
   src: url(/fonts/Montserrat-Regular.ttf) format('truetype');
 }
 
-/* line 16, ../scss/app.scss */
+/* line 23, ../scss/app.scss */
 body {
   width: 450px;
-  font-family: "Monserrat";
+  font-family: "Montserrat";
   font-size: 13px;
   font-style: normal;
   font-weight: 400;
@@ -135,91 +135,200 @@ body a img {
 body article, body aside, body details, body figcaption, body figure, body footer, body header, body hgroup, body menu, body nav, body section, body summary {
   display: block;
 }
-/* line 26, ../scss/app.scss */
-body input {
-  width: 200px;
-  float: right;
-  margin-top: 15px;
-  background-color: #232323;
-  color: white;
-  border: none;
+/* line 33, ../scss/app.scss */
+body header {
+  height: 50px;
+  padding-left: 16px;
+  padding-right: 16px;
+  background: #fdfdfd;
+}
+/* line 38, ../scss/app.scss */
+body header #logo {
+  vertical-align: middle;
+}
+/* line 41, ../scss/app.scss */
+body header #actions {
   float: right;
 }
-/* line 34, ../scss/app.scss */
-body input:focus {
+/* line 43, ../scss/app.scss */
+body header #actions #search-input {
+  font-family: "Montserrat";
+  font-size: 10px;
+  width: 120px;
+  background: #fdfdfd;
+  background-image: url("/img/icon-search.png");
+  background-position: 100px 0px;
+  background-repeat: no-repeat;
+  color: #a7a7a7;
+  border: none;
+  margin-right: 5px;
+}
+/* line 52, ../scss/app.scss */
+body header #actions #search-input::-webkit-input-placeholder {
+  font-style: italic;
+}
+/* line 56, ../scss/app.scss */
+body header #actions #search-input:focus {
   outline: none;
 }
-/* line 39, ../scss/app.scss */
+/* line 61, ../scss/app.scss */
+body header #actions #logout {
+  border-left: 1px solid #a7a7a7;
+  padding-left: 5px;
+  vertical-align: middle;
+}
+/* line 69, ../scss/app.scss */
 body .toggle-content {
+  font-size: 24px;
   display: inline-block;
   width: 80px;
-  color: white;
+  color: #a7a7a7;
   text-align: center;
 }
-/* line 47, ../scss/app.scss */
+/* line 77, ../scss/app.scss */
+body dt {
+  border-bottom: 1px solid #373736;
+}
+/* line 79, ../scss/app.scss */
 body dt:hover {
   background: #e56c69;
+  border-bottom: 1px solid #e56c69;
 }
-/* line 51, ../scss/app.scss */
-body .active {
+/* line 82, ../scss/app.scss */
+body dt:hover .count-todos {
+  background: #e9827f;
+}
+/* line 86, ../scss/app.scss */
+body dt a:after {
+  color: #a7a7a7;
+  content: '+';
+}
+/* line 91, ../scss/app.scss */
+body dt.active {
   background: #e56c69;
+  border-bottom: 1px solid #e56c69;
 }
-/* line 55, ../scss/app.scss */
+/* line 94, ../scss/app.scss */
+body dt.active a:after {
+  color: white;
+  content: '-';
+}
+/* line 98, ../scss/app.scss */
+body dt.active .count-todos {
+  background: #e9827f;
+}
+/* line 101, ../scss/app.scss */
+body dt.active + dd {
+  display: block;
+}
+/* line 106, ../scss/app.scss */
 body h1 {
   display: inline-block;
+  font-size: 14px;
   color: white;
   width: 320px;
 }
-/* line 60, ../scss/app.scss */
+/* line 112, ../scss/app.scss */
 body .count-todos {
   display: inline-block;
   color: white;
   text-align: center;
+  line-height: 25px;
+  padding-left: 8px;
+  padding-right: 8px;
+  border-radius: 10px;
+  background: #444444;
 }
-/* line 66, ../scss/app.scss */
+/* line 123, ../scss/app.scss */
 body h2 {
   color: #e56c69;
   margin-left: 80px;
 }
-/* line 70, ../scss/app.scss */
+/* line 127, ../scss/app.scss */
 body .date {
   display: inline-block;
   width: 80px;
   color: #e56c69;
   text-align: center;
 }
-/* line 76, ../scss/app.scss */
+/* line 132, ../scss/app.scss */
+body .date.overdues {
+  vertical-align: middle;
+  font-size: 18px;
+  line-height: 18px;
+}
+/* line 136, ../scss/app.scss */
+body .date.overdues p {
+  font-size: 9px;
+}
+/* line 139, ../scss/app.scss */
 body .check {
   display: none;
   width: 80px;
   text-align: center;
 }
-/* line 81, ../scss/app.scss */
-body .content {
-  background-color: #f4f0e7;
+/* line 143, ../scss/app.scss */
+body .check img {
+  vertical-align: middle;
 }
-/* line 85, ../scss/app.scss */
+/* line 145, ../scss/app.scss */
+body .comments {
+  color: #a7a7a7;
+  line-height: 50px;
+}
+/* line 148, ../scss/app.scss */
+body .comments img {
+  margin-right: 4px;
+  vertical-align: middle;
+}
+/* line 153, ../scss/app.scss */
+body .content {
+  background-color: white;
+}
+/* line 156, ../scss/app.scss */
+body li {
+  border-bottom: 1px solid #f4f4f4;
+}
+/* line 158, ../scss/app.scss */
+body li:first-child {
+  border-top: 1px solid #f4f4f4;
+}
+/* line 159, ../scss/app.scss */
+body li:last-child {
+  border-bottom: 0;
+}
+/* line 160, ../scss/app.scss */
 body li:hover {
   background-color: #339a63;
   color: white;
 }
-/* line 88, ../scss/app.scss */
+/* line 163, ../scss/app.scss */
+body li:hover .todo {
+  border-left: 1px solid #2c8d59;
+}
+/* line 166, ../scss/app.scss */
 body li:hover .date {
   display: none;
 }
-/* line 91, ../scss/app.scss */
+/* line 169, ../scss/app.scss */
 body li:hover .check {
   display: inline-block;
 }
-/* line 95, ../scss/app.scss */
+/* line 172, ../scss/app.scss */
+body li:hover .comments {
+  color: white;
+}
+/* line 176, ../scss/app.scss */
 body li .todo {
   display: inline-block;
-  width: 320px;
+  padding-left: 18px;
+  width: 300px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  border-left: 1px solid #f4f4f4;
 }
-/* line 104, ../scss/app.scss */
+/* line 187, ../scss/app.scss */
 body a {
   color: inherit;
   text-decoration: inherit;
@@ -228,4 +337,25 @@ body a {
 /* line 6, c:/Ruby200-x64/lib/ruby/gems/2.0.0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/links/_unstyled-link.scss */
 body a:active, body a:focus {
   outline: none;
+}
+
+@-webkit-keyframes slideout {
+  /* line 193, ../scss/app.scss */
+  from {
+    margin-left: 0%;
+    width: 100%;
+  }
+
+  /* line 198, ../scss/app.scss */
+  to {
+    margin-left: 5%;
+    width: 100%;
+  }
+}
+
+/* line 203, ../scss/app.scss */
+.slideout {
+  -webkit-animation-duration: 0.5s;
+  -webkit-animation-name: slidein;
+  -webkit-animation-fill-mode: forwards;
 }

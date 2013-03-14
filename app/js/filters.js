@@ -81,4 +81,17 @@ angular
         return (monthNames[date.getMonth()] + ". " + date.getDate());
       }
     };
+  })
+
+  /**
+   * Determine number of late days
+   */
+  .filter('lateDays', function(Utils) {
+    var today = new Date();    
+    return function(input) {
+      if(input) {
+        var diff = today - new Date(input);
+        return Math.round(diff/(1000*60*60*24));
+      }
+    };
   });  

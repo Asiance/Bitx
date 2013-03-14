@@ -3,7 +3,6 @@
  * Loaded by background.html
  */
 window.onload = function () {
-  initOAuth2();	
   refresh_period = 5000;
   setInterval(getAssignedTodos, refresh_period);
   setInterval(updateBadge, refresh_period);  

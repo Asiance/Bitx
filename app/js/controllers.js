@@ -89,7 +89,8 @@ angular
       }
       project.assignedTodos.push(assignedTodo);
     }
-    localStorage['assignedTodosByProject'] = JSON.stringify($scope.projects);    
+    localStorage['assignedTodosByProject'] = JSON.stringify($scope.projects);
+    $scope.displayCategory();
   };
 
   /**
@@ -130,15 +131,22 @@ angular
     console.log('LOG: displayCategory');
     try {
       var status = $filter('status');
-      $scope.overdue = "inactive";
-      $scope.today = "inactive";
-      $scope.upcoming = "inactive";
-      $scope.no_due_date = "inactive"
-      if (status($scope.assignedTodos, 1).length > 0) $scope.overdue = "active";
-      else if (status($scope.assignedTodos, 2).length > 0) $scope.today = "active";
-      else if (status($scope.assignedTodos, 3).length > 0) $scope.upcoming = "active";
-      else if (status($scope.assignedTodos, 4).length > 0) $scope.no_due_date = "active";
-      $('dt.active > a').text('-');
+      if (status($scope.assignedTodos, 1).length > 0) {
+        $scope.overdue = "active";
+        $('#overdue_content').slideDown();
+      }
+      else if (status($scope.assignedTodos, 2).length > 0) {
+        $scope.today = "active";
+        $('#today_content').slideDown();
+      }
+      else if (status($scope.assignedTodos, 3).length > 0) {
+        $scope.upcoming = "active";
+        $('#upcoming_content').slideDown();
+      }
+      else if (status($scope.assignedTodos, 4).length > 0) {
+        $scope.no_due_date = "active";
+        $('#no_due_date_content').slideDown();
+      }
     } catch(e) {
       console.log(e);
     }
@@ -157,22 +165,26 @@ angular
   if (localStorage['assignedTodosByProject']) {
     $scope.projects = JSON.parse(localStorage['assignedTodosByProject']);
   }
-  $scope.getAssignedTodos(); // In any case, trigger a refresh on open
-  $scope.displayCategory();
-
+  $scope.displayCategory();  
+  $scope.getAssignedTodos(); // In any case, trigger a refresh on open 
+  
   /**
    * Execute JS scripts
    */
+  $('.todos > dd').slideUp();
   $('.todos > dt > a').click(function() {
-    $('.todos > dt').removeClass('active');
-    $('.todos > dt > a').text('+')    
-    $('.todos > dd').slideUp();    
-    $(this).text('-');
-    $(this).parent().next().slideDown();
-    $(this).parent().addClass('active');
-    return false;
+    if ($(this).parent().hasClass('active')) {
+      $(this).parent().next().slideUp();
+      $(this).parent().removeClass('active');
+    }
+    else {
+      $('.todos > dt').removeClass('active');
+      $('.todos > dd').slideUp();
+      $(this).parent().next().slideDown();
+      $(this).parent().addClass('active');
+      return false;
+    }
   });
-
 })
 
 /**

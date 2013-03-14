@@ -3,57 +3,109 @@
 @import "compass/typography/links/unstyled-link";
 @import "compass/typography/links/link-colors";
 
-@include font-face("Monserrat", font-files("/fonts/Montserrat-Regular.ttf"));
+@include font-face("Montserrat", font-files("/fonts/Montserrat-Regular.ttf"));
 
 $color-dark: #232323;
 $color-white: #ffffff;
-$color-beige: #f4f0e7;
+$color-close-white: #fdfdfd;
 $color-red: #e56c69;
+$color-light-red: #e9827f;
 $color-green: #339a63;
+$color-grey: #a7a7a7;
+$color-dark-grey: #444444;
+$color-border: #f4f4f4;
+$color-dark-border: #373736;
+
 $line-height: 50px;
 $first-column-width: 80px;
+$search-input-width: 120px;
 
 body {
   @include global-reset;
   width: 450px;
-  font-family: "Monserrat";
+  font-family: "Montserrat";
   font-size: 13px;
   font-style: normal;
   font-weight: 400;
   background: $color-dark;
   line-height: $line-height;
 
-  input {
-    width: 200px;
-    float:right;
-    margin-top: 15px;
-    background-color: $color-dark;
-    color : $color-white;
-    border: none;
-    float: right;
-    &:focus {
-      outline: none;
+  header {
+    height: 50px;
+    padding-left: 16px;
+    padding-right: 16px;
+    background: $color-close-white;
+    #logo {
+      vertical-align: middle;
+    }
+    #actions {
+      float: right;
+      #search-input {
+        font-family: "Montserrat";
+        font-size: 10px;
+        width: $search-input-width;
+        background: $color-close-white;
+        background-image: url('/img/icon-search.png');
+        background-position: 100px 0px;
+        background-repeat: no-repeat;
+        color : $color-grey;
+        &::-webkit-input-placeholder {
+          font-style: italic;
+        }        
+        border: none;
+        &:focus {
+          outline: none;
+        }
+        margin-right: 5px;
+      }
+      #logout {
+        border-left : 1px solid $color-grey;
+        padding-left: 5px;
+        vertical-align: middle;
+      }
     }
   }
 
   .toggle-content {
+    font-size: 24px;
     display: inline-block;
     width: $first-column-width;
-    color:white;
-    text-align: center;      
+    color: $color-grey;
+    text-align: center;
   }
 
   dt {
+    border-bottom: 1px solid $color-dark-border;
     &:hover {
       background: $color-red;
+      border-bottom: 1px solid $color-red;
+      .count-todos {
+        background: $color-light-red;
+      }
+    }
+    a:after {
+      color: $color-grey;
+      content: '+';
     }
   }
-  .active {
+  dt.active {
     background: $color-red;
+    border-bottom: 1px solid $color-red;
+    a:after {
+      color: $color-white;
+      content: '-';
+    }
+    .count-todos {
+      background: $color-light-red;
+    }
+    & + dd {
+      display: block;
+    }
   }
 
   h1 {
     display: inline-block;
+    font-size: 14px;
     color: $color-white;
     width: 320px;
   }
@@ -61,6 +113,11 @@ body {
     display: inline-block;
     color: $color-white;
     text-align: center;
+    line-height: 25px;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 10px;
+    background: $color-dark-grey;
   }
 
   h2 {
@@ -71,37 +128,80 @@ body {
     display: inline-block;
     width: $first-column-width;
     color: $color-red;
-    text-align: center;      
+    text-align: center;
+    &.overdues {
+      vertical-align: middle;
+      font-size: 18px;
+      line-height: 18px;
+      p { font-size: 9px; }
+    }  
   }
   .check {
     display: none;
     width: $first-column-width;
-    text-align: center;      
+    text-align: center;
+    img { vertical-align: middle; }
   }
+  .comments {
+    color: $color-grey;
+    line-height: $line-height;
+    img {
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+  }  
   .content {
-    background-color: $color-beige;
+    background-color: $color-white;
   }
   li {
+    border-bottom: 1px solid $color-border;
+    &:first-child { border-top: 1px solid $color-border; } 
+    &:last-child { border-bottom: 0; } 
     &:hover {
       background-color: $color-green;
       color: $color-white;
+      .todo {
+        border-left: 1px solid #2c8d59;
+      }      
       .date {
         display: none;
       }
       .check {
         display: inline-block;
-      }  
+      }
+      .comments {
+        color: $color-white;
+      }
     }
     .todo {
       display: inline-block;
-      width: 320px; 
+      padding-left: 18px;
+      width: 300px; 
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      border-left: 1px solid $color-border;
     }
   }
 
   a {
     @include unstyled-link;
   }  
+}
+
+@-webkit-keyframes slideout {
+  from {
+    margin-left:0%;
+    width:100%
+  }
+  
+  to {
+    margin-left:5%;
+    width:100%;
+  }
+}
+.slideout {
+  -webkit-animation-duration: 0.5s;
+  -webkit-animation-name: slidein;
+  -webkit-animation-fill-mode: forwards;
 }

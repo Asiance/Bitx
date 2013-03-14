@@ -8,9 +8,7 @@
 <body>
   
   <div ng-controller="MainController">
-    <span style="color: #9f9f9f; margin-left: 10px;">BITx</span>
-    <ng-view></ng-view>
-<!--     <a ng-show="online" href="#/logout" ng-click="logout()">Logout</a>-->
+    <ng-view ng-show="online"></ng-view>
     <div ng-hide="online">
       <h4>Authorization needed!</h4>
     </div>
