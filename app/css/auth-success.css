@@ -65,18 +65,26 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 
 @font-face {
   font-family: "Montserrat";
-  src: url(/fonts/Montserrat-Regular.ttf) format('truetype');
+  src: url('/css/fonts/../../fonts/Montserrat-Regular.ttf') format('truetype');
 }
 
-/* line 26, ../scss/app.scss */
+/* line 7, ../scss/auth-success.scss */
+html {
+  position: relative;
+  height: 100%;
+}
+
+/* line 12, ../scss/auth-success.scss */
 body {
-  width: 450px;
+  background: url("../img/background.jpg") center;
   font-family: "Montserrat";
-  font-size: 12px;
   font-style: normal;
   font-weight: 400;
-  background: #232323;
-  line-height: 50px;
+  letter-spacing: 1px;
+  color: white;
+  width: 80%;
+  margin: 0 auto 100px;
+  text-align: center;
 }
 /* line 17, c:/Ruby200-x64/lib/ruby/gems/2.0.0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 body html, body body, body div, body span, body applet, body object, body iframe,
@@ -135,201 +143,7 @@ body a img {
 body article, body aside, body details, body figcaption, body figure, body footer, body header, body hgroup, body menu, body nav, body section, body summary {
   display: block;
 }
-/* line 36, ../scss/app.scss */
-body header {
-  height: 50px;
-  padding-left: 16px;
-  padding-right: 16px;
-  background: #fdfdfd;
-}
-/* line 41, ../scss/app.scss */
-body header #logo {
-  vertical-align: middle;
-}
-/* line 44, ../scss/app.scss */
-body header #actions {
-  float: right;
-}
-/* line 46, ../scss/app.scss */
-body header #actions #search-input {
-  font-family: "Montserrat";
-  font-size: 14px;
-  width: 120px;
-  background: #fdfdfd;
-  background-image: url("/img/icon-search.png");
-  background-size: 20px 20px;
-  background-position: 100px 0px;
-  background-repeat: no-repeat;
-  color: #a7a7a7;
-  border: none;
-  vertical-align: middle;
-  margin-right: 5px;
-}
-/* line 58, ../scss/app.scss */
-body header #actions #search-input::-webkit-input-placeholder {
-  font-style: italic;
-}
-/* line 61, ../scss/app.scss */
-body header #actions #search-input:focus {
-  outline: none;
-}
-/* line 66, ../scss/app.scss */
-body header #actions #logout {
-  border-left: 1px solid #a7a7a7;
-  padding-left: 5px;
-  vertical-align: middle;
-}
-/* line 74, ../scss/app.scss */
-body .toggle-content {
-  font-size: 24px;
-  display: inline-block;
-  width: 80px;
-  color: #a7a7a7;
-  text-align: center;
-  position: relative;
-  top: 3px;
-}
-/* line 84, ../scss/app.scss */
-body dt {
-  border-bottom: 1px solid #373736;
-  cursor: default;
-}
-/* line 87, ../scss/app.scss */
-body dt:hover {
-  background: #5e9ac9;
-  border-bottom: 1px solid #5e9ac9;
-}
-/* line 90, ../scss/app.scss */
-body dt:hover .count-todos {
-  background: rgba(255, 255, 255, 0.15);
-}
-/* line 94, ../scss/app.scss */
-body dt .toggle-content:after {
-  color: #a7a7a7;
-  content: '+';
-}
-/* line 99, ../scss/app.scss */
-body dt.active {
-  background: #5e9ac9;
-  border-bottom: 1px solid #5e9ac9;
-}
-/* line 102, ../scss/app.scss */
-body dt.active .toggle-content:after {
-  color: white;
-  content: '-';
-}
-/* line 106, ../scss/app.scss */
-body dt.active .count-todos {
-  background: rgba(255, 255, 255, 0.15);
-}
-/* line 109, ../scss/app.scss */
-body dt.active + dd {
-  display: block;
-}
-/* line 114, ../scss/app.scss */
-body #overdues.active_overdues {
-  background: #e56c69;
-  border-bottom: 1px solid #e56c69;
-}
-/* line 118, ../scss/app.scss */
-body #overdues .count-todos {
-  background: #e9827f;
-}
-/* line 123, ../scss/app.scss */
-body h1 {
-  display: inline-block;
-  font-size: 14px;
-  color: white;
-  width: 320px;
-}
-/* line 129, ../scss/app.scss */
-body .count-todos {
-  display: inline-block;
-  color: white;
-  text-align: center;
-  line-height: 25px;
-  padding-left: 8px;
-  padding-right: 8px;
-  border-radius: 20px;
-  background: #444444;
-}
-/* line 140, ../scss/app.scss */
-body h2 {
-  color: #e56c69;
-  margin-left: 80px;
-}
-/* line 144, ../scss/app.scss */
-body .date {
-  display: inline-block;
-  width: 80px;
-  color: #e56c69;
-  text-align: center;
-  vertical-align: middle;
-  border-right: 1px solid #f4f4f4;
-}
-/* line 151, ../scss/app.scss */
-body .date.overdues {
-  vertical-align: middle;
-  font-size: 18px;
-  line-height: 18px;
-}
-/* line 155, ../scss/app.scss */
-body .date.overdues p {
-  font-size: 9px;
-}
-/* line 158, ../scss/app.scss */
-body .check {
-  display: none;
-  width: 80px;
-  text-align: center;
-}
-/* line 162, ../scss/app.scss */
-body .check img {
-  vertical-align: middle;
-}
-/* line 164, ../scss/app.scss */
-body .comments {
-  color: #a7a7a7;
-  line-height: 50px;
-}
-/* line 167, ../scss/app.scss */
-body .comments img {
-  margin-right: 4px;
-  vertical-align: middle;
-}
-/* line 172, ../scss/app.scss */
-body .content {
-  background-color: white;
-}
-/* line 175, ../scss/app.scss */
-body li {
-  border-bottom: 1px solid #f4f4f4;
-}
-/* line 177, ../scss/app.scss */
-body li:first-child {
-  border-top: 1px solid #f4f4f4;
-}
-/* line 178, ../scss/app.scss */
-body li:last-child {
-  border-bottom: 0;
-}
-/* line 179, ../scss/app.scss */
-body li:hover {
-  background-color: whitesmoke;
-}
-/* line 181, ../scss/app.scss */
-body li:hover .todo {
-  color: black;
-}
-/* line 185, ../scss/app.scss */
-body li .todo {
-  display: inline-block;
-  padding-left: 18px;
-  width: 295px;
-  line-height: 16px;
-  vertical-align: middle;
-}
-/* line 194, ../scss/app.scss */
+/* line 14, ../scss/auth-success.scss */
 body a {
   color: inherit;
   text-decoration: inherit;
@@ -339,55 +153,70 @@ body a {
 body a:active, body a:focus {
   outline: none;
 }
-
-/* line 199, ../scss/app.scss */
-#allow-access {
-  display: table-row;
-  background: -webkit-linear-gradient(top, #f4f4f4, white);
-  line-height: 14px;
+/* line 24, ../scss/auth-success.scss */
+body #logo {
+  margin-top: 130px;
+  margin-bottom: 90px;
+  height: 220px;
 }
-/* line 203, ../scss/app.scss */
-#allow-access img {
+/* line 29, ../scss/auth-success.scss */
+body h1 {
+  font-size: 52px;
+  font-style: italic;
+  font-weight: 700;
+}
+/* line 34, ../scss/auth-success.scss */
+body p {
+  margin: 0 auto;
+  font-size: 20px;
+  line-height: 28px;
+  max-width: 500px;
+}
+/* line 40, ../scss/auth-success.scss */
+body hr {
+  background-color: #a0afd7;
+  border: 0 none;
+  height: 1px;
+  width: 50%;
+  margin: 50px auto;
+}
+/* line 47, ../scss/auth-success.scss */
+body #goto {
+  margin: 40px;
+}
+/* line 50, ../scss/auth-success.scss */
+body footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 100px;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  margin: auto;
+}
+/* line 58, ../scss/auth-success.scss */
+body footer .wrapper {
+  width: 40%;
+  margin: auto;
+  padding-top: 16px;
+}
+/* line 62, ../scss/auth-success.scss */
+body footer .wrapper p {
   display: table-cell;
-  vertical-align: middle;
-  margin: 24px;
-  padding-right: 24px;
-  border-right: 1px solid #a7a7a7;
-}
-/* line 210, ../scss/app.scss */
-#allow-access span {
-  color: #68bb4f;
-  font-weight: bold;
-}
-/* line 214, ../scss/app.scss */
-#allow-access p {
-  color: #a0a0a0;
+  font-size: 10px;
   line-height: 18px;
-  display: table-cell;
   vertical-align: middle;
+  width: 400px;
 }
-/* line 219, ../scss/app.scss */
-#allow-access p:last-child {
-  padding-right: 24px;
+/* line 69, ../scss/auth-success.scss */
+body footer .wrapper #left {
+  text-align: left;
+  width: 100%;
 }
-
-@-webkit-keyframes slideout {
-  /* line 224, ../scss/app.scss */
-  from {
-    margin-left: 0%;
-    width: 100%;
-  }
-
-  /* line 229, ../scss/app.scss */
-  to {
-    margin-left: 5%;
-    width: 100%;
-  }
-}
-
-/* line 234, ../scss/app.scss */
-.slideout {
-  -webkit-animation-duration: 0.5s;
-  -webkit-animation-name: slidein;
-  -webkit-animation-fill-mode: forwards;
+/* line 73, ../scss/auth-success.scss */
+body footer .wrapper #right {
+  text-align: right;
+  width: 100%;
+  position: relative;
+  top: -5px;
 }

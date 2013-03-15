@@ -12,7 +12,7 @@ function countTodos(input, status) {
   for (var i = 0; i < input.length; i++) {
       if (input[i].due_at != null && status != '4') {
       	inputDate = parseInt(input[i].due_at.replace(/-/g, ""));
-        if ((status == 'overdue') && (inputDate < todayDate)) count++;
+        if ((status == 'overdues') && (inputDate < todayDate)) count++;
         else if ((status == 'today') && (inputDate == todayDate)) count++;
         else if ((status == 'upcoming') && (inputDate > todayDate)) count++;
       } 
@@ -27,27 +27,35 @@ function countTodos(input, status) {
  */
 function updateBadge() {
   try {
+    counter_todos = localStorage['counter_todos'] ? localStorage['counter_todos'] : "default";    
     var jsonTodos = JSON.parse(localStorage.getItem('assignedTodos'));
     var counter = countTodos(jsonTodos, 'overdue');
     var color;
     
-    if (countTodos(jsonTodos, 'overdue')) {
-      counter = countTodos(jsonTodos, 'overdue');
-      color = {color: '#FF0000'};
+    if ((counter_todos == 'overdues' || counter_todos == 'default')
+      && countTodos(jsonTodos, 'overdues')) {
+        counter = countTodos(jsonTodos, 'overdues');
+        color = {color: '#FF0000'};
     }      
-    else if (countTodos(jsonTodos, 'today')) {
-      counter = countTodos(jsonTodos, 'today');
-      color = {color: '#00FF00'};
+    else if ((counter_todos == 'today' || counter_todos == 'default')
+      && countTodos(jsonTodos, 'today')) {
+        counter = countTodos(jsonTodos, 'today');
+        color = {color: '#00FF00'};
     }
-    else if (countTodos(jsonTodos, 'upcoming')) {
-      counter = countTodos(jsonTodos, 'upcoming');
-      color = {color: '#0000FF'};
+    else if ((counter_todos == 'upcoming' || counter_todos == 'default')
+      && countTodos(jsonTodos, 'upcoming')) {
+        counter = countTodos(jsonTodos, 'upcoming');
+        color = {color: '#0000FF'};
     }
-    else if (countTodos(jsonTodos, 'undefined')) {
-      counter = countTodos(jsonTodos, 'undefined');
+    else if ((counter_todos == 'undefined' || counter_todos == 'default') 
+      && countTodos(jsonTodos, 'undefined')) {
+        counter = countTodos(jsonTodos, 'undefined');
+        color = {color: '#000000'};
+    }
+    else {
+      counter = '';
       color = {color: '#000000'};
     }
-    else counter = '';
     
     chrome.browserAction.setBadgeBackgroundColor(color);
     chrome.browserAction.setBadgeText({text: counter.toString()});
@@ -55,7 +63,7 @@ function updateBadge() {
   } catch(e) {
     console.log('ERROR: updateBadge ' + e);
     chrome.browserAction.setBadgeText({text: ''});
-    chrome.browserAction.setIcon({path : '../icon.ico'});
+    chrome.browserAction.setIcon({path : '../icon.png'});
   }
 }	
 

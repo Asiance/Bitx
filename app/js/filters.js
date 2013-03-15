@@ -4,36 +4,13 @@ angular
   .module('basecampExtension.filters', [])
 
   /**
-   * Returning the right class depending on due date
-   * - Not used -
-   */
-  .filter('date', function(Utils) {
-    return function(input) {
-      if (input != null) {
-        var currentDateYYYYMMDD = Utils.getTodayDate();
-        var inputYYYYMMDD = parseInt(input.replace(/-/g, ""));
-
-        if (inputYYYYMMDD < currentDateYYYYMMDD) 
-          return 'important';
-        else if (inputYYYYMMDD == currentDateYYYYMMDD) 
-          return 'warning';
-        else if (inputYYYYMMDD > currentDateYYYYMMDD) 
-          return 'info';
-        else 
-          return 'default';
-      }
-      else return 'default';
-    }
-  })
-
-  /**
    * Filtering Todos by category
    * '1' - Overdue
    * '2' - Today
    * '3' - Upcoming
    * '4' - Undetermined
    */
-  .filter('status', function(Utils) {
+  .filter('status', function(Utils, $filter) {
     return function(input, status) {
       if(input) {
         var currentDateYYYYMMDD = Utils.getTodayDate();
@@ -42,9 +19,15 @@ angular
         for (var i = 0; i < input.length; i++) {
             if (input[i].due_at != null && status != '4') {
               inputYYYYMMDD = parseInt(input[i].due_at.replace(/-/g, ""));
-              if ((status == '1') && (inputYYYYMMDD < currentDateYYYYMMDD)) out.push(input[i]);
+              if ((status == '1') && (inputYYYYMMDD < currentDateYYYYMMDD)) {
+                input[i].days_late =  $filter('daysLate')(input[i].due_at);
+                out.push(input[i]);
+              }
               else if ((status == '2') && (inputYYYYMMDD == currentDateYYYYMMDD)) out.push(input[i]);
-              else if ((status == '3') && (inputYYYYMMDD > currentDateYYYYMMDD)) out.push(input[i]);
+              else if ((status == '3') && (inputYYYYMMDD > currentDateYYYYMMDD)) {
+                input[i].remaining_days =  $filter('daysRemaining')(input[i].due_at);
+                out.push(input[i]);
+              }
             }
             else if (input[i].due_at == null && status == '4') out.push(input[i])
         }
@@ -71,27 +54,25 @@ angular
   })
 
   /**
-   * Format date
+   * Determine number of days remaining 
    */
-  .filter('formatDate', function(Utils) {
+  .filter('daysRemaining', function(Utils) {
+    var today = new Date();
     return function(input) {
       if(input) {
-        var date = new Date(input);
-        var monthNames = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
-        return (monthNames[date.getMonth()] + ". " + date.getDate());
+        return Math.round((new Date(input) - today)/(1000*60*60*24));
       }
     };
   })
 
   /**
-   * Determine number of late days
+   * Determine number of days late
    */
-  .filter('lateDays', function(Utils) {
-    var today = new Date();    
+  .filter('daysLate', function(Utils) {
+    var today = new Date();
     return function(input) {
       if(input) {
-        var diff = today - new Date(input);
-        return Math.round(diff/(1000*60*60*24));
+        return Math.round((today - new Date(input))/(1000*60*60*24));
       }
     };
-  });  
+  });

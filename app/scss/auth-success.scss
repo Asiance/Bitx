@@ -1,0 +1,81 @@
+@import "compass/reset";
+@import "compass/css3";
+@import "compass/typography/links/unstyled-link";
+
+@include font-face("Montserrat", font-files("../../fonts/Montserrat-Regular.ttf"));
+
+html {
+    position: relative;
+    height: 100%;
+}
+
+body {
+  @include global-reset;
+  a { @include unstyled-link; }    
+  background: url('../img/background.jpg') center;
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: white;
+  width: 80%;
+  margin: 0 auto 100px;
+  text-align: center;
+  #logo {
+    margin-top: 130px;
+    margin-bottom: 90px;
+    height: 220px;
+  }
+  h1 {
+    font-size: 52px;
+    font-style: italic;
+    font-weight: 700;
+  }
+  p {
+    margin: 0 auto;
+    font-size: 20px;
+    line-height: 28px;
+    max-width: 500px;
+  }
+  hr {
+    background-color: #a0afd7;
+    border: 0 none;
+    height: 1px;
+    width: 50%;
+    margin: 50px auto;
+  }
+  #goto {
+    margin: 40px;    
+  }
+  footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 100px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    margin: auto;
+    .wrapper {
+      width: 40%;
+      margin: auto;
+      padding-top: 16px;
+      p {
+        display: table-cell;
+        font-size: 10px;
+        line-height: 18px;
+        vertical-align: middle;
+        width: 400px;
+      }
+      #left {
+        text-align: left;
+        width:100%;
+      }
+      #right {
+        text-align: right;
+        width:100%;        
+        position: relative;
+        top: -5px;
+      }  
+    }  
+  }
+}

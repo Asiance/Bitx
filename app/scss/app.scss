@@ -1,7 +1,6 @@
 @import "compass/css3";
 @import "compass/reset";
 @import "compass/typography/links/unstyled-link";
-@import "compass/typography/links/link-colors";
 
 @include font-face("Montserrat", font-files("/fonts/Montserrat-Regular.ttf"));
 
@@ -10,8 +9,12 @@ $color-white: #ffffff;
 $color-close-white: #fdfdfd;
 $color-red: #e56c69;
 $color-light-red: #e9827f;
+$color-blue: #5e9ac9;
+$color-light-blue: rgba(255, 255, 255, 0.15);
 $color-green: #339a63;
 $color-grey: #a7a7a7;
+$color-light-grey: #f5f5f5;
+$color-grey-text: #a0a0a0;
 $color-dark-grey: #444444;
 $color-border: #f4f4f4;
 $color-dark-border: #373736;
@@ -24,7 +27,7 @@ body {
   @include global-reset;
   width: 450px;
   font-family: "Montserrat";
-  font-size: 13px;
+  font-size: 12px;
   font-style: normal;
   font-weight: 400;
   background: $color-dark;
@@ -42,17 +45,19 @@ body {
       float: right;
       #search-input {
         font-family: "Montserrat";
-        font-size: 10px;
+        font-size: 14px;
         width: $search-input-width;
         background: $color-close-white;
         background-image: url('/img/icon-search.png');
+        background-size: 20px 20px;        
         background-position: 100px 0px;
         background-repeat: no-repeat;
         color : $color-grey;
+        border: none;
+        vertical-align: middle;        
         &::-webkit-input-placeholder {
           font-style: italic;
         }        
-        border: none;
         &:focus {
           outline: none;
         }
@@ -72,35 +77,47 @@ body {
     width: $first-column-width;
     color: $color-grey;
     text-align: center;
+    position: relative;
+    top: 3px;
   }
 
   dt {
     border-bottom: 1px solid $color-dark-border;
+    cursor: default;
     &:hover {
-      background: $color-red;
-      border-bottom: 1px solid $color-red;
+      background: $color-blue;
+      border-bottom: 1px solid $color-blue;
       .count-todos {
-        background: $color-light-red;
+        background: $color-light-blue;
       }
     }
-    a:after {
+    .toggle-content:after {
       color: $color-grey;
       content: '+';
     }
   }
   dt.active {
-    background: $color-red;
-    border-bottom: 1px solid $color-red;
-    a:after {
+    background: $color-blue;
+    border-bottom: 1px solid $color-blue;
+    .toggle-content:after {
       color: $color-white;
       content: '-';
     }
     .count-todos {
-      background: $color-light-red;
+      background: $color-light-blue;
     }
     & + dd {
       display: block;
     }
+  }
+  #overdues {
+    &.active_overdues {
+      background: $color-red;
+      border-bottom: 1px solid $color-red;
+    }
+    .count-todos {
+      background: $color-light-red;
+    }    
   }
 
   h1 {
@@ -116,7 +133,7 @@ body {
     line-height: 25px;
     padding-left: 8px;
     padding-right: 8px;
-    border-radius: 10px;
+    border-radius: 20px;
     background: $color-dark-grey;
   }
 
@@ -129,6 +146,8 @@ body {
     width: $first-column-width;
     color: $color-red;
     text-align: center;
+    vertical-align: middle;
+    border-right: 1px solid $color-border;    
     &.overdues {
       vertical-align: middle;
       font-size: 18px;
@@ -158,35 +177,47 @@ body {
     &:first-child { border-top: 1px solid $color-border; } 
     &:last-child { border-bottom: 0; } 
     &:hover {
-      background-color: $color-green;
-      color: $color-white;
+      background-color: $color-light-grey;
       .todo {
-        border-left: 1px solid #2c8d59;
-      }      
-      .date {
-        display: none;
-      }
-      .check {
-        display: inline-block;
-      }
-      .comments {
-        color: $color-white;
+        color: black;
       }
     }
     .todo {
       display: inline-block;
       padding-left: 18px;
-      width: 300px; 
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      border-left: 1px solid $color-border;
+      width: 295px; 
+      line-height: 16px;
+      vertical-align: middle;
     }
   }
 
   a {
     @include unstyled-link;
   }  
+}
+
+#allow-access {
+  display: table-row;
+  background: -webkit-linear-gradient(top, #f4f4f4, white);
+  line-height: 14px;
+  img {
+    display: table-cell;
+    vertical-align: middle;
+    margin : 24px;
+    padding-right: 24px;
+    border-right : 1px solid $color-grey;
+  }
+  span {
+    color: #68bb4f;
+    font-weight: bold;
+  }
+  p {
+    color: $color-grey-text;
+    line-height: 18px;  
+    display: table-cell;
+    vertical-align: middle;
+    &:last-child { padding-right: 24px;}
+  }
 }
 
 @-webkit-keyframes slideout {
