@@ -1,8 +1,7 @@
 @import "compass/css3";
 @import "compass/reset";
 @import "compass/typography/links/unstyled-link";
-
-@include font-face("Montserrat", font-files("/fonts/Montserrat-Regular.ttf"));
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans:400,700);
 
 $color-dark: #232323;
 $color-white: #ffffff;
@@ -14,6 +13,7 @@ $color-light-blue: rgba(255, 255, 255, 0.15);
 $color-green: #339a63;
 $color-grey: #a7a7a7;
 $color-light-grey: #f5f5f5;
+$color-grey-date: #a3a3a3;
 $color-grey-text: #a0a0a0;
 $color-dark-grey: #444444;
 $color-border: #f4f4f4;
@@ -25,8 +25,8 @@ $search-input-width: 120px;
 
 body {
   @include global-reset;
-  width: 450px;
-  font-family: "Montserrat";
+  width: 500px;
+  font-family: "Droid Sans";
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -44,7 +44,6 @@ body {
     #actions {
       float: right;
       #search-input {
-        font-family: "Montserrat";
         font-size: 14px;
         width: $search-input-width;
         background: $color-close-white;
@@ -75,7 +74,7 @@ body {
     font-size: 24px;
     display: inline-block;
     width: $first-column-width;
-    color: $color-grey;
+    color: $color-white;
     text-align: center;
     position: relative;
     top: 3px;
@@ -92,7 +91,6 @@ body {
       }
     }
     .toggle-content:after {
-      color: $color-grey;
       content: '+';
     }
   }
@@ -100,7 +98,6 @@ body {
     background: $color-blue;
     border-bottom: 1px solid $color-blue;
     .toggle-content:after {
-      color: $color-white;
       content: '-';
     }
     .count-todos {
@@ -123,8 +120,9 @@ body {
   h1 {
     display: inline-block;
     font-size: 14px;
+    font-weight: 700;
     color: $color-white;
-    width: 320px;
+    width: 330px;
   }
   .count-todos {
     display: inline-block;
@@ -133,27 +131,28 @@ body {
     line-height: 25px;
     padding-left: 8px;
     padding-right: 8px;
-    border-radius: 20px;
+    border-radius: 50%;
     background: $color-dark-grey;
   }
 
   h2 {
     color: $color-red;
+    font-weight: 700;    
     margin-left: $first-column-width;
   }
   .date {
-    display: inline-block;
+    display: table-cell;
     width: $first-column-width;
-    color: $color-red;
+    height: 50px;
+    color: $color-grey-date;
     text-align: center;
     vertical-align: middle;
-    border-right: 1px solid $color-border;    
     &.overdues {
       vertical-align: middle;
       font-size: 18px;
       line-height: 18px;
       p { font-size: 9px; }
-    }  
+    }
   }
   .check {
     display: none;
@@ -161,16 +160,57 @@ body {
     text-align: center;
     img { vertical-align: middle; }
   }
-  .comments {
+  .comments { 
+    display: table-cell;  
+    padding-right: 12px;  
+    background: url(/img/icon-comment.png) left no-repeat;
+    &:hover { background: url(/img/icon-comment-hover.png) left no-repeat; }  
+    width: 32px;
+    text-align: right;
     color: $color-grey;
-    line-height: $line-height;
-    img {
-      margin-right: 4px;
-      vertical-align: middle;
-    }
+  }
+  .void { 
+    display: table-cell;    
+    width: 32px;
+    padding-right: 12px;      
+  }  
+  .icon-link {
+    margin-left: 8px;
+    display: table-cell;
+    background: url(/img/icon-link.png) left no-repeat;
+    &:hover { background: url(/img/icon-link-hover.png) left no-repeat; }  
+    width: 16px;
   }  
   .content {
     background-color: $color-white;
+  }
+  .todo {
+    display: table-cell;
+    width: 340px; 
+    line-height: 16px;
+    overflow: hidden;
+    vertical-align: middle;
+    div {
+      display: table;
+      width: 340px;
+      margin-left: -30px;
+      .checkbox {
+        display: table-cell;
+        height: 22px;
+        width: 22px;
+        background: url(/img/icon-checkbox.png) left no-repeat;
+        &:hover {
+          background: url(/img/icon-checkbox-hover.png) left no-repeat;
+        }
+      }
+      .todo-text {
+        padding-left: 16px;
+        width: 340px;
+        cursor: default;
+        display: table-cell;        
+        vertical-align: middle;        
+      }
+    }
   }
   li {
     border-bottom: 1px solid $color-border;
@@ -180,14 +220,12 @@ body {
       background-color: $color-light-grey;
       .todo {
         color: black;
+        div {
+          -webkit-animation-fill-mode: forwards;
+          -webkit-animation-duration: .3s;
+          -webkit-animation-name: slideout;
+        }
       }
-    }
-    .todo {
-      display: inline-block;
-      padding-left: 18px;
-      width: 295px; 
-      line-height: 16px;
-      vertical-align: middle;
     }
   }
 
@@ -222,17 +260,10 @@ body {
 
 @-webkit-keyframes slideout {
   from {
-    margin-left:0%;
-    width:100%
+    margin-left: -30px;
   }
   
   to {
-    margin-left:5%;
-    width:100%;
+    margin-left: 0px;
   }
-}
-.slideout {
-  -webkit-animation-duration: 0.5s;
-  -webkit-animation-name: slidein;
-  -webkit-animation-fill-mode: forwards;
 }

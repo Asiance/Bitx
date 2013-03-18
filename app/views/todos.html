@@ -20,9 +20,14 @@
         <span class="date overdues">{{assignedTodo.due_at | daysLate}}<br>
           <p><ng-pluralize count="assignedTodo.days_late" when="{'1': 'day late', 'other': 'days late'}"></ng-pluralize></p>
         </span>
-        <a href="#" class="check" ng-click="completeTodo(project.id, assignedTodo.id)"><img src="img/icon-check.png"></a>
-        <a href="#" ng-click="openTodo(project.id, assignedTodo.id)"class="todo">{{assignedTodo.content}}</a>
-        <span class="comments" title="Last update: {{assignedTodo.updated_at | elapsedTime}}"><img src="img/icon-comment.png"></img>{{assignedTodo.comments_count}}</span>
+        <div class="todo">
+          <div><span class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
+        </div>
+        <span class="comments" ng-show="assignedTodo.comments_count" title="Last update: {{assignedTodo.updated_at | elapsedTime}}">
+          <p>{{assignedTodo.comments_count}}</p>
+        </span>
+        <span class="void" ng-hide="assignedTodo.comments_count"></span>     
+        <span ng-click="openTodo(project.id, assignedTodo.id)" class="icon-link"></span>
       </li>
     </ul>
   </div>
@@ -38,10 +43,14 @@
     <h2>{{project.name | uppercase }}</h2>
     <ul>
       <li ng-repeat="assignedTodo in filteredToday = (project.assignedTodos | filter:search | orderBy: sortByDate | status: 2)">
-        <span class="date" ng-click="completeTodo(project.id, assignedTodo.id)">{{assignedTodo.due_at}}</span><a href="#" class="check" ng-click="completeTodo(project.id, assignedTodo.id)"><img src="img/icon-check.png"></a>
-        <a href="#" ng-click="openTodo(project.id, assignedTodo.id)" class="todo">{{assignedTodo.content}}</a>
-        <span class="comments" title="Last update: {{assignedTodo.updated_at | elapsedTime}}"><img src="img/icon-comment.png"></img>{{assignedTodo.comments_count}}</span>
-      </li>
+        <div class="todo">
+          <div><span class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
+        </div>
+        <span class="comments" ng-show="assignedTodo.comments_count" title="Last update: {{assignedTodo.updated_at | elapsedTime}}">
+          <p>{{assignedTodo.comments_count}}</p>
+        </span>
+        <span class="void" ng-hide="assignedTodo.comments_count"></span>     
+        <span ng-click="openTodo(project.id, assignedTodo.id)" class="icon-link"></span>
     </ul>
   </div>
   </dd>
@@ -57,11 +66,16 @@
     <ul>
       <li ng-repeat="assignedTodo in filteredUpcoming = (project.assignedTodos | filter:search | orderBy: sortByDate | status: 3)">
         <span class="date overdues">{{assignedTodo.due_at | daysRemaining}}<br>
-          <p><ng-pluralize count="assignedTodo.remaining_days" when="{'1': 'day remaining', 'other': 'days remaining '}"></ng-pluralize></p>
+          <p><ng-pluralize count="assignedTodo.remaining_days" when="{'1': 'day left', 'other': 'days left '}"></ng-pluralize></p>
         </span>
-        <a href="#" class="check" ng-click="completeTodo(project.id, assignedTodo.id)"><img src="img/icon-check.png"></a>
-        <a href="#" ng-click="openTodo(project.id, assignedTodo.id)" class="todo">{{assignedTodo.content}}</a>
-        <span class="comments" title="Last update: {{assignedTodo.updated_at | elapsedTime}}"><img src="img/icon-comment.png"></img>{{assignedTodo.comments_count}}</span>
+        <div class="todo">
+          <div><span class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
+        </div>
+        <span class="comments" ng-show="assignedTodo.comments_count" title="Last update: {{assignedTodo.updated_at | elapsedTime}}">
+          <p>{{assignedTodo.comments_count}}</p>
+        </span>
+        <span class="void" ng-hide="assignedTodo.comments_count"></span>     
+        <span ng-click="openTodo(project.id, assignedTodo.id)" class="icon-link"></span>
       </li>
     </ul>
   </div>
@@ -77,8 +91,14 @@
     <h2>{{project.name | uppercase }}</h2>
     <ul>
       <li ng-repeat="assignedTodo in filteredUndetermined = (project.assignedTodos | filter:search | orderBy: sortByDate | status: 4)"><a href="#" class="check" ng-click="completeTodo(project.id, assignedTodo.id)"><img src="img/icon-check.png"></a>
-        <a href="#" ng-click="openTodo(project.id, assignedTodo.id)" class="todo">{{assignedTodo.content}}
-        <span class="comments" title="Last update: {{assignedTodo.updated_at | elapsedTime}}"><img src="img/icon-comment.png"></img>{{assignedTodo.comments_count}}</span>
+        <div class="todo">
+          <div><span class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
+        </div>
+        <span class="comments" ng-show="assignedTodo.comments_count" title="Last update: {{assignedTodo.updated_at | elapsedTime}}">
+          <p>{{assignedTodo.comments_count}}</p>
+        </span>
+        <span class="void" ng-hide="assignedTodo.comments_count"></span>     
+        <span ng-click="openTodo(project.id, assignedTodo.id)" class="icon-link"></span>
       </li>
     </ul>
   </div>
