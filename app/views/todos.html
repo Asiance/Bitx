@@ -6,6 +6,7 @@
   </div>
 </header>
 
+<section>
 <dl class="todos">
   <dt ng-class="overdue" id="overdues"><a>
     <span class="toggle-content"></span>
@@ -14,14 +15,14 @@
   </a></dt>
   <dd id="overdue_content">
   <div class="content" ng-show="filteredOverdue.length" ng-repeat="project in projects">
-    <h2>{{project.name | uppercase }}</h2>
+    <h2>{{project.name | uppercase}}</h2>
     <ul>
-      <li ng-repeat="assignedTodo in filteredOverdue = (project.assignedTodos | filter:search | orderBy: sortByDate | status: 1)">
+      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredOverdue = (project.assignedTodos | filter:search | orderBy: sortByDate | status: 1)">
         <span class="date overdues">{{assignedTodo.due_at | daysLate}}<br>
           <p><ng-pluralize count="assignedTodo.days_late" when="{'1': 'day late', 'other': 'days late'}"></ng-pluralize></p>
         </span>
         <div class="todo">
-          <div><span class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
+          <div><span ng-click="completeTodo(project.id, assignedTodo.id)" class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
         </div>
         <span class="comments" ng-show="assignedTodo.comments_count" title="Last update: {{assignedTodo.updated_at | elapsedTime}}">
           <p>{{assignedTodo.comments_count}}</p>
@@ -40,11 +41,11 @@
     </span></a></dt>
   <dd id="today_content">
   <div class="content" ng-show="filteredToday.length" ng-repeat="project in projects">
-    <h2>{{project.name | uppercase }}</h2>
+    <h2>{{project.name | uppercase}}</h2>
     <ul>
-      <li ng-repeat="assignedTodo in filteredToday = (project.assignedTodos | filter:search | orderBy: sortByDate | status: 2)">
+      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredToday = (project.assignedTodos | filter:search | orderBy: sortByDate | status: 2)">
         <div class="todo">
-          <div><span class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
+          <div><span ng-click="completeTodo(project.id, assignedTodo.id)" class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
         </div>
         <span class="comments" ng-show="assignedTodo.comments_count" title="Last update: {{assignedTodo.updated_at | elapsedTime}}">
           <p>{{assignedTodo.comments_count}}</p>
@@ -62,14 +63,14 @@
   </a></dt>
   <dd id="upcoming_content">
   <div class="content" ng-show="filteredUpcoming.length" ng-repeat="project in projects">
-    <h2>{{project.name | uppercase }}</h2>
+    <h2>{{project.name | uppercase}}</h2>
     <ul>
-      <li ng-repeat="assignedTodo in filteredUpcoming = (project.assignedTodos | filter:search | orderBy: sortByDate | status: 3)">
-        <span class="date overdues">{{assignedTodo.due_at | daysRemaining}}<br>
+      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredUpcoming = (project.assignedTodos | filter:search | orderBy: sortByDate | status: 3)">
+        <span class="date">{{assignedTodo.due_at | daysRemaining}}<br>
           <p><ng-pluralize count="assignedTodo.remaining_days" when="{'1': 'day left', 'other': 'days left '}"></ng-pluralize></p>
         </span>
         <div class="todo">
-          <div><span class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
+          <div><span ng-click="completeTodo(project.id, assignedTodo.id)" class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
         </div>
         <span class="comments" ng-show="assignedTodo.comments_count" title="Last update: {{assignedTodo.updated_at | elapsedTime}}">
           <p>{{assignedTodo.comments_count}}</p>
@@ -88,11 +89,11 @@
   </a></dt>
   <dd id="no_due_date_content">
   <div class="content" ng-show="filteredUndetermined.length" ng-repeat="project in projects">
-    <h2>{{project.name | uppercase }}</h2>
+    <h2>{{project.name | uppercase}}</h2>
     <ul>
-      <li ng-repeat="assignedTodo in filteredUndetermined = (project.assignedTodos | filter:search | orderBy: sortByDate | status: 4)"><a href="#" class="check" ng-click="completeTodo(project.id, assignedTodo.id)"><img src="img/icon-check.png"></a>
+      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredUndetermined = (project.assignedTodos | filter:search | orderBy: sortByDate | status: 4)"><a href="#" class="check" ng-click="completeTodo(project.id, assignedTodo.id)"><img src="img/icon-check.png"></a>
         <div class="todo">
-          <div><span class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
+          <div><span ng-click="completeTodo(project.id, assignedTodo.id)" class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
         </div>
         <span class="comments" ng-show="assignedTodo.comments_count" title="Last update: {{assignedTodo.updated_at | elapsedTime}}">
           <p>{{assignedTodo.comments_count}}</p>
@@ -105,3 +106,4 @@
   </dd>
 
 </dl>
+</section>

@@ -80,6 +80,14 @@ body {
     top: 3px;
   }
 
+  section {
+    overflow: hidden;
+  }
+  dl {
+    width: 520px;
+    max-height: 520px;
+    overflow: auto;
+  }
   dt {
     border-bottom: 1px solid $color-dark-border;
     cursor: default;
@@ -103,9 +111,6 @@ body {
     .count-todos {
       background: $color-light-blue;
     }
-    & + dd {
-      display: block;
-    }
   }
   #overdues {
     &.active_overdues {
@@ -114,7 +119,10 @@ body {
     }
     .count-todos {
       background: $color-light-red;
-    }    
+    }
+    .date {
+      color: $color-red;
+    }
   }
 
   h1 {
@@ -147,24 +155,21 @@ body {
     color: $color-grey-date;
     text-align: center;
     vertical-align: middle;
+    font-size: 18px;
+    line-height: 18px;
+    p { font-size: 9px; }    
     &.overdues {
-      vertical-align: middle;
-      font-size: 18px;
-      line-height: 18px;
-      p { font-size: 9px; }
+      color: $color-red;
     }
-  }
-  .check {
-    display: none;
-    width: $first-column-width;
-    text-align: center;
-    img { vertical-align: middle; }
   }
   .comments { 
     display: table-cell;  
     padding-right: 12px;  
     background: url(/img/icon-comment.png) left no-repeat;
-    &:hover { background: url(/img/icon-comment-hover.png) left no-repeat; }  
+    &:hover { 
+      background: url(/img/icon-comment-hover.png) left no-repeat;
+      p { color: $color-blue; }
+    }  
     width: 32px;
     text-align: right;
     color: $color-grey;
@@ -201,10 +206,10 @@ body {
         background: url(/img/icon-checkbox.png) left no-repeat;
         &:hover {
           background: url(/img/icon-checkbox-hover.png) left no-repeat;
-        }
+        }     
       }
       .todo-text {
-        padding-left: 16px;
+        padding-left: 12px;
         width: 340px;
         cursor: default;
         display: table-cell;        
@@ -222,16 +227,14 @@ body {
         color: black;
         div {
           -webkit-animation-fill-mode: forwards;
-          -webkit-animation-duration: .3s;
+          -webkit-animation-duration: 0.5s;
           -webkit-animation-name: slideout;
+          -webkit-animation-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000); /* easeOutQuart */
         }
       }
     }
   }
-
-  a {
-    @include unstyled-link;
-  }  
+  a { @include unstyled-link; }  
 }
 
 #allow-access {
@@ -258,12 +261,21 @@ body {
   }
 }
 
+
 @-webkit-keyframes slideout {
-  from {
-    margin-left: -30px;
-  }
-  
-  to {
-    margin-left: 0px;
-  }
+  from { margin-left: -30px; }
+  to { margin-left: 0px; }
 }
+
+@-webkit-keyframes scaledown {
+  0% { -webkit-transform: scaleY(1); }
+  100% { -webkit-transform: scaleY(0); }
+}
+
+.disappear {
+  -webkit-animation-fill-mode: forwards;
+  -webkit-animation-duration: 0.2s;
+  -webkit-animation-name: scaledown;
+}
+
+.highlight { background: yellow; }

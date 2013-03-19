@@ -48,11 +48,6 @@ angular
       method:   'GET', 
       isArray:  true,
       headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}
-    },
-    update: {
-      method:   'PUT', 
-      params:   {basecampId: '@basecampId', projectId: '@projectId', todoId: '@todoId', completed:true},
-      headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}
     }
   });
 })

@@ -120,32 +120,43 @@ angular
   $scope.completeTodo = function(projectId, todoId) {
     console.log('LOG: completeTodo ' + projectId + ' ' + todoId);
     try { 
-      Todo.update({basecampId: $scope.basecampId, projectId: 0, todoId: 0});
+      $http.put(
+        'https://basecamp.com/'+$scope.basecampId+'/api/v1/projects/'+projectId+'/todos/'+todoId+'.json', 
+        {completed:true},
+        {headers: {'Authorization':'Bearer ' + localStorage['basecampToken']}}
+      );
       $scope.getAssignedTodos();
+      $( "#" + todoId.toString()).addClass('disappear');
     } catch(e) {
       console.log(e);
     }
   };
 
+  /**
+   * Set the right class (with ng-class) et display (using jQuery) only one category on launch
+   */
   $scope.displayCategory = function() {
     console.log('LOG: displayCategory');
     try {
-      var status = $filter('status');
-      if (status($scope.assignedTodos, 1).length > 0) {
-        $scope.overdue = "active_overdues";
-        $('#overdue_content').slideDown();
-      }
-      else if (status($scope.assignedTodos, 2).length > 0) {
-        $scope.today = "active";
-        $('#today_content').slideDown();
-      }
-      else if (status($scope.assignedTodos, 3).length > 0) {
-        $scope.upcoming = "active";
-        $('#upcoming_content').slideDown();
-      }
-      else if (status($scope.assignedTodos, 4).length > 0) {
-        $scope.no_due_date = "active";
-        $('#no_due_date_content').slideDown();
+      // If no category is active, display the first which is not empty
+      if (!$scope.overdue && !$scope.today && !$scope.upcoming && !$scope.no_due_date) {
+        var status = $filter('status');
+        if (status($scope.assignedTodos, 1).length > 0) {
+          $scope.overdue = "active_overdues";
+          $('#overdue_content').slideDown();
+        }
+        else if (status($scope.assignedTodos, 2).length > 0) {
+          $scope.today = "active";
+          $('#today_content').slideDown();
+        }
+        else if (status($scope.assignedTodos, 3).length > 0) {
+          $scope.upcoming = "active";
+          $('#upcoming_content').slideDown();
+        }
+        else if (status($scope.assignedTodos, 4).length > 0) {
+          $scope.no_due_date = "active";
+          $('#no_due_date_content').slideDown();
+        }
       }
     } catch(e) {
       console.log(e);
@@ -153,7 +164,30 @@ angular
   }
 
   /**
-   * Initialization
+   * Display every category and highlight the found string amoung todos (using jQuery)
+   * Event triggered by AngularJS
+   */
+  $scope.$watch('search', function() {
+    if ($scope.search) {
+      console.log($scope.search);
+      $('.todos > dd').slideDown();
+      $('.todos > dt').addClass("active");
+      $(".todo-text").each(function(i, v) {
+      var block = $(v);
+      block.html(
+        block.text().replace(
+          new RegExp($scope.search, "gi"), function(match) {
+            return ["<span class='highlight'>", match, "</span>"].join("");
+        }));
+      });
+    } else if ($scope.search == "") {
+      $('.todos > dd').slideUp();
+      $('.todos > dt').removeClass("active");
+    }
+  });
+
+  /**
+   * Initialization of variables
    */
   if (localStorage['basecampId'] || localStorage['userId']) {
     $scope.basecampId = localStorage['basecampId'];
@@ -165,11 +199,10 @@ angular
   if (localStorage['assignedTodosByProject']) {
     $scope.projects = JSON.parse(localStorage['assignedTodosByProject']);
   }
-  $scope.displayCategory();  
   $scope.getAssignedTodos(); // In any case, trigger a refresh on open 
   
   /**
-   * Execute JS scripts
+   * Execute JS scripts on launch
    */
   $('.todos > dd').slideUp();
   $('.todos > dt > a').click(function() {
