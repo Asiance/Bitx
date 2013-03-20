@@ -25,7 +25,6 @@ function getAuthorization() {
         console.log('LOG: getAuthorization XHR');
       } else if (xhr.readyState === 4) {
         console.log('ERROR: getAuthorization XHR');
-        localStorage.clear();
       }
     };
     xhr.send();
@@ -50,7 +49,7 @@ function getUser() {
         console.log('LOG: getUser XHR');        
       } else if (xhr.readyState === 4) {
         console.log('ERROR: getUser XHR');
-        localStorage.clear();        
+        localStorage.clear();
       }
     };
     xhr.send();

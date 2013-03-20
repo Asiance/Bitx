@@ -40,12 +40,12 @@ function updateBadge() {
     else if ((counter_todos == 'today' || counter_todos == 'default')
       && countTodos(jsonTodos, 'today')) {
         counter = countTodos(jsonTodos, 'today');
-        color = {color: '#00FF00'};
+        color = {color: '#FF9100'};
     }
     else if ((counter_todos == 'upcoming' || counter_todos == 'default')
       && countTodos(jsonTodos, 'upcoming')) {
         counter = countTodos(jsonTodos, 'upcoming');
-        color = {color: '#0000FF'};
+        color = {color: '#00AAFF'};
     }
     else if ((counter_todos == 'undefined' || counter_todos == 'default') 
       && countTodos(jsonTodos, 'undefined')) {

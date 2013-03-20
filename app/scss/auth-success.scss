@@ -1,8 +1,7 @@
 @import "compass/reset";
 @import "compass/css3";
 @import "compass/typography/links/unstyled-link";
-
-@include font-face("Montserrat", font-files("../../fonts/Montserrat-Regular.ttf"));
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans:400,700);
 
 html {
     position: relative;
@@ -13,12 +12,12 @@ body {
   @include global-reset;
   a { @include unstyled-link; }    
   background: url('../img/background.jpg') center;
-  font-family: "Montserrat";
+  font-family: "Droid Sans";
   font-style: normal;
   font-weight: 400;
   letter-spacing: 1px;
   color: white;
-  width: 80%;
+  width: 100%;
   margin: 0 auto 100px;
   text-align: center;
   #logo {
@@ -48,7 +47,7 @@ body {
     margin: 40px;    
   }
   footer {
-    position: absolute;
+    position: relative;
     left: 0;
     bottom: 0;
     height: 100px;
@@ -61,7 +60,7 @@ body {
       padding-top: 16px;
       p {
         display: table-cell;
-        font-size: 10px;
+        font-size: 12px;
         line-height: 18px;
         vertical-align: middle;
         width: 400px;

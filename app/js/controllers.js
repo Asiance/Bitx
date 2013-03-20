@@ -143,19 +143,19 @@ angular
         var status = $filter('status');
         if (status($scope.assignedTodos, 1).length > 0) {
           $scope.overdue = "active_overdues";
-          $('#overdue_content').slideDown();
+          $('#overdue_content').css("display", "block");
         }
         else if (status($scope.assignedTodos, 2).length > 0) {
           $scope.today = "active";
-          $('#today_content').slideDown();
+          $('#today_content').css("display", "block");
         }
         else if (status($scope.assignedTodos, 3).length > 0) {
           $scope.upcoming = "active";
-          $('#upcoming_content').slideDown();
+          $('#upcoming_content').css("display", "block");
         }
         else if (status($scope.assignedTodos, 4).length > 0) {
           $scope.no_due_date = "active";
-          $('#no_due_date_content').slideDown();
+          $('#no_due_date_content').css("display", "block");
         }
       }
     } catch(e) {
@@ -170,7 +170,7 @@ angular
   $scope.$watch('search', function() {
     if ($scope.search) {
       console.log($scope.search);
-      $('.todos > dd').slideDown();
+      $('.todos > dd').css("display", "block");
       $('.todos > dt').addClass("active");
       $(".todo-text").each(function(i, v) {
       var block = $(v);
@@ -181,7 +181,7 @@ angular
         }));
       });
     } else if ($scope.search == "") {
-      $('.todos > dd').slideUp();
+      $('.todos > dd').css("display", "none");
       $('.todos > dt').removeClass("active");
     }
   });
@@ -199,12 +199,12 @@ angular
   if (localStorage['assignedTodosByProject']) {
     $scope.projects = JSON.parse(localStorage['assignedTodosByProject']);
   }
-  $scope.getAssignedTodos(); // In any case, trigger a refresh on open 
   
   /**
    * Execute JS scripts on launch
    */
-  $('.todos > dd').slideUp();
+  $('.todos > dd').css("display", "none");
+  $scope.displayCategory();
   $('.todos > dt > a').click(function() {
     if ($(this).parent().hasClass('active')) {
       $(this).parent().next().slideUp();
@@ -218,6 +218,8 @@ angular
       return false;
     }
   });
+  
+  $scope.getAssignedTodos(); // In any case, trigger a refresh on open 
 })
 
 /**

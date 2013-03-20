@@ -1,9 +1,7 @@
 <header>
   <img id="logo" src="/img/logo-header.png">
-  <div id="actions">
-    <input id="search-input" type="text" ng-model="search" placeholder="Search todo..." autofocus>
-    <a ng-show="online" href="#/logout" ng-click="logout()"><img id="logout" src="/img/icon-logout.png"></a>
-  </div>
+  <input id="search-input" type="text" ng-model="search" placeholder="Search todo..." autofocus>  
+  <a href="#/logout" ng-click="logout()"><img id="logout" src="/img/icon-logout.png"></a>
 </header>
 
 <section>
@@ -11,7 +9,7 @@
   <dt ng-class="overdue" id="overdues"><a>
     <span class="toggle-content"></span>
     <span><h1>OVERDUES</h1></span>
-    <span ng-show="(assignedTodos | filter:search | status :'1').length" class="count-todos">{{(assignedTodos | filter:search | status :'1').length}}</span>
+    <span ng-show="(assignedTodos | filter:search | status :'1').length" title="{{(assignedTodos | filter:search | status :'1').length}} overdue todo(s)" class="count-todos">{{(assignedTodos | filter:search | status :'1').length}}</span>
   </a></dt>
   <dd id="overdue_content">
   <div class="content" ng-show="filteredOverdue.length" ng-repeat="project in projects">
@@ -37,13 +35,15 @@
   <dt ng-class="today" id="today"><a>
     <span class="toggle-content"></span>
     <span><h1>TODAY</h1></span>
-    <span ng-show="(assignedTodos | filter:search | status :'2').length" class="count-todos">{{(assignedTodos | filter:search | status :'2').length}}
+    <span ng-show="(assignedTodos | filter:search | status :'2').length" title="{{(assignedTodos | filter:search | status :'2').length}} todo(s) for today" class="count-todos">{{(assignedTodos | filter:search | status :'2').length}}
     </span></a></dt>
   <dd id="today_content">
   <div class="content" ng-show="filteredToday.length" ng-repeat="project in projects">
     <h2>{{project.name | uppercase}}</h2>
     <ul>
       <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredToday = (project.assignedTodos | filter:search | orderBy: sortByDate | status: 2)">
+        <span class="date"><br>
+        </span>        
         <div class="todo">
           <div><span ng-click="completeTodo(project.id, assignedTodo.id)" class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
         </div>
@@ -59,7 +59,7 @@
   <dt ng-class="upcoming" id="upcoming"><a>
       <span class="toggle-content"></span>
       <span><h1>UPCOMING</h1></span>
-      <span ng-show="(assignedTodos | filter:search | status :'3').length" class="count-todos">{{(assignedTodos | filter:search | status :'3').length}}</span>
+      <span ng-show="(assignedTodos | filter:search | status :'3').length" title="{{(assignedTodos | filter:search | status :'3').length}} upcoming todo(s)" class="count-todos">{{(assignedTodos | filter:search | status :'3').length}}</span>
   </a></dt>
   <dd id="upcoming_content">
   <div class="content" ng-show="filteredUpcoming.length" ng-repeat="project in projects">
@@ -85,7 +85,7 @@
   <dt ng-class="no_due_date" id="no-due-date"><a>
     <span class="toggle-content"></span>
     <span><h1>NO DUE DATE</h1></span>
-    <span ng-show="(assignedTodos | filter:search | status :'4').length" class="count-todos">{{(assignedTodos | filter:search | status :'4').length}}</span>
+    <span ng-show="(assignedTodos | filter:search | status :'4').length" title="{{(assignedTodos | filter:search | status :'4').length}} todo(s) without due date" class="count-todos">{{(assignedTodos | filter:search | status :'4').length}}</span>
   </a></dt>
   <dd id="no_due_date_content">
   <div class="content" ng-show="filteredUndetermined.length" ng-repeat="project in projects">

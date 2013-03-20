@@ -35,38 +35,33 @@ body {
 
   header {
     height: 50px;
-    padding-left: 16px;
-    padding-right: 16px;
     background: $color-close-white;
     #logo {
       vertical-align: middle;
+      position: relative;
+      top: -2px;
+      left: 20px;
     }
-    #actions {
+    #search-input {
+      font-size: 14px;
+      margin-left: 140px;
+      width: $search-input-width;
+      background: $color-close-white;
+      color : $color-grey;
+      border: none;
+      vertical-align: middle;
+      &::-webkit-input-placeholder {
+        font-style: italic;
+      }
+      &:focus {
+        outline: none;
+      }
+      margin-right: 5px;
+    }    
+    #logout {
       float: right;
-      #search-input {
-        font-size: 14px;
-        width: $search-input-width;
-        background: $color-close-white;
-        background-image: url('/img/icon-search.png');
-        background-size: 20px 20px;        
-        background-position: 100px 0px;
-        background-repeat: no-repeat;
-        color : $color-grey;
-        border: none;
-        vertical-align: middle;        
-        &::-webkit-input-placeholder {
-          font-style: italic;
-        }        
-        &:focus {
-          outline: none;
-        }
-        margin-right: 5px;
-      }
-      #logout {
-        border-left : 1px solid $color-grey;
-        padding-left: 5px;
-        vertical-align: middle;
-      }
+      padding: 14px;
+      margin-right: 13px;
     }
   }
 
@@ -90,7 +85,7 @@ body {
   }
   dt {
     border-bottom: 1px solid $color-dark-border;
-    cursor: default;
+    cursor: pointer;
     &:hover {
       background: $color-blue;
       border-bottom: 1px solid $color-blue;
@@ -130,25 +125,27 @@ body {
     font-size: 14px;
     font-weight: 700;
     color: $color-white;
-    width: 330px;
+    width: 360px;
   }
   .count-todos {
     display: inline-block;
     color: $color-white;
     text-align: center;
-    line-height: 25px;
-    padding-left: 8px;
-    padding-right: 8px;
+    line-height: 16px;
+    padding: 8px;
+    width: 15px;
+    height: 15px;
     border-radius: 50%;
     background: $color-dark-grey;
   }
 
   h2 {
     color: $color-red;
-    font-weight: 700;    
-    margin-left: $first-column-width;
+    font-weight: 700;
+    margin-left: 40px;
   }
   .date {
+    cursor: default;
     display: table-cell;
     width: $first-column-width;
     height: 50px;
@@ -157,63 +154,65 @@ body {
     vertical-align: middle;
     font-size: 18px;
     line-height: 18px;
-    p { font-size: 9px; }    
+    p { font-size: 9px; }
     &.overdues {
       color: $color-red;
     }
   }
   .comments { 
-    display: table-cell;  
-    padding-right: 12px;  
+    display: table-cell;
+    padding-right: 8px;
     background: url(/img/icon-comment.png) left no-repeat;
     &:hover { 
       background: url(/img/icon-comment-hover.png) left no-repeat;
       p { color: $color-blue; }
     }  
-    width: 32px;
+    width: 30px;
     text-align: right;
     color: $color-grey;
   }
   .void { 
-    display: table-cell;    
-    width: 32px;
-    padding-right: 12px;      
+    display: table-cell;
+    width: 30px;
+    padding-right: 8px;
   }  
   .icon-link {
-    margin-left: 8px;
+    cursor: pointer;
     display: table-cell;
-    background: url(/img/icon-link.png) left no-repeat;
-    &:hover { background: url(/img/icon-link-hover.png) left no-repeat; }  
-    width: 16px;
+    background: url(/img/icon-link.png) center no-repeat;
+    &:hover { background: url(/img/icon-link-hover.png) center no-repeat; }
+    width: 32px;
+    margin-right:20px;
   }  
   .content {
     background-color: $color-white;
   }
   .todo {
     display: table-cell;
-    width: 340px; 
+    width: 327px; 
     line-height: 16px;
     overflow: hidden;
     vertical-align: middle;
     div {
       display: table;
-      width: 340px;
+      width: 325px;
       margin-left: -30px;
       .checkbox {
+        cursor: pointer;
         display: table-cell;
-        height: 22px;
-        width: 22px;
+        width: 24px;
         background: url(/img/icon-checkbox.png) left no-repeat;
         &:hover {
           background: url(/img/icon-checkbox-hover.png) left no-repeat;
         }     
       }
       .todo-text {
-        padding-left: 12px;
-        width: 340px;
+        padding-left: 8px;
+        width: 325px;
         cursor: default;
-        display: table-cell;        
-        vertical-align: middle;        
+        display: table-cell;
+        vertical-align: middle;
+        word-break: break-word;
       }
     }
   }
@@ -234,7 +233,7 @@ body {
       }
     }
   }
-  a { @include unstyled-link; }  
+  a { @include unstyled-link; }
 }
 
 #allow-access {
