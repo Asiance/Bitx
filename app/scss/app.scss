@@ -142,7 +142,7 @@ body {
   h2 {
     color: $color-red;
     font-weight: 700;
-    margin-left: 40px;
+    margin-left: 38px;
   }
   .date {
     cursor: default;
@@ -259,7 +259,6 @@ body {
     &:last-child { padding-right: 24px;}
   }
 }
-
 
 @-webkit-keyframes slideout {
   from { margin-left: -30px; }

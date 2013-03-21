@@ -142,7 +142,7 @@ angular
       if (!$scope.overdue && !$scope.today && !$scope.upcoming && !$scope.no_due_date) {
         var status = $filter('status');
         if (status($scope.assignedTodos, 1).length > 0) {
-          $scope.overdue = "active_overdues";
+          $scope.overdue = "active active_overdues";
           $('#overdue_content').css("display", "block");
         }
         else if (status($scope.assignedTodos, 2).length > 0) {
