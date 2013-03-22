@@ -1,5 +1,6 @@
 {
   "manifest_version": 2,
+  "default_locale": "en",
 
   "name": "basecampExtension",
   "description": "Connect to a Basecamp account and display all Todos",

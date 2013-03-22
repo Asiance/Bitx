@@ -16,7 +16,7 @@ function countTodos(input, status) {
         else if ((status == 'today') && (inputDate == todayDate)) count++;
         else if ((status == 'upcoming') && (inputDate > todayDate)) count++;
       } 
-      else if (input[i].due_at == null && (status == 'undefined')) count++;
+      else if (input[i].due_at == null && (status == 'no_due_date')) count++;
   }      
   return count;		
 }
@@ -27,29 +27,29 @@ function countTodos(input, status) {
  */
 function updateBadge() {
   try {
-    counter_todos = localStorage['counter_todos'] ? localStorage['counter_todos'] : "default";    
+    var counter_todos = localStorage['counter_todos'] ? localStorage['counter_todos'] : "default";
     var jsonTodos = JSON.parse(localStorage.getItem('assignedTodos'));
     var counter = countTodos(jsonTodos, 'overdue');
     var color;
     
-    if ((counter_todos == 'overdues' || counter_todos == 'default')
-      && countTodos(jsonTodos, 'overdues')) {
+    if ((counter_todos == 'overdues') || 
+      (counter_todos == 'default' && countTodos(jsonTodos, 'overdues'))) {
         counter = countTodos(jsonTodos, 'overdues');
         color = {color: '#FF0000'};
     }      
-    else if ((counter_todos == 'today' || counter_todos == 'default')
-      && countTodos(jsonTodos, 'today')) {
+    else if ((counter_todos == 'today') || 
+      (counter_todos == 'default' && countTodos(jsonTodos, 'today'))) {
         counter = countTodos(jsonTodos, 'today');
         color = {color: '#FF9100'};
     }
-    else if ((counter_todos == 'upcoming' || counter_todos == 'default')
-      && countTodos(jsonTodos, 'upcoming')) {
+    else if ((counter_todos == 'upcoming') || 
+      (counter_todos == 'default' && countTodos(jsonTodos, 'upcoming'))) {
         counter = countTodos(jsonTodos, 'upcoming');
         color = {color: '#00AAFF'};
     }
-    else if ((counter_todos == 'undefined' || counter_todos == 'default') 
-      && countTodos(jsonTodos, 'undefined')) {
-        counter = countTodos(jsonTodos, 'undefined');
+    else if ((counter_todos == 'no_due_date') || 
+      (counter_todos == 'default' && countTodos(jsonTodos, 'no_due_date'))) {
+        counter = countTodos(jsonTodos, 'no_due_date');
         color = {color: '#000000'};
     }
     else {

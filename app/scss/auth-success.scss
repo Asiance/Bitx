@@ -3,28 +3,33 @@
 @import "compass/typography/links/unstyled-link";
 @import url(http://fonts.googleapis.com/css?family=Droid+Sans:400,700);
 
-html {
-    position: relative;
-    height: 100%;
+html, body {
+  height: 100%;
 }
 
 body {
-  @include global-reset;
-  a { @include unstyled-link; }    
+  margin: 0px;
+  padding: 0px;
   background: url('../img/background.jpg') center;
   font-family: "Droid Sans";
   font-style: normal;
   font-weight: 400;
-  letter-spacing: 1px;
   color: white;
-  width: 100%;
-  margin: 0 auto 100px;
   text-align: center;
+  a { @include unstyled-link; }  
+}
+
+div#wrapper {
+  width: 100%;
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0px 0px -100px 0px;
   #logo {
     margin-top: 130px;
     margin-bottom: 90px;
     height: 220px;
-  }
+  }  
   h1 {
     font-size: 52px;
     font-style: italic;
@@ -33,48 +38,55 @@ body {
   p {
     margin: 0 auto;
     font-size: 20px;
+    font-style: italic;    
     line-height: 28px;
-    max-width: 500px;
+    max-width: 400px;
+    &:last-child { padding-bottom: 50px; }
   }
   hr {
     background-color: #a0afd7;
     border: 0 none;
     height: 1px;
-    width: 50%;
     margin: 50px auto;
+  }  
+}
+
+div#footer_wrapper {
+  width: 100%;
+  height: 100px;
+  background-color: rgba(0, 0, 0, 0.4);  
+}
+
+div#footer_inner_wrapper {
+  padding-top: 16px;
+  p {
+    display: table-cell;
+    font-size: 12px;
+    line-height: 18px;
+    vertical-align: middle;
   }
-  #goto {
-    margin: 40px;    
+  #left {
+    text-align: left;
+    width:100%;
   }
-  footer {
+  #right {
+    text-align: right;
+    width:100%;        
     position: relative;
-    left: 0;
-    bottom: 0;
-    height: 100px;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    margin: auto;
-    .wrapper {
-      width: 40%;
-      margin: auto;
-      padding-top: 16px;
-      p {
-        display: table-cell;
-        font-size: 12px;
-        line-height: 18px;
-        vertical-align: middle;
-        width: 400px;
-      }
-      #left {
-        text-align: left;
-        width:100%;
-      }
-      #right {
-        text-align: right;
-        width:100%;        
-        position: relative;
-        top: -5px;
-      }  
-    }  
-  }
+    top: -5px;
+  } 
+}
+
+div#content_wrapper {
+  width: 100%;
+  padding: 0px 0px 100px 0px;  
+}
+
+div#footer_wrapper, div#content_wrapper {
+  min-width: 750px;
+}
+
+div#footer_inner_wrapper, div#content_inner_wrapper {
+  width: 750px;  
+  margin: 0px auto;
 }

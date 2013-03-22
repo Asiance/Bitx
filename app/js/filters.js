@@ -46,9 +46,9 @@ angular
         var diff = today - new Date(input);
         if (diff/(1000*60*60*24) < 1) // If last update is less than one day ago
           if (diff/(1000*60*60) < 1) // If last update is less than one hour ago
-            return Math.round(diff/(1000*60)) + " minute(s) ago";
-          else return Math.round(diff/(1000*60*60)) + " hour(s) ago";
-        else return Math.round(diff/(1000*60*60*24)) + " day(s) ago";
+            return Math.round(diff/(1000*60)) + " " + chrome.i18n.getMessage("minutesAgo");
+          else return Math.round(diff/(1000*60*60)) + " " + chrome.i18n.getMessage("hoursAgo");
+        else return Math.round(diff/(1000*60*60*24)) + " " + chrome.i18n.getMessage("daysAgo");
       } else return "";
     };
   })

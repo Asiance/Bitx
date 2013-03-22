@@ -6,7 +6,7 @@ angular
 /**
  * Controller linked to todos.html
  */
-.controller('TodosController', function($scope, $filter, $resource, $http, $location, $timeout, Authorization, User, AssignedTodolists, Todo) {
+.controller('TodosController', function($scope, $filter, $resource, $http, $location, Authorization, User, AssignedTodolists, Todo) {
 
   /**
    * After OAuth2 signin, retrieve a Basecamp Account
@@ -139,21 +139,26 @@ angular
     console.log('LOG: displayCategory');
     try {
       // If no category is active, display the first which is not empty
+      var counter_todos = localStorage['counter_todos'] ? localStorage['counter_todos'] : "default";      
       if (!$scope.overdue && !$scope.today && !$scope.upcoming && !$scope.no_due_date) {
         var status = $filter('status');
-        if (status($scope.assignedTodos, 1).length > 0) {
+        if (counter_todos == 'overdues' || 
+          (counter_todos == 'default' && status($scope.assignedTodos, 1).length > 0)) {
           $scope.overdue = "active active_overdues";
           $('#overdue_content').css("display", "block");
         }
-        else if (status($scope.assignedTodos, 2).length > 0) {
+        else if (counter_todos == 'today' || 
+          (counter_todos == 'default' && status($scope.assignedTodos, 2).length > 0)) {
           $scope.today = "active";
           $('#today_content').css("display", "block");
         }
-        else if (status($scope.assignedTodos, 3).length > 0) {
+        else if (counter_todos == 'upcoming' || 
+          (counter_todos == 'default' && status($scope.assignedTodos, 3).length > 0)) {
           $scope.upcoming = "active";
           $('#upcoming_content').css("display", "block");
         }
-        else if (status($scope.assignedTodos, 4).length > 0) {
+        else if (counter_todos == 'no_due_date' || 
+          (counter_todos == 'default' && status($scope.assignedTodos, 4).length > 0)) {
           $scope.no_due_date = "active";
           $('#no_due_date_content').css("display", "block");
         }
@@ -199,7 +204,33 @@ angular
   if (localStorage['assignedTodosByProject']) {
     $scope.projects = JSON.parse(localStorage['assignedTodosByProject']);
   }
-  
+  $scope.test="$";
+  /**
+   * Initialization of i18n
+   */
+  document.getElementById("search-input").placeholder = chrome.i18n.getMessage("searchTodo");
+
+  document.getElementById("header_overdues").innerHTML = chrome.i18n.getMessage("header_overdues");
+  document.getElementById("header_today").innerHTML = chrome.i18n.getMessage("header_today");
+  document.getElementById("header_upcoming").innerHTML = chrome.i18n.getMessage("header_upcoming");
+  document.getElementById("header_noduedate").innerHTML = chrome.i18n.getMessage("header_noduedate");
+
+  $scope.addedDate = chrome.i18n.getMessage("addedDate");
+
+  $scope.dayLate = chrome.i18n.getMessage("dayLate");
+  $scope.daysLate = chrome.i18n.getMessage("daysLate");
+
+  $scope.dayLeft = chrome.i18n.getMessage("dayLeft");
+  $scope.daysLeft = chrome.i18n.getMessage("daysLeft");
+
+  $scope.lastUpdate = chrome.i18n.getMessage("lastUpdate");
+
+
+  $scope.countOverdues = chrome.i18n.getMessage("countOverdues");
+  $scope.countToday = chrome.i18n.getMessage("countToday");
+  $scope.countUpcoming = chrome.i18n.getMessage("countUpcoming");
+  $scope.countNoDueDate = chrome.i18n.getMessage("countNoDueDate");
+
   /**
    * Execute JS scripts on launch
    */
@@ -239,4 +270,9 @@ angular
     window.close();
   }
   if (localStorage['basecampToken']) $scope.online = true;
+
+  document.getElementById("needAuth1").innerHTML = chrome.i18n.getMessage("needAuth1");
+  document.getElementById("needAuth2").innerHTML = chrome.i18n.getMessage("needAuth2");
+
+
 });

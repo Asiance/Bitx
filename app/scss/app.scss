@@ -44,7 +44,8 @@ body {
     }
     #search-input {
       font-size: 14px;
-      margin-left: 140px;
+      margin-left: 70px;
+      padding: 10px 80px;
       width: $search-input-width;
       background: $color-close-white;
       color : $color-grey;
@@ -247,7 +248,7 @@ body {
     padding-right: 24px;
     border-right : 1px solid $color-grey;
   }
-  span {
+  #allow {
     color: #68bb4f;
     font-weight: bold;
   }

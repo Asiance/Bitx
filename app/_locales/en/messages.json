@@ -1,0 +1,113 @@
+{
+  "lang": {
+    "message": "en"
+  }, 
+  "extName": {
+    "message": "Bitx",
+    "description": "Extension name (original: Bitx)."
+  },
+  "extDesc": {
+    "message": "Connect to a Basecamp account and display all assigned todos",
+    "description": "Extension description shown in Chrome > Extensions."    
+  },
+
+  "needAuth1": {
+    "message": "Click on",
+    "description": "Message asking the user to click on a link."    
+  },
+  "needAuth2": {
+    "message": "to synchronize your basecamp account with the extension.",
+    "description": "Message asking the user to click on a link so he can synchronize the extension."    
+  },
+
+  "thankYou": {
+    "message": "Thank you!",
+    "description": "Thanks user for using Bitx."    
+  },
+  "syncMess": {
+    "message": "Your Todo Basecamp Extension is now connected to your account!",
+    "description": "Tell user that Bitx is now synchronized."    
+  },
+  "startMess": {
+    "message": "You can start using the extension.",
+    "description": "Tell user he can use Bitx."    
+  },
+
+  "searchTodo": {
+    "message": "Search todo...",
+    "description": "Placeholder before typing in search box."
+  },
+
+  "header_overdues": {
+    "message": "OVERDUES",
+    "description": "Title of the header related to late tasks."
+  },
+  "header_today": {
+    "message": "TODAY",
+    "description": "Title of the header related to tasks due today."
+  },
+  "header_upcoming": {
+    "message": "UPCOMING",
+    "description": "Title of the header related to future tasks."
+  },
+  "header_noduedate": {
+    "message": "NO DUE DATE",
+    "description": "Title of the header related to tasks without due date."
+  }, 
+
+  "addedDate": {
+    "message": "Added:",
+    "description": "Display the date when the todo was created."
+  },
+  "dayLate": {
+    "message": "day late",
+    "description": "Append to the counter of days late of late tasks."
+  },
+  "daysLate": {
+    "message": "days late",
+    "description": "Append to the counter of days late of late tasks."
+  },  
+
+  "dayLeft": {
+    "message": "day left",
+    "description": "Append to the counter of days left to achieve future tasks."
+  },
+  "daysLeft": {
+    "message": "days left",
+    "description": "Append to the counter of days left to achieve future tasks."
+  },
+
+  "lastUpdate": {
+    "message": "Last update:",
+    "description": "Tooltip to check when was the most recent comment."
+  },
+  "minutesAgo": {
+    "message": "minute(s) ago",
+    "description": "Tooltip to check when was the most recent comment in minutes."
+  },
+  "hoursAgo": {
+    "message": "hours(s) ago",
+    "description": "Tooltip to check when was the most recent comment in hours."
+  },
+  "daysAgo": {
+    "message": "day(s) ago",
+    "description": "Tooltip to check when was the most recent comment in days."
+  },
+
+  "countOverdues": {
+    "message": "overdue todo(s)",
+    "description": "Tooltip to understand the overdues counter in the header."
+  },
+  "countToday": {
+    "message": "todo(s) for today",
+    "description": "Tooltip to understand the today todos counter in the header."
+  },
+  "countUpcoming": {
+    "message": "upcoming todo(s)",
+    "description": "Tooltip to understand the upcoming todos counter in the header."
+  },
+  "countNoDueDate": {
+    "message": "todo(s) without due date",
+    "description": "Tooltip to understand the no-due-date todos counter in the header."
+  }
+}

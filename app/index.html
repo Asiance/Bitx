@@ -11,7 +11,7 @@
     <ng-view ng-show="online"></ng-view>
     <div id="allow-access" ng-hide="online">
       <p><img src="/img/logo-header.png"></p>    
-      <p>Click on <span>"Yes, I'll allow access"</span> to synchronize your basecamp account with the extension.</p>
+      <p><span id="needAuth1"></span> <span id="allow">"Yes, I'll allow access"</span> <span id="needAuth2"></span></p>
     </div>
   </div>
 
