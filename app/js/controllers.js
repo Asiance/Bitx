@@ -139,21 +139,26 @@ angular
     console.log('LOG: displayCategory');
     try {
       // If no category is active, display the first which is not empty
+      var counter_todos = localStorage['counter_todos'] ? localStorage['counter_todos'] : "default";      
       if (!$scope.overdue && !$scope.today && !$scope.upcoming && !$scope.no_due_date) {
         var status = $filter('status');
-        if (status($scope.assignedTodos, 1).length > 0) {
+        if (counter_todos == 'overdues' || 
+          (counter_todos == 'default' && status($scope.assignedTodos, 1).length > 0)) {
           $scope.overdue = "active active_overdues";
           $('#overdue_content').css("display", "block");
         }
-        else if (status($scope.assignedTodos, 2).length > 0) {
+        else if (counter_todos == 'today' || 
+          (counter_todos == 'default' && status($scope.assignedTodos, 2).length > 0)) {
           $scope.today = "active";
           $('#today_content').css("display", "block");
         }
-        else if (status($scope.assignedTodos, 3).length > 0) {
+        else if (counter_todos == 'upcoming' || 
+          (counter_todos == 'default' && status($scope.assignedTodos, 3).length > 0)) {
           $scope.upcoming = "active";
           $('#upcoming_content').css("display", "block");
         }
-        else if (status($scope.assignedTodos, 4).length > 0) {
+        else if (counter_todos == 'no_due_date' || 
+          (counter_todos == 'default' && status($scope.assignedTodos, 4).length > 0)) {
           $scope.no_due_date = "active";
           $('#no_due_date_content').css("display", "block");
         }
