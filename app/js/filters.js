@@ -41,14 +41,15 @@ angular
    */
   .filter('elapsedTime', function(Utils) {
     var today = new Date();
+    var lang = localStorage["language"] ? localStorage["language"] : "en";      
     return function(input) {
       if(input) {
         var diff = today - new Date(input);
         if (diff/(1000*60*60*24) < 1) // If last update is less than one day ago
           if (diff/(1000*60*60) < 1) // If last update is less than one hour ago
-            return Math.round(diff/(1000*60)) + " " + chrome.i18n.getMessage("minutesAgo");
-          else return Math.round(diff/(1000*60*60)) + " " + chrome.i18n.getMessage("hoursAgo");
-        else return Math.round(diff/(1000*60*60*24)) + " " + chrome.i18n.getMessage("daysAgo");
+            return Math.round(diff/(1000*60)) + " " + window[lang]["minutesAgo"];
+          else return Math.round(diff/(1000*60*60)) + " " + window[lang]["hoursAgo"];
+        else return Math.round(diff/(1000*60*60*24)) + " " + window[lang]["daysAgo"];
       } else return "";
     };
   })
@@ -74,5 +75,27 @@ angular
       if(input) {
         return Math.round((today - new Date(input))/(1000*60*60*24));
       }
+    };
+  })
+
+
+  /*
+  * Translations for strings
+  */
+  .filter("i18n", function() {
+    return function(string) {
+      var log_untranslated, translated;
+      log_untranslated = false;
+      translated = window[localStorage.language][string];
+      console.log(string);
+      console.log(translated);
+      if (translated === undefined || translated === "") {
+        log_untranslated === true;
+        if (translated === undefined) {
+          console.log("Missing translation for string: " + string);
+        }
+        return string;
+      }
+      return translated;
     };
   });

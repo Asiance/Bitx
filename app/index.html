@@ -5,9 +5,9 @@
   <title>basecampExtension</title>
   <link href="css/app.css" rel="stylesheet" media="screen">
 </head>
-<body>
-  
-  <div ng-controller="MainController">
+
+<body ng-controller="MainController" class="{{lang}}">
+  <div>
     <ng-view ng-show="online"></ng-view>
     <div id="allow-access" ng-hide="online">
       <p><img src="/img/logo-header.png"></p>    
@@ -27,6 +27,9 @@
   <script src="js/controllers.js"></script>
   <script src="js/filters.js"></script>
   <script src="js/services.js"></script>
+
+  <script src="js/lang/en.js"></script>
+  <script src="js/lang/fr.js"></script>
 
 </body>
 </html>

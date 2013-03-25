@@ -8,7 +8,7 @@
 <dl class="todos">
   <dt ng-class="overdue" id="overdues"><a>
     <span class="toggle-content"></span>
-    <span><h1 id="header_overdues"></h1></span>
+    <span><h1 id="header_overdues">OVERDUES</h1></span>
     <span ng-show="(assignedTodos | filter:search | status :'1').length" title="{{(assignedTodos | filter:search | status :'1').length}} {{countOverdues}}" class="count-todos">{{(assignedTodos | filter:search | status :'1').length}}</span>
   </a></dt>
   <dd id="overdue_content">
@@ -34,7 +34,7 @@
 
   <dt ng-class="today" id="today"><a>
     <span class="toggle-content"></span>
-    <span><h1 id="header_today"></h1></span>
+    <span><h1 id="header_today">TODAY</h1></span>
     <span ng-show="(assignedTodos | filter:search | status :'2').length" title="{{(assignedTodos | filter:search | status :'2').length}} {{countToday}}" class="count-todos">{{(assignedTodos | filter:search | status :'2').length}}
     </span></a></dt>
   <dd id="today_content">
@@ -57,7 +57,7 @@
 
   <dt ng-class="upcoming" id="upcoming"><a>
       <span class="toggle-content"></span>
-      <span><h1 id="header_upcoming"></h1></span>
+      <span><h1 id="header_upcoming">UPCOMING</h1></span>
       <span ng-show="(assignedTodos | filter:search | status :'3').length" title="{{(assignedTodos | filter:search | status :'3').length}} {{countUpcoming}}" class="count-todos">{{(assignedTodos | filter:search | status :'3').length}}</span>
   </a></dt>
   <dd id="upcoming_content">
@@ -83,7 +83,7 @@
 
   <dt ng-class="no_due_date" id="no-due-date"><a>
     <span class="toggle-content"></span>
-    <span><h1 id="header_noduedate"></h1></span>
+    <span><h1 id="header_noduedate">NO DUE DATE</h1></span>
     <span ng-show="(assignedTodos | filter:search | status :'4').length" title="{{(assignedTodos | filter:search | status :'4').length}} {{countNoDueDate}}" class="count-todos">{{(assignedTodos | filter:search | status :'4').length}}</span>
   </a></dt>
   <dd id="no_due_date_content">

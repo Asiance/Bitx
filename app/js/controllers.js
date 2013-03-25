@@ -53,18 +53,21 @@ angular
     try { 
       AssignedTodolists.query({basecampId: $scope.basecampId, userId: $scope.userId}, function(data) {
         // Flatten data to get only Todos
-        $scope.assignedTodos = [];
+        var assignedTodos = [];
         for (var i = 0; i < data.length; i++) { 
           for (var j = 0; j < data[i].assigned_todos.length; j++) { 
             var tmp = data[i].assigned_todos[j];
             tmp.project = data[i].bucket.name;
             tmp.project_id = data[i].bucket.id;
             tmp.todolist = data[i].name;
-            $scope.assignedTodos.push(tmp);
+            assignedTodos.push(tmp);
           }
         }
-        localStorage['assignedTodos'] = JSON.stringify($scope.assignedTodos);
-        $scope.groupByProject();
+        if (assignedTodos != $scope.assignedTodos) {
+          $scope.assignedTodos = assignedTodos;
+          localStorage['assignedTodos'] = JSON.stringify(assignedTodos);          
+          $scope.groupByProject();
+        }
       }, function(response) {
         console.log('ERROR: Failed to connect!')
       });
@@ -78,19 +81,24 @@ angular
    */
   $scope.groupByProject = function() {
     console.log('LOG: groupByProject');
-    $scope.projects = [];
+    var projects = [];
     var projectName = 'NO_PROJECT';
-    for (var i = 0; i < $scope.assignedTodos.length; i++) {
-      var assignedTodo = $scope.assignedTodos[i];
+    var assignedTodos = $scope.assignedTodos;
+    for (var i = 0; i < assignedTodos.length; i++) {
+      var assignedTodo = assignedTodos[i];
       if (assignedTodo.project !== projectName) {
         var project = {name: assignedTodo.project, id: assignedTodo.project_id, assignedTodos: []};
         projectName = assignedTodo.project;
-        $scope.projects.push(project);
+        projects.push(project);
       }
       project.assignedTodos.push(assignedTodo);
     }
-    localStorage['assignedTodosByProject'] = JSON.stringify($scope.projects);
-    $scope.displayCategory();
+
+    // Update only if new Todos
+    if (!_.isEqual(projects, $scope.projects)) {
+      localStorage['assignedTodosByProject'] = JSON.stringify(projects);
+      $scope.projects = projects;
+    }
   };
 
   /**
@@ -125,8 +133,8 @@ angular
         {completed:true},
         {headers: {'Authorization':'Bearer ' + localStorage['basecampToken']}}
       );
-      $scope.getAssignedTodos();
       $( "#" + todoId.toString()).addClass('disappear');
+      $( "#" + todoId.toString()).delay(600).slideUp();
     } catch(e) {
       console.log(e);
     }
@@ -138,14 +146,18 @@ angular
   $scope.displayCategory = function() {
     console.log('LOG: displayCategory');
     try {
+      $scope.i18n();
       // If no category is active, display the first which is not empty
       var counter_todos = localStorage['counter_todos'] ? localStorage['counter_todos'] : "default";      
       if (!$scope.overdue && !$scope.today && !$scope.upcoming && !$scope.no_due_date) {
         var status = $filter('status');
+        if (status($scope.assignedTodos, 1).length > 0) {
+          $scope.overdue = "active_overdues";
+        }
         if (counter_todos == 'overdues' || 
           (counter_todos == 'default' && status($scope.assignedTodos, 1).length > 0)) {
-          $scope.overdue = "active active_overdues";
           $('#overdue_content').css("display", "block");
+          $scope.overdue = "active active_overdues";        
         }
         else if (counter_todos == 'today' || 
           (counter_todos == 'default' && status($scope.assignedTodos, 2).length > 0)) {
@@ -167,6 +179,34 @@ angular
       console.log(e);
     }
   }
+
+  /**
+   * Initialization of i18n
+   */
+  $scope.i18n = function() {
+    var lang = $scope.lang;
+    document.getElementById("search-input").placeholder = window[lang]["searchTodo"];
+
+    document.getElementById("header_overdues").innerHTML = window[lang]["header_overdues"];
+    document.getElementById("header_today").innerHTML = window[lang]["header_today"];
+    document.getElementById("header_upcoming").innerHTML = window[lang]["header_upcoming"];
+    document.getElementById("header_noduedate").innerHTML = window[lang]["header_noduedate"];
+
+    $scope.addedDate = window[lang]["addedDate"];
+
+    $scope.dayLate = window[lang]["dayLate"];
+    $scope.daysLate = window[lang]["daysLate"];
+
+    $scope.dayLeft = window[lang]["dayLeft"];
+    $scope.daysLeft = window[lang]["daysLeft"];
+
+    $scope.lastUpdate = window[lang]["lastUpdate"];
+
+    $scope.countOverdues = window[lang]["countOverdues"];
+    $scope.countToday = window[lang]["countToday"];
+    $scope.countUpcoming = window[lang]["countUpcoming"];
+    $scope.countNoDueDate = window[lang]["countNoDueDate"];
+  }  
 
   /**
    * Display every category and highlight the found string amoung todos (using jQuery)
@@ -204,38 +244,13 @@ angular
   if (localStorage['assignedTodosByProject']) {
     $scope.projects = JSON.parse(localStorage['assignedTodosByProject']);
   }
-  $scope.test="$";
-  /**
-   * Initialization of i18n
-   */
-  document.getElementById("search-input").placeholder = chrome.i18n.getMessage("searchTodo");
-
-  document.getElementById("header_overdues").innerHTML = chrome.i18n.getMessage("header_overdues");
-  document.getElementById("header_today").innerHTML = chrome.i18n.getMessage("header_today");
-  document.getElementById("header_upcoming").innerHTML = chrome.i18n.getMessage("header_upcoming");
-  document.getElementById("header_noduedate").innerHTML = chrome.i18n.getMessage("header_noduedate");
-
-  $scope.addedDate = chrome.i18n.getMessage("addedDate");
-
-  $scope.dayLate = chrome.i18n.getMessage("dayLate");
-  $scope.daysLate = chrome.i18n.getMessage("daysLate");
-
-  $scope.dayLeft = chrome.i18n.getMessage("dayLeft");
-  $scope.daysLeft = chrome.i18n.getMessage("daysLeft");
-
-  $scope.lastUpdate = chrome.i18n.getMessage("lastUpdate");
-
-
-  $scope.countOverdues = chrome.i18n.getMessage("countOverdues");
-  $scope.countToday = chrome.i18n.getMessage("countToday");
-  $scope.countUpcoming = chrome.i18n.getMessage("countUpcoming");
-  $scope.countNoDueDate = chrome.i18n.getMessage("countNoDueDate");
+  $scope.getAssignedTodos();
 
   /**
    * Execute JS scripts on launch
    */
   $('.todos > dd').css("display", "none");
-  $scope.displayCategory();
+  $scope.displayCategory();  
   $('.todos > dt > a').click(function() {
     if ($(this).parent().hasClass('active')) {
       $(this).parent().next().slideUp();
@@ -249,8 +264,7 @@ angular
       return false;
     }
   });
-  
-  $scope.getAssignedTodos(); // In any case, trigger a refresh on open 
+
 })
 
 /**
@@ -263,16 +277,21 @@ angular
    */
   $scope.logout = function() {
     console.log('LOG: logout');
-    localStorage.clear();
     $scope.assignedTodos = [];
     $scope.basecampId = [];
     $scope.userId = [];
     window.close();
+    localStorage.clear();    
   }
   if (localStorage['basecampToken']) $scope.online = true;
 
-  document.getElementById("needAuth1").innerHTML = chrome.i18n.getMessage("needAuth1");
-  document.getElementById("needAuth2").innerHTML = chrome.i18n.getMessage("needAuth2");
-
+  /**
+   * Initialization of i18n
+   */
+  var userLang = (navigator.language) ? navigator.language : navigator.userLanguage; 
+  var lang = userLang.substring(0,2);
+  $scope.lang = localStorage["language"] ? localStorage["language"] : lang;
+  document.getElementById("needAuth1").innerHTML = window[lang]["needAuth1"];
+  document.getElementById("needAuth2").innerHTML = window[lang]["needAuth2"];
 
 });

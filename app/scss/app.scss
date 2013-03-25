@@ -98,18 +98,8 @@ body {
       content: '+';
     }
   }
-  dt.active {
-    background: $color-blue;
-    border-bottom: 1px solid $color-blue;
-    .toggle-content:after {
-      content: '-';
-    }
-    .count-todos {
-      background: $color-light-blue;
-    }
-  }
   #overdues {
-    &.active_overdues {
+    &.active, &:hover, &.active_overdues {
       background: $color-red;
       border-bottom: 1px solid $color-red;
     }
@@ -120,6 +110,17 @@ body {
       color: $color-red;
     }
   }
+  dt.active {
+    background: $color-blue;
+    border-bottom: 1px solid $color-blue;
+    .toggle-content:after {
+      content: '-';
+    }
+    .count-todos {
+      background: $color-light-blue;
+    }
+  }
+
 
   h1 {
     display: inline-block;
@@ -233,6 +234,10 @@ body {
         }
       }
     }
+    .achievement {
+      background: $color-green;
+      color: $color-white;
+    }
   }
   a { @include unstyled-link; }
 }
@@ -273,7 +278,7 @@ body {
 
 .disappear {
   -webkit-animation-fill-mode: forwards;
-  -webkit-animation-duration: 0.2s;
+  -webkit-animation-duration: 0.5s;
   -webkit-animation-name: scaledown;
 }
 

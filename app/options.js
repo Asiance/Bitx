@@ -3,12 +3,13 @@
 // Saves options to localStorage.
 function save_options() {
   var select = document.getElementById("refresh_period");
-  var refresh_period = select.children[select.selectedIndex].value;
-  localStorage["refresh_period"] = refresh_period;
+  localStorage["refresh_period"] = select.children[select.selectedIndex].value;
 
   select = document.getElementById("counter_todos");
-  counter_todos = select.children[select.selectedIndex].value;
-  localStorage["counter_todos"] = counter_todos;
+  localStorage["counter_todos"] = select.children[select.selectedIndex].value;
+
+  select = document.getElementById("language");
+  localStorage["language"] = select.children[select.selectedIndex].value;
 
   // Update status to let user know options were saved.
   var status = document.getElementById("status");
