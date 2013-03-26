@@ -98,4 +98,46 @@ angular
       }
       return translated;
     };
+  })
+  
+  /**
+   * Advanced search
+   */
+  .filter('keywordSearch', function(Utils, $filter) {
+    var out = [];
+    var realSearch = "";
+    return function(input, search) {
+      if(search && input) {
+        if (search.substring(0, 9) == ":todolist") {
+          realSearch = search.substring(10);
+          out = _.filter(input, function(item) { 
+            return item['todolist'].match(new RegExp(realSearch, "gi"));
+          });
+          return out;        
+        }
+        else if (search.substring(0, 5) == ":todo") {
+          realSearch = search.substring(6);
+          out = _.filter(input, function(item) { 
+            return item['content'].match(new RegExp(realSearch, "gi"));
+          });
+          return out;          
+        }
+        else if (search.substring(0, 8) == ":creator") {
+          realSearch = search.substring(9);
+          out = _.filter(input, function(item) { 
+            return item['creator']['name'].match(new RegExp(realSearch, "gi"));
+          });
+          return out;          
+        }        
+        else if (search.substring(0, 8) == ":project") {
+          realSearch = search.substring(9);
+          out = _.filter(input, function(item) { 
+            return item['project'].match(new RegExp(realSearch, "gi"));
+          });
+          return out;          
+        }  
+        else return $filter('filter')(input, search);
+      } 
+      else return $filter('filter')(input, search);
+    };
   });

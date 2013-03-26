@@ -63,9 +63,11 @@ angular
             assignedTodos.push(tmp);
           }
         }
-        if (assignedTodos != $scope.assignedTodos) {
+
+        // Update only if new todos
+        if (angular.toJson(assignedTodos) !== localStorage['assignedTodos']) {
           $scope.assignedTodos = assignedTodos;
-          localStorage['assignedTodos'] = JSON.stringify(assignedTodos);          
+          localStorage['assignedTodos'] = angular.toJson(assignedTodos);
           $scope.groupByProject();
         }
       }, function(response) {
@@ -83,7 +85,7 @@ angular
     console.log('LOG: groupByProject');
     var projects = [];
     var projectName = 'NO_PROJECT';
-    var assignedTodos = $scope.assignedTodos;
+    var assignedTodos = JSON.parse(localStorage['assignedTodos']);
     for (var i = 0; i < assignedTodos.length; i++) {
       var assignedTodo = assignedTodos[i];
       if (assignedTodo.project !== projectName) {
@@ -94,10 +96,11 @@ angular
       project.assignedTodos.push(assignedTodo);
     }
 
-    // Update only if new Todos
-    if (!_.isEqual(projects, $scope.projects)) {
-      localStorage['assignedTodosByProject'] = JSON.stringify(projects);
+    // Update only if new todos
+    if (angular.toJson(projects) !== localStorage['assignedTodosByProject']) {
+      localStorage['assignedTodosByProject'] = angular.toJson(projects);
       $scope.projects = projects;
+      $scope.displayCategory(); 
     }
   };
 
@@ -110,7 +113,7 @@ angular
   };
 
   /**
-   * Open tab to view Todo on bacsecamp.com
+   * Open tab to view todo on basecamp.com
    */
   $scope.openTodo = function(projectId, todoId) {
     console.log('LOG: openTodo');
@@ -123,18 +126,21 @@ angular
   };
 
   /**
-   * Check a Todo
+   * Check a todo
    */
   $scope.completeTodo = function(projectId, todoId) {
     console.log('LOG: completeTodo ' + projectId + ' ' + todoId);
     try { 
-      $http.put(
-        'https://basecamp.com/'+$scope.basecampId+'/api/v1/projects/'+projectId+'/todos/'+todoId+'.json', 
-        {completed:true},
-        {headers: {'Authorization':'Bearer ' + localStorage['basecampToken']}}
-      );
-      $( "#" + todoId.toString()).addClass('disappear');
-      $( "#" + todoId.toString()).delay(600).slideUp();
+      // $http.put(
+      //   'https://basecamp.com/'+$scope.basecampId+'/api/v1/projects/'+projectId+'/todos/'+todoId+'.json', 
+      //   {completed:true},
+      //   {headers: {'Authorization':'Bearer ' + localStorage['basecampToken']}}
+      // );
+      $scope.assignedTodos = _.filter($scope.assignedTodos, function(item) {
+        return item.id !== todoId;
+      });
+      $( "#" + todoId.toString()).addClass('achieved');
+      $( "#" + todoId.toString()).delay(500).slideUp();
     } catch(e) {
       console.log(e);
     }
@@ -213,18 +219,21 @@ angular
    * Event triggered by AngularJS
    */
   $scope.$watch('search', function() {
+
     if ($scope.search) {
-      console.log($scope.search);
       $('.todos > dd').css("display", "block");
       $('.todos > dt').addClass("active");
-      $(".todo-text").each(function(i, v) {
-      var block = $(v);
-      block.html(
-        block.text().replace(
-          new RegExp($scope.search, "gi"), function(match) {
-            return ["<span class='highlight'>", match, "</span>"].join("");
-        }));
-      });
+      if ($scope.search.substring(0, 5) === ":todo") {
+        var realSearch = $scope.search.substring(6);      
+        $(".todo-text").each(function(i, v) {
+        var block = $(v);
+        block.html(
+          block.text().replace(
+            new RegExp(realSearch, "gi"), function(match) {
+              return ["<span class='highlight'>", match, "</span>"].join("");
+          }));
+        });
+      }
     } else if ($scope.search == "") {
       $('.todos > dd').css("display", "none");
       $('.todos > dt').removeClass("active");

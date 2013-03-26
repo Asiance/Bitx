@@ -57,7 +57,6 @@ body {
       &:focus {
         outline: none;
       }
-      margin-right: 5px;
     }    
     #logout {
       float: right;
@@ -76,7 +75,7 @@ body {
     top: 3px;
   }
 
-  section {
+  section, dd {
     overflow: hidden;
   }
   dl {
@@ -184,7 +183,7 @@ body {
     background: url(/img/icon-link.png) center no-repeat;
     &:hover { background: url(/img/icon-link-hover.png) center no-repeat; }
     width: 32px;
-    margin-right:20px;
+    margin-right: 20px;
   }  
   .content {
     background-color: $color-white;
@@ -220,6 +219,9 @@ body {
   }
   li {
     border-bottom: 1px solid $color-border;
+    width: 1040px;
+    position: relative;
+    left: -520px;
     &:first-child { border-top: 1px solid $color-border; } 
     &:last-child { border-bottom: 0; } 
     &:hover {
@@ -235,8 +237,20 @@ body {
       }
     }
     .achievement {
+      cursor: default;
+      display: table-cell;
       background: $color-green;
       color: $color-white;
+      width: 437px;
+      padding-left: 83px;
+      font-size: 16px;
+      img {
+        vertical-align: middle;
+        padding-right: 15px;
+      }
+    }
+    .visible {
+      width: 520px;
     }
   }
   a { @include unstyled-link; }
@@ -271,15 +285,16 @@ body {
   to { margin-left: 0px; }
 }
 
-@-webkit-keyframes scaledown {
-  0% { -webkit-transform: scaleY(1); }
-  100% { -webkit-transform: scaleY(0); }
+@-webkit-keyframes achievement {
+  from { margin-left: 0px; }
+  to { margin-left: 520px; }
 }
 
-.disappear {
+.achieved {
   -webkit-animation-fill-mode: forwards;
   -webkit-animation-duration: 0.5s;
-  -webkit-animation-name: scaledown;
+  -webkit-animation-name: achievement;
+  -webkit-animation-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000); /* easeOutQuart */  
 }
 
 .highlight { background: yellow; }

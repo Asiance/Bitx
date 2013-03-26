@@ -90,7 +90,6 @@ function getAssignedTodos() {
               assignedTodos.push(tmp);
             }
           }
-          localStorage['assignedTodos'] = JSON.stringify(assignedTodos);
 
           // Group assigned Todos by Project
           var projects = [];
@@ -104,7 +103,6 @@ function getAssignedTodos() {
             }
             project.assignedTodos.push(assignedTodo);
           }
-          localStorage['assignedTodosByProject'] = JSON.stringify(projects);
 
           // Create notification
           if (localStorage['assignedTodos'] && !_.isEqual(assignedTodos, JSON.parse(localStorage['assignedTodos']))) {
@@ -116,15 +114,20 @@ function getAssignedTodos() {
                   projectName, // Title
                   item.content // Body
                 );
+                notification.onclick = function () {
+                  window.open("https://basecamp.com/" + localStorage['basecampId'] + "/projects/" + item.project_id + "/todos/" + item.id);
+                  notification.close();
+                }                
                 notification.show();
                 setTimeout(function(){ notification.cancel(); }, 15000); // Hide notificiation after 15 seconds
               }
-            });
+            });            
           }
 
           // Update localStorage
           localStorage['assignedTodos'] = JSON.stringify(assignedTodos); 
           localStorage['assignedTodolists'] = JSON.stringify(data);
+          localStorage['assignedTodosByProject'] = JSON.stringify(projects);          
           
           console.log('LOG: getAssignedTodos XHR');
         } else if (xhr.readyState === 4) {
