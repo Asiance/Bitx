@@ -1,0 +1,49 @@
+window.ja = {
+
+  "searchTodo":"タスクを検索",
+
+  "header_overdues": "期限超過",
+  "header_today": "今日",
+  "header_upcoming": "今後",
+  "header_noduedate": "期限なし",
+
+  "addedDate": "Added:",
+  
+  "dayLate": "日遅れ",
+  "daysLate": "日遅れ",
+
+  "dayLeft": "dayLeft",
+  "daysLeft": "dayLeft",
+
+  "lastUpdate": "最終更新日",
+  "minutesAgo":"分前",
+  "hoursAgo":"時間前",
+  "daysAgo":"日前",
+
+  "countOverdues":"-期限超過タスク",
+  "countToday":"-今日のタスク",
+  "countUpcoming":"-後のタスク",
+  "countNoDueDate":"-期限ないタスク",
+
+  "needAuth1":"ベースキャンプアカウントと同期するために、",
+  "needAuth2":"をクリックしてください。",
+
+  "thankYou":"ありがとうございます！",
+  "syncMess":"あなたのTodo ベースキャンプのエクステンションは只今接続されました！今から拡張機能を使用して楽しんでください。",
+
+  "settings": "設定",
+  "logout": "ログアウト",
+  "languages": "言語",
+  "eng": "英語",
+  "fra": "フランス語",
+  "kor": "韓国語",
+  "jap": "日本語",
+  "por": "ポルトガル語",
+  "ita": "イタリア語",
+  "refreshPeriod": "更新間隔",
+  "second": "秒",
+  "seconds": "秒",
+  "category": "すべてのリスト",
+  "default": "不履行"
+
+};

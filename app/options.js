@@ -47,3 +47,24 @@ function restore_options() {
 }
 document.addEventListener('DOMContentLoaded', restore_options);
 document.querySelector('#save').addEventListener('click', save_options);
+
+var userLang = (navigator.language) ? navigator.language : navigator.userLanguage; 
+var locale = userLang.substring(0,2);
+lang = localStorage['language'] ? localStorage['language'] : locale;
+
+document.getElementById("onesecond").innerHTML += window[lang]["second"];
+document.getElementById("fiveseconds").innerHTML += window[lang]["seconds"];
+document.getElementById("tenseconds").innerHTML += window[lang]["seconds"];
+
+document.getElementById("default").innerHTML = window[lang]["default"];
+document.getElementById("overdues").innerHTML = window[lang]["header_overdues"];
+document.getElementById("today").innerHTML = window[lang]["header_today"];
+document.getElementById("upcoming").innerHTML = window[lang]["header_upcoming"];
+document.getElementById("noduedate").innerHTML = window[lang]["header_noduedate"];
+
+document.getElementById("eng").innerHTML = window[lang]["eng"];
+document.getElementById("fra").innerHTML = window[lang]["fra"];
+document.getElementById("kor").innerHTML = window[lang]["kor"];
+document.getElementById("jap").innerHTML = window[lang]["jap"];
+document.getElementById("ita").innerHTML = window[lang]["ita"];
+document.getElementById("por").innerHTML = window[lang]["por"];

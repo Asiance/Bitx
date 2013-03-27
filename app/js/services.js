@@ -53,6 +53,19 @@ angular
 })
 
 /*
+ * Check a Todo
+ */
+.factory('completeTodo', function($http) {
+  return {
+    completeTodo: function(basecampId, projectId, todoId) {
+      $http.put('https://basecamp.com/'+basecampId+'/api/v1/projects/'+projectId+'/todos/'+todoId+'.json', 
+      {completed:true},
+      {headers: {'Authorization':'Bearer ' + localStorage['basecampToken']}});
+    }
+  }
+})
+
+/*
  * Return date following YYYYMMDD format
  */
 .factory('Utils', function () {

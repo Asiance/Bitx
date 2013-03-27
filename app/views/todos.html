@@ -29,7 +29,7 @@
         <div class="todo">
           <div><span ng-click="completeTodo(project.id, assignedTodo.id)" class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
         </div>
-        <span class="comments" ng-show="assignedTodo.comments_count" title="{{lastUpdate}}: {{assignedTodo.updated_at | elapsedTime}}">
+        <span ng-click="openTodo(project.id, assignedTodo.id)" class="comments" ng-show="assignedTodo.comments_count" title="{{lastUpdate}}: {{assignedTodo.updated_at | elapsedTime}}">
           <p>{{assignedTodo.comments_count}}</p>
         </span>
         <span class="void" ng-hide="assignedTodo.comments_count"></span>
@@ -54,7 +54,7 @@
         <div class="todo">
           <div><span ng-click="completeTodo(project.id, assignedTodo.id)" class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
         </div>
-        <span class="comments" ng-show="assignedTodo.comments_count" title="{{lastUpdate}}: {{assignedTodo.updated_at | elapsedTime}}">
+        <span ng-click="openTodo(project.id, assignedTodo.id)" class="comments" ng-show="assignedTodo.comments_count" title="{{lastUpdate}}: {{assignedTodo.updated_at | elapsedTime}}">
           <p>{{assignedTodo.comments_count}}</p>
         </span>
         <span class="void" ng-hide="assignedTodo.comments_count"></span>
@@ -80,7 +80,7 @@
         <div class="todo">
           <div><span ng-click="completeTodo(project.id, assignedTodo.id)" class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
         </div>
-        <span class="comments" ng-show="assignedTodo.comments_count" title="{{lastUpdate}} {{assignedTodo.updated_at | elapsedTime}}">
+        <span ng-click="openTodo(project.id, assignedTodo.id)"  class="comments" ng-show="assignedTodo.comments_count" title="{{lastUpdate}} {{assignedTodo.updated_at | elapsedTime}}">
           <p>{{assignedTodo.comments_count}}</p>
         </span>
         <span class="void" ng-hide="assignedTodo.comments_count"></span>
@@ -105,7 +105,7 @@
         <div class="todo">
           <div><span ng-click="completeTodo(project.id, assignedTodo.id)" class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
         </div>
-        <span class="comments" ng-show="assignedTodo.comments_count" title="{{lastUpdate}}: {{assignedTodo.updated_at | elapsedTime}}">
+        <span ng-click="openTodo(project.id, assignedTodo.id)" class="comments" ng-show="assignedTodo.comments_count" title="{{lastUpdate}}: {{assignedTodo.updated_at | elapsedTime}}">
           <p>{{assignedTodo.comments_count}}</p>
         </span>
         <span class="void" ng-hide="assignedTodo.comments_count"></span>

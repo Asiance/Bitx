@@ -2,10 +2,10 @@ window.fr = {
 
   "searchTodo":"Chercher une todo...",
 
-  "header_overdues": "EN RETARD",
-  "header_today": "AUJOURD'HUI",
-  "header_upcoming": "A VENIR",
-  "header_noduedate": "SANS DATE",
+  "header_overdues": "En retard",
+  "header_today": "Aujourd'hui",
+  "header_upcoming": "A venir",
+  "header_noduedate": "Sans date",
 
   "addedDate": "Ajouté il y a",
   
@@ -29,7 +29,21 @@ window.fr = {
   "needAuth2":"pour synchroniser votre compte Basecamp avec l'extension.",
 
   "thankYou":"Merci !",
-  "syncMess":"Votre Todo extension pour Basecamp est maintenant connecté à votre compte !",
-  "startMess":"Vous pouvez commencer à utiliser l'extension."
+  "syncMess":"Votre Todo extension pour Basecamp est maintenant connecté à votre compte ! Vous pouvez commencer à utiliser l'extension.",
+
+  "settings": "Paramètres",
+  "logout": "Déconnexion",
+  "languages": "Langues",
+  "eng": "Anglais",
+  "fra": "Français",
+  "kor": "Coréen",
+  "jap": "Japonais",
+  "por": "Portugais",
+  "ita": "Italien",
+  "refreshPeriod": "Refresh period",
+  "second": " seconde",
+  "seconds": " secondes",
+  "category": "Catégorie à afficher",
+  "default": "Défaut"
 
 };

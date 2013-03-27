@@ -6,7 +6,7 @@ angular
 /**
  * Controller linked to todos.html
  */
-.controller('TodosController', function($scope, $filter, $resource, $http, $location, Authorization, User, AssignedTodolists, Todo) {
+.controller('TodosController', function($scope, $filter, Authorization, User, AssignedTodolists, Todo, completeTodo) {
 
   /**
    * After OAuth2 signin, retrieve a Basecamp Account
@@ -131,11 +131,7 @@ angular
   $scope.completeTodo = function(projectId, todoId) {
     console.log('LOG: completeTodo ' + projectId + ' ' + todoId);
     try { 
-      // $http.put(
-      //   'https://basecamp.com/'+$scope.basecampId+'/api/v1/projects/'+projectId+'/todos/'+todoId+'.json', 
-      //   {completed:true},
-      //   {headers: {'Authorization':'Bearer ' + localStorage['basecampToken']}}
-      // );
+      completeTodo.completeTodo($scope.basecampId, projectId, todoId);
       $scope.assignedTodos = _.filter($scope.assignedTodos, function(item) {
         return item.id !== todoId;
       });
@@ -193,10 +189,10 @@ angular
     var lang = $scope.lang;
     document.getElementById("search-input").placeholder = window[lang]["searchTodo"];
 
-    document.getElementById("header_overdues").innerHTML = window[lang]["header_overdues"];
-    document.getElementById("header_today").innerHTML = window[lang]["header_today"];
-    document.getElementById("header_upcoming").innerHTML = window[lang]["header_upcoming"];
-    document.getElementById("header_noduedate").innerHTML = window[lang]["header_noduedate"];
+    document.getElementById("header_overdues").innerHTML = $filter('uppercase')(window[lang]["header_overdues"]);
+    document.getElementById("header_today").innerHTML = $filter('uppercase')(window[lang]["header_today"]);
+    document.getElementById("header_upcoming").innerHTML = $filter('uppercase')(window[lang]["header_upcoming"]);
+    document.getElementById("header_noduedate").innerHTML = $filter('uppercase')(window[lang]["header_noduedate"]);
 
     $scope.addedDate = window[lang]["addedDate"];
 
@@ -219,7 +215,6 @@ angular
    * Event triggered by AngularJS
    */
   $scope.$watch('search', function() {
-
     if ($scope.search) {
       $('.todos > dd').css("display", "block");
       $('.todos > dt').addClass("active");
@@ -253,7 +248,7 @@ angular
   if (localStorage['assignedTodosByProject']) {
     $scope.projects = JSON.parse(localStorage['assignedTodosByProject']);
   }
-  $scope.getAssignedTodos();
+  $scope.getAssignedTodos(); // Trigger a refresh on launch
 
   /**
    * Execute JS scripts on launch
@@ -292,15 +287,22 @@ angular
     window.close();
     localStorage.clear();    
   }
-  if (localStorage['basecampToken']) $scope.online = true;
 
   /**
    * Initialization of i18n
    */
-  var userLang = (navigator.language) ? navigator.language : navigator.userLanguage; 
-  var lang = userLang.substring(0,2);
-  $scope.lang = localStorage["language"] ? localStorage["language"] : lang;
-  document.getElementById("needAuth1").innerHTML = window[lang]["needAuth1"];
-  document.getElementById("needAuth2").innerHTML = window[lang]["needAuth2"];
+  $scope.i18n = function() {   
+    var userLang = (navigator.language) ? navigator.language : navigator.userLanguage; 
+    var lang = userLang.substring(0,2);
+    $scope.lang = localStorage["language"] ? localStorage["language"] : lang;
+    document.getElementById("needAuth1").innerHTML = window[lang]["needAuth1"];
+    document.getElementById("needAuth2").innerHTML = window[lang]["needAuth2"];
+  }
+
+  /**
+   * Initialization
+   */
+  if (localStorage['basecampToken']) $scope.online = true;
+  $scope.i18n(); 
 
 });

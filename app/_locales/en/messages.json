@@ -1,13 +1,10 @@
 {
-  "lang": {
-    "message": "en"
-  }, 
   "extName": {
     "message": "Bitx",
     "description": "Extension name (original: Bitx)."
   },
   "extDesc": {
-    "message": "Connect to a Basecamp account and display all assigned todos",
+    "message": "Connect to a Basecamp account and display all assigned todos.",
     "description": "Extension description shown in Chrome > Extensions."    
   }
 }

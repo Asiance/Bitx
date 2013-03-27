@@ -1,39 +1,47 @@
+<!doctype html>
 <html>
-<head><title>Bitx - Options</title></head>
-
+<head>
+  <title id="title">Bitx - Options</title>
+  <meta charset='utf-8'>
+</head>
 <body>
 
   refresh_period:
   <select id="refresh_period">
-    <option value="1000">1s</option>
-    <option value="5000">5s</option>
-    <option value="10000">10s</option>
+    <option value="1000" id="onesecond">1</option>
+    <option value="5000" id="fiveseconds">5</option>
+    <option value="10000" id="tenseconds">10</option>
   </select>
 
   counter_todos:
   <select id="counter_todos">
-    <option value="default">default</option>
-    <option value="overdues">overdues</option>
-    <option value="today">today</option>
-    <option value="upcoming">upcoming</option>
-    <option value="no_due_date">no due date</option>
+    <option value="default" id="default"></option>
+    <option value="overdues" id="overdues"></option>
+    <option value="today" id="today"></option>
+    <option value="upcoming" id="upcoming"></option>
+    <option value="no_due_date" id="noduedate"></option>
   </select>
 
   language:
   <select id="language">
-    <option value="en">English</option>
-    <option value="fr">French</option>
-    <option value="ko">Korean</option>
-    <option value="it">Italian</option>
-    <option value="ja">Japanese</option>
-    <option value="pt">Portuguese</option>
+    <option value="en" id="eng"></option>
+    <option value="fr" id="fra"></option>
+    <option value="ko" id="kor"></option>
+    <option value="it" id="ita"></option>
+    <option value="ja" id="jap"></option>
+    <option value="pt" id="por"></option>
   </select>
 
   <br>
   <div id="status"></div>
   <button id="save">Save</button>
+
+  <script src="js/lang/en.js"></script>
+  <script src="js/lang/fr.js"></script>
+  <script src="js/lang/it.js"></script>
+  <script src="js/lang/ja.js"></script>
+  <script src="js/lang/pt.js"></script>
+  <script src="options.js"></script>
+
 </body>
-
-<script src="options.js"></script>
-
 </html>
