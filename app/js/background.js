@@ -7,10 +7,7 @@ window.onload = function () {
   var locale = userLang.substring(0,2);
   localStorage['language'] = localStorage['language'] ? localStorage['language'] : locale;
   refresh_period = localStorage['refresh_period'] ? localStorage['refresh_period'] : 5000;
-  getAssignedTodos();
-  updateBadge();
-  setInterval(getAssignedTodos, refresh_period);
-  setInterval(updateBadge, refresh_period);  
+  setInterval(getMyTodos, refresh_period);
 }
 
 /*
@@ -29,10 +26,11 @@ function getAuthorization() {
         getUser();
         console.log('LOG: getAuthorization XHR');
       } else if (xhr.readyState === 4) {
-        localStorage.assignedTodolists = "";
-        localStorage.assignedTodos = "";
-        localStorage.assignedTodosByProject = "";
-        console.log('ERROR: getAuthorization XHR');
+        localStorage.myTodolists = "";
+        localStorage.myTodos = "";
+        localStorage.myTodosByProject = "";
+        updateBadge();        
+        console.log('ERROR: getAuthorization XHR');        
       }
     };
     xhr.send();
@@ -69,7 +67,7 @@ function getUser() {
  * Retrieve the Assigned Todos et Todolists of the user
  * Store data in localStorage
  */
-function getAssignedTodos() {
+function getMyTodos() {
   try {
     if (localStorage['basecampId'] && localStorage['userId']) {
       var xhr = new XMLHttpRequest();
@@ -80,34 +78,21 @@ function getAssignedTodos() {
           data = JSON.parse(xhr.responseText);
           
           // Flatten Todolists to keep only Todos
-          var assignedTodos = new Array(); 
+          var myTodos = new Array(); 
           for (var i = 0; i < data.length; i++) { 
             for (var j = 0; j < data[i].assigned_todos.length; j++) { 
               var tmp = data[i].assigned_todos[j];
               tmp.project = data[i].bucket.name;
               tmp.project_id = data[i].bucket.id;
               tmp.todolist = data[i].name;
-              assignedTodos.push(tmp);
+              myTodos.push(tmp);
             }
-          }
-
-          // Group assigned Todos by Project
-          var projects = [];
-          var projectName = 'NO_PROJECT';
-          for (var i = 0; i < assignedTodos.length; i++) {
-            var assignedTodo = assignedTodos[i];
-            if (assignedTodo.project !== projectName) {
-              var project = {name: assignedTodo.project, id: assignedTodo.project_id, assignedTodos: []};
-              projectName = assignedTodo.project;
-              projects.push(project);
-            }
-            project.assignedTodos.push(assignedTodo);
           }
 
           // Create notification
-          if (localStorage['assignedTodos'] && !_.isEqual(assignedTodos, JSON.parse(localStorage['assignedTodos']))) {
-            _.each(assignedTodos, function(item) {
-              if (!_.findWhere(JSON.parse(localStorage['assignedTodos']), {id: item.id})) { // Check each todo whether it is new or not
+          if (localStorage['myTodos'] && !_.isEqual(myTodos, JSON.parse(localStorage['myTodos']))) {
+            _.each(myTodos, function(item) {
+              if (!_.findWhere(JSON.parse(localStorage['myTodos']), {id: item.id})) { // Check each todo whether it is new or not
                 var projectName = _.findWhere(data, {id: item.todolist_id}).bucket.name;
                 var notification = webkitNotifications.createNotification(
                   item.creator.avatar_url, // Icon
@@ -119,20 +104,32 @@ function getAssignedTodos() {
                   notification.close();
                 }                
                 notification.show();
-                setTimeout(function(){ notification.cancel(); }, 15000); // Hide notificiation after 15 seconds
+                setTimeout(function() { notification.cancel(); }, 15000); // Hide notificiation after 15 seconds
               }
-            });            
+            });  
+          }
+
+          var projects = [];
+          var projectName = 'NO_PROJECT';
+          for (var i = 0; i < myTodos.length; i++) {
+            var myTodo = myTodos[i];
+            if (myTodo.project !== projectName) {
+              var project = {name: myTodo.project, id: myTodo.project_id, assignedTodos: []};
+              projectName = myTodo.project;
+              projects.push(project);
+            }
+            project.assignedTodos.push(myTodo);
           }
 
           // Update localStorage
-          localStorage['assignedTodos'] = JSON.stringify(assignedTodos); 
-          localStorage['assignedTodolists'] = JSON.stringify(data);
-          localStorage['assignedTodosByProject'] = JSON.stringify(projects);          
-          
-          console.log('LOG: getAssignedTodos XHR');
+          localStorage['myTodos'] = JSON.stringify(myTodos); 
+          localStorage['myTodolists'] = JSON.stringify(data);
+          localStorage['myTodosByProject'] = JSON.stringify(projects);
+          updateBadge();
+          console.log('LOG: getMyTodos XHR');
         } else if (xhr.readyState === 4) {
           localStorage.clear();
-          console.log('ERROR: getAssignedTodos XHR');
+          console.log('ERROR: getMyTodos XHR');
         }
       };
       xhr.send();

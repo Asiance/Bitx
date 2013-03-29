@@ -44,6 +44,10 @@ window.it = {
   "second": " secondo",
   "seconds": " secondi",
   "category": "Mostrare categoria",
-  "default": "Omettere"
+  "default": "Omettere",
+
+  "achievement1":"Good work!",
+  "achievement2":"Well done!",
+  "achievement3":"Excellent!"
 
 };

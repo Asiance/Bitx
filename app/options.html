@@ -1,43 +1,57 @@
 <!doctype html>
 <html>
 <head>
-  <title id="title">Bitx - Options</title>
   <meta charset='utf-8'>
+  <title id="title">Bitx - Options</title>
+  <link href="css/options.css" rel="stylesheet" media="screen"> 
 </head>
 <body>
 
-  refresh_period:
-  <select id="refresh_period">
-    <option value="1000" id="onesecond">1</option>
-    <option value="5000" id="fiveseconds">5</option>
-    <option value="10000" id="tenseconds">10</option>
-  </select>
+  <form>
+    <fieldset>
+      <legend>Settings</legend>
 
-  counter_todos:
-  <select id="counter_todos">
-    <option value="default" id="default"></option>
-    <option value="overdues" id="overdues"></option>
-    <option value="today" id="today"></option>
-    <option value="upcoming" id="upcoming"></option>
-    <option value="no_due_date" id="noduedate"></option>
-  </select>
+      <p>
+        <label for="refresh_period">refresh_period</label>
+        <select id="refresh_period">
+          <option value="1000" id="onesecond">1</option>
+          <option value="5000" id="fiveseconds">5</option>
+          <option value="10000" id="tenseconds">10</option>
+        </select>
+      </p>
 
-  language:
-  <select id="language">
-    <option value="en" id="eng"></option>
-    <option value="fr" id="fra"></option>
-    <option value="ko" id="kor"></option>
-    <option value="it" id="ita"></option>
-    <option value="ja" id="jap"></option>
-    <option value="pt" id="por"></option>
-  </select>
+      <p>
+        <label for="counter_todos">counter_todos</label>
+        <select id="counter_todos">
+          <option value="default" id="default"></option>
+          <option value="overdues" id="overdues"></option>
+          <option value="today" id="today"></option>
+          <option value="upcoming" id="upcoming"></option>
+          <option value="no_due_date" id="noduedate"></option>
+        </select>
+      </p>
 
-  <br>
-  <div id="status"></div>
-  <button id="save">Save</button>
+      <p>
+      <label for="language">language</label>
+      <select id="language">
+        <option value="en" id="eng"></option>
+        <option value="fr" id="fra"></option>
+        <option value="ko" id="kor"></option>
+        <option value="it" id="ita"></option>
+        <option value="ja" id="jap"></option>
+        <option value="pt" id="por"></option>
+      </select>
+      <p>
+    </fieldset>
+
+    <div id="status"></div>
+    <button id="save">Save</button>
+    <button id="logout">Logout</button>
+  </form>
 
   <script src="js/lang/en.js"></script>
   <script src="js/lang/fr.js"></script>
+  <script src="js/lang/ko.js"></script>
   <script src="js/lang/it.js"></script>
   <script src="js/lang/ja.js"></script>
   <script src="js/lang/pt.js"></script>

@@ -10,21 +10,23 @@ angular
    * '3' - Upcoming
    * '4' - Undetermined
    */
-  .filter('status', function(Utils, $filter) {
+  .filter('status', function($filter) {
     return function(input, status) {
       if(input) {
-        var currentDateYYYYMMDD = Utils.getTodayDate();
-        var inputYYYYMMDD = "";
+        var todayDate = new Date();
+        todayDate.setHours(0,0,0,0);
+        var inputDate = null;
         var out = []; 
         for (var i = 0; i < input.length; i++) {
             if (input[i].due_at != null && status != '4') {
-              inputYYYYMMDD = parseInt(input[i].due_at.replace(/-/g, ""));
-              if ((status == '1') && (inputYYYYMMDD < currentDateYYYYMMDD)) {
+              inputDate = new Date(input[i].due_at);
+              inputDate.setHours(0,0,0,0);
+              if ((status == '1') && (inputDate < todayDate)) {
                 input[i].days_late =  $filter('daysLate')(input[i].due_at);
                 out.push(input[i]);
               }
-              else if ((status == '2') && (inputYYYYMMDD == currentDateYYYYMMDD)) out.push(input[i]);
-              else if ((status == '3') && (inputYYYYMMDD > currentDateYYYYMMDD)) {
+              else if ((status == '2') && (inputDate == todayDate)) out.push(input[i]);
+              else if ((status == '3') && (inputDate > todayDate)) {
                 input[i].remaining_days =  $filter('daysRemaining')(input[i].due_at);
                 out.push(input[i]);
               }
@@ -39,7 +41,7 @@ angular
   /**
    * Determine elapsed time
    */
-  .filter('elapsedTime', function(Utils) {
+  .filter('elapsedTime', function() {
     var today = new Date();
     var lang = localStorage["language"] ? localStorage["language"] : "en";      
     return function(input) {
@@ -57,7 +59,7 @@ angular
   /**
    * Determine number of days remaining 
    */
-  .filter('daysRemaining', function(Utils) {
+  .filter('daysRemaining', function() {
     var today = new Date();
     return function(input) {
       if(input) {
@@ -69,7 +71,7 @@ angular
   /**
    * Determine number of days late
    */
-  .filter('daysLate', function(Utils) {
+  .filter('daysLate', function() {
     var today = new Date();
     return function(input) {
       if(input) {
@@ -78,66 +80,47 @@ angular
     };
   })
 
-
-  /*
-  * Translations for strings
-  */
-  .filter("i18n", function() {
-    return function(string) {
-      var log_untranslated, translated;
-      log_untranslated = false;
-      translated = window[localStorage.language][string];
-      console.log(string);
-      console.log(translated);
-      if (translated === undefined || translated === "") {
-        log_untranslated === true;
-        if (translated === undefined) {
-          console.log("Missing translation for string: " + string);
-        }
-        return string;
+  /**
+   * Remove domain name of email address
+   * (Just for display)
+   */
+  .filter('removeDomain', function() {
+    return function(input) {
+      if(input) {
+        return input.split("@")[0];
       }
-      return translated;
     };
   })
-  
+ 
   /**
    * Advanced search
    */
-  .filter('keywordSearch', function(Utils, $filter) {
+  .filter('keywordSearch', function($filter) {
     var out = [];
     var realSearch = "";
     return function(input, search) {
-      if(search && input) {
-        if (search.substring(0, 9) == ":todolist") {
-          realSearch = search.substring(10);
-          out = _.filter(input, function(item) { 
-            return item['todolist'].match(new RegExp(realSearch, "gi"));
-          });
-          return out;        
+       if(search && input) {
+        switch(true) {
+          // If '@someone' has been type
+          case (new RegExp("^@.+", "gi")).test(search):
+            // If nothing follows '@someone'
+            if(search.indexOf(" ") === -1) return $filter('filter')(input, "");
+            // If something follows '@someone'
+            // Look in the todo description or in the project name
+            else {
+              realSearch = search.substring(search.indexOf(" ") + 1);
+              out = _.filter(input, function(item) { 
+                if ( item['content'].match(new RegExp(realSearch, "gi")) ||
+                      item['project'].match(new RegExp(realSearch, "gi")) ) return true;
+              });
+              return out; 
+            }
+            break;
+          // If any word has been typed, load the regular search filter
+          default:
+            return $filter('filter')(input, search);
         }
-        else if (search.substring(0, 5) == ":todo") {
-          realSearch = search.substring(6);
-          out = _.filter(input, function(item) { 
-            return item['content'].match(new RegExp(realSearch, "gi"));
-          });
-          return out;          
-        }
-        else if (search.substring(0, 8) == ":creator") {
-          realSearch = search.substring(9);
-          out = _.filter(input, function(item) { 
-            return item['creator']['name'].match(new RegExp(realSearch, "gi"));
-          });
-          return out;          
-        }        
-        else if (search.substring(0, 8) == ":project") {
-          realSearch = search.substring(9);
-          out = _.filter(input, function(item) { 
-            return item['project'].match(new RegExp(realSearch, "gi"));
-          });
-          return out;          
-        }  
-        else return $filter('filter')(input, search);
-      } 
-      else return $filter('filter')(input, search);
+      // If nothing has been type
+      } else return input;
     };
   });

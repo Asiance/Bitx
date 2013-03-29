@@ -2,6 +2,7 @@
 @import "compass/reset";
 @import "compass/typography/links/unstyled-link";
 @import url(http://fonts.googleapis.com/css?family=Droid+Sans:400,700);
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
 
 $color-dark: #232323;
 $color-white: #ffffff;
@@ -18,20 +19,28 @@ $color-grey-text: #a0a0a0;
 $color-dark-grey: #444444;
 $color-border: #f4f4f4;
 $color-dark-border: #373736;
-
-$line-height: 50px;
 $first-column-width: 80px;
-$search-input-width: 120px;
+
+$fonts_en: "Droid Sans", Verdana, arial, helvetica, clean, sans-serif;
+$fonts_ko: "Nanum Gothic", "나눔고딕", "NanumGothic", "Malgun Gothic", '돋움', "Dotum", "AppleGothic", "Gulim", "Arial Unicode", "Arial", sans-serif;
+$fonts_ja: "Meiryo UI", 'Meiryo', 'MS UI Gothic', 'MS PGothic', 'MS Gothic','Microsoft YaHei',"Arial Unicode", "Arial", sans-serif;
 
 body {
   @include global-reset;
   width: 500px;
-  font-family: "Droid Sans";
+  font-family: $fonts_en;
+  &.ja { 
+    h1, .date p { font-family: $fonts_ja; }
+  };
+  &.ko { 
+    h1, .date p { font-family: $fonts_ko; }
+    .date p { font-size: 12px; }
+  }
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
   background: $color-dark;
-  line-height: $line-height;
+  line-height: 50px;
 
   header {
     height: 50px;
@@ -46,7 +55,7 @@ body {
       font-size: 14px;
       margin-left: 70px;
       padding: 10px 80px;
-      width: $search-input-width;
+      width: 120px;
       background: $color-close-white;
       color : $color-grey;
       border: none;
@@ -58,10 +67,11 @@ body {
         outline: none;
       }
     }    
-    #logout {
+    #settings {
+      cursor: pointer;
       float: right;
       padding: 14px;
-      margin-right: 13px;
+      margin-right: 14px;
     }
   }
 
@@ -119,7 +129,6 @@ body {
       background: $color-light-blue;
     }
   }
-
 
   h1 {
     display: inline-block;

@@ -12,8 +12,8 @@ window.ja = {
   "dayLate": "日遅れ",
   "daysLate": "日遅れ",
 
-  "dayLeft": "dayLeft",
-  "daysLeft": "dayLeft",
+  "dayLeft": "日残り", // Don't match perfectly
+  "daysLeft": "日残り", // Don't match perfectly
 
   "lastUpdate": "最終更新日",
   "minutesAgo":"分前",
@@ -44,6 +44,10 @@ window.ja = {
   "second": "秒",
   "seconds": "秒",
   "category": "すべてのリスト",
-  "default": "不履行"
+  "default": "標準",
+
+  "achievement1":"Good work!",
+  "achievement2":"Well done!",
+  "achievement3":"Excellent!"
 
 };

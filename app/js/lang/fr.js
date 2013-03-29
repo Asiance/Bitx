@@ -44,6 +44,10 @@ window.fr = {
   "second": " seconde",
   "seconds": " secondes",
   "category": "Catégorie à afficher",
-  "default": "Défaut"
+  "default": "Défaut",
+
+  "achievement1":"Bon travail!",
+  "achievement2":"Bravo!",
+  "achievement3":"Excellent!"
 
 };

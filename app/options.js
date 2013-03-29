@@ -19,34 +19,36 @@ function save_options() {
   }, 750);
 }
 
+function logout() {
+  localStorage.clear();
+}
+
 // Restores select box state to saved value from localStorage.
 function restore_options() {
-  var choice = localStorage["refresh_period"];
+  selectOption("refresh_period");
+  selectOption("counter_todos");
+  selectOption("language");
+}
+
+function selectOption(variableString) {
+  var child;
+  var choice = localStorage[variableString];
   if (!choice) {
     return;
   }
-  var select = document.getElementById("refresh_period");
+  var select = document.getElementById(variableString);
   for (var i = 0; i < select.children.length; i++) {
-    if (select.children[i].value == choice) {
-      child.selected = "true";
-      break;
-    }
-  }
-  
-  choice = localStorage["counter_todos"];
-  if (!choice) {
-    return;
-  }
-  select = document.getElementById("counter_todos");
-  for (var i = 0; i < select.children.length; i++) {
+    child = select.children[i];    
     if (select.children[i].value == choice) {
       child.selected = "true";
       break;
     }
   }
 }
+
 document.addEventListener('DOMContentLoaded', restore_options);
 document.querySelector('#save').addEventListener('click', save_options);
+document.querySelector('#logout').addEventListener('click', logout);
 
 var userLang = (navigator.language) ? navigator.language : navigator.userLanguage; 
 var locale = userLang.substring(0,2);

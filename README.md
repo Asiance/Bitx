@@ -20,13 +20,21 @@ Installation
 3. Click **Load unpacked extension…**
 4. Select the directory in which you unzip the extension files
 
-Configuration
+Default configuration
 --------------------
 *  The extension is preconfigured to choose the **first** Basecamp account that matches `{"product": "bcx"}`. In `js/background.js` and `js/controller.js`:
 
         localStorage['basecampId'] = _.findWhere(data.accounts, {product: "bcx"}).id;
 
 *  Refresh period is set in `js/background.js` to **five seconds**.
+
+Settings
+--------------------
+
+  - Period refresh
+  - Category to display on open
+  - Languages (English, French, Italian, Japanese, Korean, Portuguese)
+  - Logout
 
 Dependencies
 --------------------

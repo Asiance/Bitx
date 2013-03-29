@@ -44,6 +44,10 @@ window.pt = {
   "second": " segundo",
   "seconds": " segundos",
   "category": "Mostrar categoria",
-  "default": "Omitir"
+  "default": "Omitir",
+
+  "achievement1":"Good work!",
+  "achievement2":"Well done!",
+  "achievement3":"Excellent!"
 
 };

@@ -2,6 +2,11 @@
 @import "compass/css3";
 @import "compass/typography/links/unstyled-link";
 @import url(http://fonts.googleapis.com/css?family=Droid+Sans:400,700);
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+
+$fonts_en: "Droid Sans", Verdana, arial, helvetica, clean, sans-serif;
+$fonts_ko: "Nanum Gothic", "나눔고딕", "NanumGothic", "Malgun Gothic", '돋움', "Dotum", "AppleGothic", "Gulim", "Arial Unicode", "Arial", sans-serif;
+$fonts_ja: "Meiryo UI", 'Meiryo', 'MS UI Gothic', 'MS PGothic', 'MS Gothic','Microsoft YaHei',"Arial Unicode", "Arial", sans-serif;
 
 html, body {
   height: 100%;
@@ -11,7 +16,13 @@ body {
   margin: 0px;
   padding: 0px;
   background: url('../img/background.jpg') center;
-  font-family: "Droid Sans";
+  font-family: $fonts_en;  
+  &.ja { 
+    p { font-family: $fonts_ja; }
+  };
+  &.ko { 
+    p { font-family: $fonts_ko; }
+  }
   font-style: normal;
   font-weight: 400;
   color: white;

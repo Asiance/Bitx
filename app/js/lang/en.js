@@ -44,6 +44,9 @@ window.en = {
   "second": " second",
   "seconds": " seconds",
   "category": "Category to display",
-  "default": "Default"
+  "default": "Default",
 
+  "achievement1":"Good work!",
+  "achievement2":"Well done!",
+  "achievement3":"Excellent!"
 };
