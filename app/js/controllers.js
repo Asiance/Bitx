@@ -6,7 +6,7 @@ angular
 /**
  * Controller linked to todos.html
  */
-.controller('TodosController', function($scope, $filter, Authorization, People, User, AssignedTodolists, Todolist, Todo, completeTodo, AllTodolists) {
+.controller('TodosController', function($scope, $filter, Authorization, People, User, AssignedTodolists, Todo, completeTodo) {
 
   /**
    * After OAuth2 signin, retrieve a Basecamp Account
@@ -52,7 +52,7 @@ angular
     console.log('LOG: getPeople');
     try {
       People.query({basecampId: $scope.basecampId}, function(data) {
-        $scope.people = _.sortBy(data, function(user) { return user.name; });;
+        $scope.people = _.sortBy(data, function(user) { return user.name; });
         localStorage['people'] = angular.toJson($scope.people);
       }, function(response) {
         console.log('ERROR: Failed to connect!')
@@ -62,7 +62,7 @@ angular
     }
   };
 
- /**
+  /**
    * Fetch Todolists assigned to the user
    * and remove the 'Todolist level' to keep only remaining Todos
    */
@@ -73,8 +73,8 @@ angular
       AssignedTodolists.query({basecampId: $scope.basecampId, userId: paramUserId}, function(data) {
         // Flatten data to get only Todos
         var assignedTodos = [];
-        for (var i = 0; i < data.length; i++) { 
-          for (var j = 0; j < data[i].assigned_todos.length; j++) { 
+        for (var i = 0; i < data.length; i++) {
+          for (var j = 0; j < data[i].assigned_todos.length; j++) {
             var tmp = data[i].assigned_todos[j];
             tmp.project = data[i].bucket.name;
             tmp.project_id = data[i].bucket.id;
@@ -84,7 +84,7 @@ angular
         }
 
         // Update only if new todos
-        // Works only because Basecamp served the JSON in the same order
+        // Works only because Basecamp give the JSON in the same order
         if (angular.toJson(assignedTodos) !== localStorage['assignedTodos']) {
           $scope.assignedTodos = assignedTodos;
           localStorage['assignedTodos'] = angular.toJson(assignedTodos);
@@ -117,7 +117,7 @@ angular
     }
 
     // Update only if new todos
-    // Works only because Basecamp served the JSON in the same order
+    // Works only because Basecamp give the JSON in the same order
     if (angular.toJson(projects) !== localStorage['assignedTodosByProject']) {
       localStorage['assignedTodosByProject'] = angular.toJson(projects);
       $scope.projects = projects;
@@ -152,7 +152,7 @@ angular
   $scope.completeTodo = function(projectId, todoId) {
     console.log('LOG: completeTodo ' + projectId + ' ' + todoId);
     try { 
-      completeTodo.completeTodo($scope.basecampId, projectId, todoId);
+      //completeTodo.completeTodo($scope.basecampId, projectId, todoId);
       $scope.assignedTodos = _.filter($scope.assignedTodos, function(item) {
         return item.id !== todoId;
       });
@@ -170,14 +170,14 @@ angular
    */
   $scope.displayCategory = function() {
     try {
-      // If no category is active, display the first which is not empty
       $scope.overdue = "";
       $scope.today = "";
       $scope.upcoming = "";
       $scope.no_due_date = "";
       $('.todos > dd').css("display", "none");
-
-      var counter_todos = localStorage['counter_todos'] ? localStorage['counter_todos'] : "default";      
+      
+      // If no category is active, display the first which is not empty
+      var counter_todos = localStorage['counter_todos'] ? localStorage['counter_todos'] : "default";
       if (!$scope.overdue && !$scope.today && !$scope.upcoming && !$scope.no_due_date) {
         var status = $filter('status');
         var keywordSearch = $filter('keywordSearch');
@@ -187,7 +187,7 @@ angular
         if (counter_todos == 'overdues' || 
           (counter_todos == 'default' && status(keywordSearch($scope.assignedTodos, $scope.search), 1).length > 0)) {
           $('#overdue_content').css("display", "block");
-          $scope.overdue = "active active_overdues";        
+          $scope.overdue = "active active_overdues";
         }
         else if (counter_todos == 'today' || 
           (counter_todos == 'default' && status(keywordSearch($scope.assignedTodos, $scope.search), 2).length > 0)) {
@@ -221,16 +221,10 @@ angular
       document.getElementById("header_today").innerHTML = $filter('uppercase')(window[lang]["header_today"]);
       document.getElementById("header_upcoming").innerHTML = $filter('uppercase')(window[lang]["header_upcoming"]);
       document.getElementById("header_noduedate").innerHTML = $filter('uppercase')(window[lang]["header_noduedate"]);
-      $scope.addedDate = window[lang]["addedDate"];
       $scope.dayLate = window[lang]["dayLate"];
       $scope.daysLate = window[lang]["daysLate"];
       $scope.dayLeft = window[lang]["dayLeft"];
       $scope.daysLeft = window[lang]["daysLeft"];
-      $scope.lastUpdate = window[lang]["lastUpdate"];
-      $scope.countOverdues = window[lang]["countOverdues"];
-      $scope.countToday = window[lang]["countToday"];
-      $scope.countUpcoming = window[lang]["countUpcoming"];
-      $scope.countNoDueDate = window[lang]["countNoDueDate"];
     } catch(e) {
       console.log("ERROR: i18n" + e)
     }
@@ -260,12 +254,11 @@ angular
         localStorage['assignedTodosByProject'] = null;
         localStorage['assignedTodos'] = null;
       }
-  
+      
       highlight($scope.search.substring($scope.search.indexOf(" ") + 1));
     }
     // If a any word has been typed
     else if ($scope.search) {
-      // On key pressed, display the first category which is not empty
       highlight($scope.search);
     }
     // If nothing is typed, fetch your own todos    
@@ -273,7 +266,7 @@ angular
       $scope.getAssignedTodos();
     }
     // On key pressed, display the first category which is not empty
-    $scope.displayCategory();    
+    $scope.displayCategory();
   });
 
   /**
@@ -313,9 +306,9 @@ angular
     $scope.people = JSON.parse(localStorage['people']);
   }
   if (!fullInit) {
-    // Trigger a refresh on launch    
+    // Trigger a refresh on launch
     $scope.getAssignedTodos();
-    $scope.displayCategory();     
+    $scope.displayCategory();
   }
 
   /**
@@ -334,6 +327,7 @@ angular
       return false;
     }
   });
+if (localStorage['scrollbar'] === '1') document.getElementsByTagName("dl")[0].style.width = '501px';
 
 })
 
@@ -355,13 +349,13 @@ angular
    */
   $scope.i18n = function() { 
     try {
-      var userLang = (navigator.language) ? navigator.language : navigator.userLanguage; 
+      var userLang = (navigator.language) ? navigator.language : navigator.userLanguage;
       var lang = userLang.substring(0,2);
       $scope.lang = localStorage["language"] ? localStorage["language"] : lang;
       document.getElementById("needAuth1").innerHTML = window[lang]["needAuth1"];
       document.getElementById("needAuth2").innerHTML = window[lang]["needAuth2"];
     } catch(e) {
-      console.log("ERROR: i18n" + e)      
+      console.log("ERROR: i18n" + e)
     }
   }
 

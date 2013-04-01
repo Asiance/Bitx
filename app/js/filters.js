@@ -43,15 +43,14 @@ angular
    */
   .filter('elapsedTime', function() {
     var today = new Date();
-    var lang = localStorage["language"] ? localStorage["language"] : "en";      
     return function(input) {
       if(input) {
         var diff = today - new Date(input);
         if (diff/(1000*60*60*24) < 1) // If last update is less than one day ago
           if (diff/(1000*60*60) < 1) // If last update is less than one hour ago
-            return Math.round(diff/(1000*60)) + " " + window[lang]["minutesAgo"];
-          else return Math.round(diff/(1000*60*60)) + " " + window[lang]["hoursAgo"];
-        else return Math.round(diff/(1000*60*60*24)) + " " + window[lang]["daysAgo"];
+            return Math.round(diff/(1000*60)) + " " + "minute(s) ago";
+          else return Math.round(diff/(1000*60*60)) + " " + "hour(s) ago";
+        else return Math.round(diff/(1000*60*60*24)) + " " + "day(s) ago";
       } else return "";
     };
   })

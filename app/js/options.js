@@ -1,5 +1,3 @@
-// Save this script as `options.js`
-
 // Saves options to localStorage.
 function save_options() {
   var select = document.getElementById("refresh_period");
@@ -11,12 +9,12 @@ function save_options() {
   select = document.getElementById("language");
   localStorage["language"] = select.children[select.selectedIndex].value;
 
+  select = document.getElementById("scrollbar");
+  localStorage["scrollbar"] = select.children[select.selectedIndex].value;
+
   // Update status to let user know options were saved.
   var status = document.getElementById("status");
   status.innerHTML = "Options Saved.";
-  setTimeout(function() {
-    status.innerHTML = "";
-  }, 750);
 }
 
 function logout() {
@@ -28,6 +26,7 @@ function restore_options() {
   selectOption("refresh_period");
   selectOption("counter_todos");
   selectOption("language");
+  selectOption("scrollbar");
 }
 
 function selectOption(variableString) {
@@ -50,7 +49,7 @@ document.addEventListener('DOMContentLoaded', restore_options);
 document.querySelector('#save').addEventListener('click', save_options);
 document.querySelector('#logout').addEventListener('click', logout);
 
-var userLang = (navigator.language) ? navigator.language : navigator.userLanguage; 
+var userLang = navigator.language ? navigator.language : navigator.userLanguage; 
 var locale = userLang.substring(0,2);
 lang = localStorage['language'] ? localStorage['language'] : locale;
 
@@ -63,10 +62,3 @@ document.getElementById("overdues").innerHTML = window[lang]["header_overdues"];
 document.getElementById("today").innerHTML = window[lang]["header_today"];
 document.getElementById("upcoming").innerHTML = window[lang]["header_upcoming"];
 document.getElementById("noduedate").innerHTML = window[lang]["header_noduedate"];
-
-document.getElementById("eng").innerHTML = window[lang]["eng"];
-document.getElementById("fra").innerHTML = window[lang]["fra"];
-document.getElementById("kor").innerHTML = window[lang]["kor"];
-document.getElementById("jap").innerHTML = window[lang]["jap"];
-document.getElementById("ita").innerHTML = window[lang]["ita"];
-document.getElementById("por").innerHTML = window[lang]["por"];

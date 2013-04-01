@@ -308,3 +308,23 @@ body {
 }
 
 .highlight { background: yellow; }
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-button:start:decrement,
+::-webkit-scrollbar-button:end:increment  {
+  height: 0px;
+  display: block;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-track-piece  {
+  background-color: $color-white;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+  height: 50px;
+  background-color: $color-grey;
+}

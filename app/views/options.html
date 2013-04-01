@@ -3,7 +3,7 @@
 <head>
   <meta charset='utf-8'>
   <title id="title">Bitx - Options</title>
-  <link href="css/options.css" rel="stylesheet" media="screen"> 
+  <link href="/css/options.css" rel="stylesheet" media="screen"> 
 </head>
 <body>
 
@@ -34,14 +34,23 @@
       <p>
       <label for="language">language</label>
       <select id="language">
-        <option value="en" id="eng"></option>
-        <option value="fr" id="fra"></option>
-        <option value="ko" id="kor"></option>
-        <option value="it" id="ita"></option>
-        <option value="ja" id="jap"></option>
-        <option value="pt" id="por"></option>
+        <option value="en" id="eng">English</option>
+        <option value="fr" id="fra">Français</option>
+        <option value="ko" id="kor">한국어</option>
+        <option value="it" id="ita">Italiano</option>
+        <option value="ja" id="jap">日本語</option>
+        <option value="pt" id="por">Português</option>
       </select>
       <p>
+
+      <p>
+      <label for="scrollbar">scrollbar</label>
+      <select id="scrollbar">
+        <option value="1" id="scrollOn">On</option>
+        <option value="0" id="scrollOff">Off</option>
+      </select>      
+      <p>
+
     </fieldset>
 
     <div id="status"></div>
@@ -49,13 +58,13 @@
     <button id="logout">Logout</button>
   </form>
 
-  <script src="js/lang/en.js"></script>
-  <script src="js/lang/fr.js"></script>
-  <script src="js/lang/ko.js"></script>
-  <script src="js/lang/it.js"></script>
-  <script src="js/lang/ja.js"></script>
-  <script src="js/lang/pt.js"></script>
-  <script src="options.js"></script>
+  <script src="/js/lang/en.js"></script>
+  <script src="/js/lang/fr.js"></script>
+  <script src="/js/lang/ko.js"></script>
+  <script src="/js/lang/it.js"></script>
+  <script src="/js/lang/ja.js"></script>
+  <script src="/js/lang/pt.js"></script>
+  <script src="/js/options.js"></script>
 
 </body>
 </html>
