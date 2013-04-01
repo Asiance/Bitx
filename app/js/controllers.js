@@ -6,7 +6,7 @@ angular
 /**
  * Controller linked to todos.html
  */
-.controller('TodosController', function($scope, $filter, Authorization, People, User, AssignedTodolists, Todo, completeTodo) {
+.controller('TodosController', function($scope, $filter, Authorization, People, User, AssignedTodolists, Todo, completeTodo, AllTodolists, Todolist, $q, $http) {
 
   /**
    * After OAuth2 signin, retrieve a Basecamp Account
@@ -63,33 +63,34 @@ angular
   };
 
   /**
-   * Fetch Todolists assigned to the user
+   * Fetch Todolists
    * and remove the 'Todolist level' to keep only remaining Todos
    */
   $scope.getAssignedTodos = function(paramUserId) {
     console.log('LOG: getAssignedTodos');
     try { 
-      if (paramUserId == null ) paramUserId = $scope.userId;
-      AssignedTodolists.query({basecampId: $scope.basecampId, userId: paramUserId}, function(data) {
-        // Flatten data to get only Todos
-        var assignedTodos = [];
-        for (var i = 0; i < data.length; i++) {
-          for (var j = 0; j < data[i].assigned_todos.length; j++) {
-            var tmp = data[i].assigned_todos[j];
-            tmp.project = data[i].bucket.name;
-            tmp.project_id = data[i].bucket.id;
-            tmp.todolist = data[i].name;
-            assignedTodos.push(tmp);
-          }
-        }
-
-        // Update only if new todos
-        // Works only because Basecamp give the JSON in the same order
-        if (angular.toJson(assignedTodos) !== localStorage['assignedTodos']) {
-          $scope.assignedTodos = assignedTodos;
-          localStorage['assignedTodos'] = angular.toJson(assignedTodos);
-          $scope.groupByProject();
-        }
+      AllTodolists.query({basecampId: $scope.basecampId}, function(todolists) {
+        var allTodos = [];          
+        var promise = syncRequests(todolists);
+        promise.then(function(allTodolists) {
+          _.forEach(allTodolists, function (todolist) {
+            _.forEach(todolist.todos.remaining, function(todo) {
+              todo.todolist = todolist.name;
+              todo.project = todolist.project;
+              todo.project_id = todolist.project_id;
+              allTodos.push(todo);
+            })
+          })
+          console.log(allTodos);       
+          allTodos = _.sortBy(allTodos, function(todo) { return todo.id; });
+          // Update only if new todos
+          // Works only because Basecamp give the JSON in the same order
+          if (angular.toJson(allTodos) !== localStorage['assignedTodos']) {
+            $scope.assignedTodos = allTodos;
+            localStorage['assignedTodos'] = angular.toJson(allTodos);
+            $scope.groupByProject();
+          } 
+        });
       }, function(response) {
         console.log('ERROR: Failed to connect!')
       });
@@ -98,6 +99,34 @@ angular
     }
   };
 
+  function syncRequests(todolists) {
+    var deferred = $q.defer();
+    var done = todolists.length;
+    var allTodolists = [];
+
+    function checkIfDone() {
+      if (--done == 0) deferred.resolve(allTodolists);
+    }
+    _.forEach(todolists, function (todolist) {
+      $http({
+        method: 'GET', 
+        url: 'https://basecamp.com/'+ $scope.basecampId + '/api/v1/projects/' + todolist.bucket.id + '/todolists/' + todolist.id + '.json',
+        headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}
+      })
+      .success(function(data) {
+        data.project_id = todolist.bucket.id;
+        data.project = todolist.bucket.name;
+        allTodolists.push(data);
+        checkIfDone();
+      })
+      .error(function() {
+        console.log('ERROR: syncRequests - Unable to get one todolist');
+        checkIfDone();
+      }
+    })
+    return deferred.promise;
+  }
+
   /**
    * Group assigned Todos by Project
    */
@@ -105,7 +134,7 @@ angular
     console.log('LOG: groupByProject');
     var projects = [];
     var projectName = 'NO_PROJECT';
-    var assignedTodos = JSON.parse(localStorage['assignedTodos']);
+    var assignedTodos = $scope.assignedTodos;
     for (var i = 0; i < assignedTodos.length; i++) {
       var assignedTodo = assignedTodos[i];
       if (assignedTodo.project !== projectName) {
@@ -152,7 +181,7 @@ angular
   $scope.completeTodo = function(projectId, todoId) {
     console.log('LOG: completeTodo ' + projectId + ' ' + todoId);
     try { 
-      //completeTodo.completeTodo($scope.basecampId, projectId, todoId);
+      completeTodo.completeTodo($scope.basecampId, projectId, todoId);
       $scope.assignedTodos = _.filter($scope.assignedTodos, function(item) {
         return item.id !== todoId;
       });
@@ -235,26 +264,9 @@ angular
    * Event triggered by AngularJS
    */
   $scope.$watch('search', function() {
+    $scope.assignedTodosK = $scope.assignedTodos;
     // If '@someone' has been typed, look for 'someone' among the people on Basecamp
-    if ($scope.search && (new RegExp("^@.{2}", "gi")).test($scope.search)) {
-      var user = _.find($scope.people, function(user) {
-        if ( user['email_address'].match(new RegExp($scope.search.substring(1).split(" ")[0], "gi")) ||
-              user['name'].match(new RegExp($scope.search.substring(1), "gi")) )
-          return true;
-      });
-      // If 'someone' has been found, look for his/her todos
-      if (user) {
-        $scope.getAssignedTodos(user.id);
-        console.log("LOG: Search *" + user.name + "* todos");
-      }
-      // If 'someone' hasn't been found AND you keep type in search input, erase current scope
-      else if (!user) {
-        $scope.projects = null;
-        $scope.assignedTodos = null;
-        localStorage['assignedTodosByProject'] = null;
-        localStorage['assignedTodos'] = null;
-      }
-      
+    if ($scope.search && (new RegExp("^@.{2}", "gi")).test($scope.search)) {    
       highlight($scope.search.substring($scope.search.indexOf(" ") + 1));
     }
     // If a any word has been typed
@@ -296,11 +308,11 @@ angular
     $scope.getBasecampAccount();
     fullInit = true;
   }
-  if (localStorage['myTodos']) {
-    $scope.assignedTodos = JSON.parse(localStorage['myTodos']);
+  if (localStorage['assignedTodos']) {
+    $scope.assignedTodos = JSON.parse(localStorage['assignedTodos']);
   }
-  if (localStorage['myTodosByProject']) {
-    $scope.projects = JSON.parse(localStorage['myTodosByProject']);
+  if (localStorage['assignedTodosByProject']) {
+    $scope.projects = JSON.parse(localStorage['assignedTodosByProject']);
   }
   if (localStorage['people']) {
     $scope.people = JSON.parse(localStorage['people']);

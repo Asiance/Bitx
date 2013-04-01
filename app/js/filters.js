@@ -96,8 +96,19 @@ angular
         switch(true) {
           // If '@someone' has been type
           case (new RegExp("^@.+", "gi")).test(search):
+            var user = _.find(angular.fromJson(localStorage['people']), function(user) {
+              if ( user['email_address'].match(new RegExp(search.substring(1).split(" ")[0], "gi")) ||
+                    user['name'].match(new RegExp(search.substring(1), "gi")) )
+                return true;
+            });
+            if (user) { 
+              out = _.filter(input, function(item) { 
+                if ( item['assignee'] && item['assignee']['id'] == user.id ) return true;
+              });
+              return out;
+            }
             // If nothing follows '@someone'
-            if(search.indexOf(" ") === -1) return $filter('filter')(input, "");
+            if(search.indexOf(" ") == -1) return $filter('filter')(input, "");
             // If something follows '@someone'
             // Look in the todo description or in the project name
             else {
@@ -109,11 +120,25 @@ angular
               return out; 
             }
             break;
+          case (search == ":created"):
+            out = _.filter(input, function(item) { 
+              if ( item['creator']['id'] == localStorage['userId'] ) return true;
+            });
+            return out;
+            break;
           // If any word has been typed, load the regular search filter
           default:
-            return $filter('filter')(input, search);
+            out = _.filter(input, function(item) { 
+              if ( item['assignee'] && item['assignee']['id'] == localStorage['userId'] ) return true;
+            });          
+            return $filter('filter')(out, search);
         }
       // If nothing has been type
-      } else return input;
+      } else {
+        out = _.filter(input, function(item) { 
+          if ( item['assignee'] && item['assignee']['id'] == localStorage['userId'] ) return true;
+        });
+        return out;
+      };
     };
   });

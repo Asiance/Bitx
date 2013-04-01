@@ -2,6 +2,7 @@
   <img id="logo" src="/img/logo-header.png">
   <input autocomplete="off" id="search-input" type="text" ng-model="search" list="keywords">
   <datalist id="keywords">
+    <option value=":created" label="See todos I created"/>
     <option value="@" label="Type a user name"/>
     <option ng-repeat="user in people" value="@{{user.email_address | removeDomain}}" label="{{user.name}}"  />
   </datalist>
