@@ -122,7 +122,7 @@ angular
       .error(function() {
         console.log('ERROR: syncRequests - Unable to get one todolist');
         checkIfDone();
-      }
+      })
     })
     return deferred.promise;
   }
