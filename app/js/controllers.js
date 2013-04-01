@@ -327,7 +327,7 @@ angular
       return false;
     }
   });
-if (localStorage['scrollbar'] === '1') document.getElementsByTagName("dl")[0].style.width = '501px';
+if (localStorage['scrollbar'] === '1') document.getElementsByTagName("dl")[0].style.width = '500px';
 
 })
 
@@ -340,7 +340,7 @@ if (localStorage['scrollbar'] === '1') document.getElementsByTagName("dl")[0].st
    * Logout by clearing localStorage
    */
   $scope.openOptions = function() {
-    chrome.tabs.create({url: "options.html"});
+    chrome.tabs.create({url: "views/options.html"});
     console.log('LOG: openOptions');
   }
 

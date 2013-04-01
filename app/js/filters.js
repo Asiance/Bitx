@@ -61,9 +61,7 @@ angular
   .filter('daysRemaining', function() {
     var today = new Date();
     return function(input) {
-      if(input) {
-        return Math.round((new Date(input) - today)/(1000*60*60*24));
-      }
+      if(input) return Math.round((new Date(input) - today)/(1000*60*60*24));
     };
   })
 
@@ -73,9 +71,7 @@ angular
   .filter('daysLate', function() {
     var today = new Date();
     return function(input) {
-      if(input) {
-        return Math.round((today - new Date(input))/(1000*60*60*24));
-      }
+      if(input) return Math.round((today - new Date(input))/(1000*60*60*24));
     };
   })
 
@@ -85,9 +81,7 @@ angular
    */
   .filter('removeDomain', function() {
     return function(input) {
-      if(input) {
-        return input.split("@")[0];
-      }
+      if(input) return input.split("@")[0];
     };
   })
  
