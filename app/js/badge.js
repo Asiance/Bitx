@@ -1,20 +1,22 @@
 /**
  * Count Todos in one category
  * @param {string} status Count overdue, today, upcoming or undefined Todos
- * @param {string} input JSON string containing all assignedTodos
+ * @param {string} input JSON string containing all myTodos
  */
 function countTodos(input, status) {
 
-  var todayDate = getTodayDate();
-  var inputDate = "";
+  var todayDate = new Date();
+  todayDate.setHours(0,0,0,0);  
+  var inputDate = null;
   var count = 0; 
 
   for (var i = 0; i < input.length; i++) {
-      if (input[i].due_at != null && status != '4') {
-      	inputDate = parseInt(input[i].due_at.replace(/-/g, ""));
-        if ((status == 'overdues') && (inputDate < todayDate)) count++;
-        else if ((status == 'today') && (inputDate == todayDate)) count++;
-        else if ((status == 'upcoming') && (inputDate > todayDate)) count++;
+      if (input[i].due_at != null && status != 'no_due_date') {
+        inputDate = new Date(input[i].due_at);
+        inputDate.setHours(0,0,0,0);        
+        if ((status == 'overdues') && (inputDate.getTime() < todayDate.getTime())) count++;
+        else if ((status == 'today') && (inputDate.getTime() == todayDate.getTime())) count++;
+        else if ((status == 'upcoming') && (inputDate.getTime() > todayDate.getTime())) count++;
       } 
       else if (input[i].due_at == null && (status == 'no_due_date')) count++;
   }      
@@ -23,12 +25,12 @@ function countTodos(input, status) {
 
 /**
  * Draw the extension badge in Chrome based on the Todos counter
- * localStorage['assignedTodos'] must to be set
+ * localStorage['myTodos'] must to be set
  */
 function updateBadge() {
   try {
     var counter_todos = localStorage['counter_todos'] ? localStorage['counter_todos'] : "default";
-    var jsonTodos = JSON.parse(localStorage.getItem('assignedTodos'));
+    var jsonTodos = JSON.parse(localStorage.getItem('myTodos'));
     var counter = countTodos(jsonTodos, 'overdue');
     var color;
     
@@ -65,16 +67,4 @@ function updateBadge() {
     chrome.browserAction.setBadgeText({text: ''});
     chrome.browserAction.setIcon({path : '../icon.png'});
   }
-}	
-
-/**
- * Give the current date
- * @return {int} date in YYYYMMDD format
- */
-function getTodayDate() {
-  var currentDate = new Date();
-  var yyyy = currentDate.getFullYear().toString();
-  var mm = (currentDate.getMonth()+1).toString();
-  var dd = currentDate.getDate().toString();
-  return parseInt(yyyy + (mm[1]?mm:"0"+mm[0]) + (dd[1]?dd:"0"+dd[0]));
 }

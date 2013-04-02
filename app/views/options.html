@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <title id="title">Bitx - Options</title>
+  <link href="/css/options.css" rel="stylesheet" media="screen"> 
+</head>
+<body>
+
+  <form>
+    <fieldset>
+      <legend>Settings</legend>
+
+      <p>
+        <label for="refresh_period">refresh_period</label>
+        <select id="refresh_period">
+          <option value="1000" id="onesecond">1</option>
+          <option value="5000" id="fiveseconds">5</option>
+          <option value="10000" id="tenseconds">10</option>
+        </select>
+      </p>
+
+      <p>
+        <label for="counter_todos">counter_todos</label>
+        <select id="counter_todos">
+          <option value="default" id="default"></option>
+          <option value="overdues" id="overdues"></option>
+          <option value="today" id="today"></option>
+          <option value="upcoming" id="upcoming"></option>
+          <option value="no_due_date" id="noduedate"></option>
+        </select>
+      </p>
+
+      <p>
+      <label for="language">language</label>
+      <select id="language">
+        <option value="en" id="eng">English</option>
+        <option value="fr" id="fra">Français</option>
+        <option value="ko" id="kor">한국어</option>
+        <option value="it" id="ita">Italiano</option>
+        <option value="ja" id="jap">日本語</option>
+        <option value="pt" id="por">Português</option>
+      </select>
+      <p>
+
+      <p>
+      <label for="scrollbar">scrollbar</label>
+      <select id="scrollbar">
+        <option value="1" id="scrollOn">On</option>
+        <option value="0" id="scrollOff">Off</option>
+      </select>      
+      <p>
+
+      <button id="save">Save</button>
+      <button id="logout">Logout</button>
+
+    </fieldset>
+  </form>
+
+  <fieldset>
+      <legend>Tips</legend>
+      <dl>
+      <dt>@username</dt>
+      <dd>Display current todos assigned to someone else</dd>
+      <dt>:created</dt>
+      <dd>Display todos I created</dd>      
+    </dl>
+  </fieldset>
+
+  <script src="/js/lang/en.js"></script>
+  <script src="/js/lang/fr.js"></script>
+  <script src="/js/lang/ko.js"></script>
+  <script src="/js/lang/it.js"></script>
+  <script src="/js/lang/ja.js"></script>
+  <script src="/js/lang/pt.js"></script>
+  <script src="/js/options.js"></script>
+
+</body>
+</html>

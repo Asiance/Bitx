@@ -1,0 +1,50 @@
+@import "compass/css3";
+@import "compass/typography/links/unstyled-link";
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans:400,700);
+
+body {
+  font-family: "Droid Sans";
+  font-style: normal;
+  font-weight: 400;
+  height: 100%;
+  height: auto !important;
+  margin: 0px 0px 0px 0px;
+  min-height: 100%;
+  width: 100%;
+  a { @include unstyled-link; }
+}
+
+fieldset { 
+  border: 1px solid grey;
+  margin: 50px auto;
+  width: 600px;
+}
+label {
+  float: left;
+  font-weight: bold;
+  padding: 0px 10px;
+  position: relative;
+  text-align: right;
+  top: 3px;
+  width: 200px;
+}
+input {
+  float: right;
+  width: 300px;
+}
+button {
+  float:right;
+}
+
+dt {
+  clear: left;
+  float: left;
+  font-weight: bold;
+  padding: 0px 40px;  
+  text-align: right;
+  width: 120px;
+}
+
+dd {
+  margin-left: 130px;
+}

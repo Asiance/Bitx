@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 	<head>
     <meta charset="utf-8">
 		<title>Bitx</title>	
     <link href="../css/auth-success.css" rel="stylesheet" media="screen">
+    <script src="../js/auth-success.js"></script>    
 	</head>
 	<body>
 		<div id="wrapper">	
@@ -11,10 +12,9 @@
 				<div id="content_inner_wrapper">		
 					<div>
             <img id="logo" src="../img/logo-light.png">
-            <h1>Thank you!</h1>
+            <h1 id="thankYou"></h1>
             <hr>
-            <p>Your Todo Basecamp Extension is now connected to your account!</p>
-            <p>You can start using the extension.</p>            
+            <p id="syncMess"></p>
           </div>
 				</div>	
 			</div>	
@@ -26,4 +26,14 @@
 			</div>	
 		</div>
 	</body>
+  
+  <script src="../lib/underscore-min.js"></script>
+  <script src="../lib/jquery-1.9.1.min.js"></script>
+  
+  <script src="../js/lang/en.js"></script>
+  <script src="../js/lang/fr.js"></script>
+  <script src="../js/lang/ko.js"></script>
+  <script src="../js/lang/it.js"></script>
+  <script src="../js/lang/ja.js"></script>
+  <script src="../js/lang/pt.js"></script>
 </html>

@@ -28,6 +28,18 @@ angular
 })
 
 /*
+ * Get People will return all people on the account
+ */
+.factory('People', function($resource) {
+  return $resource('https://basecamp.com/:basecampId/api/v1/people.json', {}, {
+    query: {
+      method:   'GET',
+      isArray:  true,
+      headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}}
+  });
+})
+
+/*
  * Get ACTIVE Assigned Todolists of a User
  */
 .factory('AssignedTodolists', function($resource) {
@@ -53,17 +65,38 @@ angular
 })
 
 /*
- * Return date following YYYYMMDD format
+ * Check a Todo
  */
-.factory('Utils', function () {
+.factory('completeTodo', function($http) {
   return {
-    getTodayDate: function () {
-      var currentDate = new Date();
-      var yyyy = currentDate.getFullYear().toString();
-      var mm = (currentDate.getMonth()+1).toString();
-      var dd = currentDate.getDate().toString();
-      var dateFormat = parseInt(yyyy + (mm[1]?mm:"0"+mm[0]) + (dd[1]?dd:"0"+dd[0]));
-      return dateFormat;
+    completeTodo: function(basecampId, projectId, todoId) {
+      $http.put('https://basecamp.com/'+basecampId+'/api/v1/projects/'+projectId+'/todos/'+todoId+'.json', 
+      {completed:true},
+      {headers: {'Authorization':'Bearer ' + localStorage['basecampToken']}});
     }
   }
+})
+
+/*
+ * Get all ACTIVE Todolist
+ */
+.factory('AllTodolists', function($resource) {
+  return $resource('https://basecamp.com/:basecampId/api/v1/todolists.json', {}, {
+    query: {
+      method:   'GET',
+      isArray:  true,
+      headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}}
+  });
+})
+
+/*
+ * Get a Todolist of a Project
+ */
+.factory('Todolist', function($resource) {
+  return $resource('https://basecamp.com/:basecampId/api/v1/projects/:projectId/todolists/:todolistId.json', {}, {
+    query: {
+      method:   'GET',
+      isArray:  false,
+      headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}}
+  });
 });

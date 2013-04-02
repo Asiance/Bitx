@@ -3,7 +3,7 @@
 angular
   .module('basecampExtension', 
   	['basecampExtension.controllers',
-  	'basecampExtension.services', 
+    'basecampExtension.services', 
   	'basecampExtension.filters'])
   
   .config([

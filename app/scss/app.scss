@@ -1,279 +1,329 @@
 @import "compass/css3";
 @import "compass/reset";
-@import "compass/typography/links/unstyled-link";
 @import url(http://fonts.googleapis.com/css?family=Droid+Sans:400,700);
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
 
-$color-dark: #232323;
-$color-white: #ffffff;
-$color-close-white: #fdfdfd;
-$color-red: #e56c69;
-$color-light-red: #e9827f;
 $color-blue: #5e9ac9;
-$color-light-blue: rgba(255, 255, 255, 0.15);
+$color-border: #f4f4f4;
+$color-close-white: #fdfdfd;
+$color-dark-border: #373736;
+$color-dark-grey: #444444;
+$color-dark: #232323;
 $color-green: #339a63;
-$color-grey: #a7a7a7;
-$color-light-grey: #f5f5f5;
 $color-grey-date: #a3a3a3;
 $color-grey-text: #a0a0a0;
-$color-dark-grey: #444444;
-$color-border: #f4f4f4;
-$color-dark-border: #373736;
-
-$line-height: 50px;
+$color-grey: #a7a7a7;
+$color-light-blue: rgba(255, 255, 255, 0.15);
+$color-light-grey: #f5f5f5;
+$color-light-red: #e9827f;
+$color-red: #e56c69;
+$color-white: #ffffff;
 $first-column-width: 80px;
-$search-input-width: 120px;
+
+$fonts_en: "Droid Sans", Verdana, arial, helvetica, clean, sans-serif;
+$fonts_ja: "Meiryo UI", 'Meiryo', 'MS UI Gothic', 'MS PGothic', 'MS Gothic','Microsoft YaHei',"Arial Unicode", "Arial", sans-serif;
+$fonts_ko: "Nanum Gothic", "나눔고딕", "NanumGothic", "Malgun Gothic", '돋움', "Dotum", "AppleGothic", "Gulim", "Arial Unicode", "Arial", sans-serif;
 
 body {
-  @include global-reset;
-  width: 500px;
-  font-family: "Droid Sans";
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  background: $color-dark;
-  line-height: $line-height;
-
-  header {
-    height: 50px;
-    background: $color-close-white;
-    #logo {
-      vertical-align: middle;
-      position: relative;
-      top: -2px;
-      left: 20px;
-    }
-    #search-input {
-      font-size: 14px;
-      margin-left: 140px;
-      width: $search-input-width;
-      background: $color-close-white;
-      color : $color-grey;
-      border: none;
-      vertical-align: middle;
-      &::-webkit-input-placeholder {
-        font-style: italic;
-      }
-      &:focus {
-        outline: none;
-      }
-      margin-right: 5px;
-    }    
-    #logout {
-      float: right;
-      padding: 14px;
-      margin-right: 13px;
-    }
+  &.ja { 
+    header, h1, .date p, .achievement, #search-input::-webkit-input-placeholder { font-family: $fonts_ja; }
+  };
+  &.ko { 
+    header, h1, .date p, .achievement, #search-input::-webkit-input-placeholder { font-family: $fonts_ko; }
+    .date p { font-size: 12px; }
+    h1 { font-size: 15px; }
   }
-
-  .toggle-content {
-    font-size: 24px;
-    display: inline-block;
-    width: $first-column-width;
-    color: $color-white;
-    text-align: center;
-    position: relative;
-    top: 3px;
-  }
-
-  section {
-    overflow: hidden;
-  }
-  dl {
-    width: 520px;
-    max-height: 520px;
-    overflow: auto;
-  }
-  dt {
-    border-bottom: 1px solid $color-dark-border;
-    cursor: pointer;
-    &:hover {
-      background: $color-blue;
-      border-bottom: 1px solid $color-blue;
-      .count-todos {
-        background: $color-light-blue;
-      }
-    }
-    .toggle-content:after {
-      content: '+';
-    }
-  }
-  dt.active {
-    background: $color-blue;
-    border-bottom: 1px solid $color-blue;
-    .toggle-content:after {
-      content: '-';
-    }
-    .count-todos {
-      background: $color-light-blue;
-    }
-  }
-  #overdues {
-    &.active_overdues {
-      background: $color-red;
-      border-bottom: 1px solid $color-red;
-    }
-    .count-todos {
-      background: $color-light-red;
-    }
-    .date {
-      color: $color-red;
-    }
-  }
-
   h1 {
+    color: $color-white;
     display: inline-block;
     font-size: 14px;
     font-weight: 700;
-    color: $color-white;
     width: 360px;
   }
-  .count-todos {
-    display: inline-block;
-    color: $color-white;
-    text-align: center;
-    line-height: 16px;
-    padding: 8px;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background: $color-dark-grey;
-  }
-
   h2 {
     color: $color-red;
     font-weight: 700;
     margin-left: 38px;
   }
-  .date {
-    cursor: default;
-    display: table-cell;
-    width: $first-column-width;
-    height: 50px;
-    color: $color-grey-date;
-    text-align: center;
+  background: $color-dark;
+  cursor: default;
+  font-size: 12px;
+  font-style: normal;
+  font-family: $fonts_en;
+  font-weight: 400;
+  line-height: 50px;
+  width: 500px;
+}
+
+header {
+  background: $color-close-white;
+  height: 50px;
+  #logo {
     vertical-align: middle;
-    font-size: 18px;
-    line-height: 18px;
-    p { font-size: 9px; }
-    &.overdues {
-      color: $color-red;
+    position: relative;
+    top: -2px;
+    left: 20px;
+  }
+  #search-input {
+    background: $color-close-white;
+    border: none;
+    color : $color-grey;
+    font-size: 14px;
+    margin-left: 70px;
+    padding: 10px 80px;
+    vertical-align: middle;
+    width: 120px;
+    &::-webkit-input-placeholder {
+      font-style: italic;
     }
-  }
-  .comments { 
-    display: table-cell;
-    padding-right: 8px;
-    background: url(/img/icon-comment.png) left no-repeat;
-    &:hover { 
-      background: url(/img/icon-comment-hover.png) left no-repeat;
-      p { color: $color-blue; }
-    }  
-    width: 30px;
-    text-align: right;
-    color: $color-grey;
-  }
-  .void { 
-    display: table-cell;
-    width: 30px;
-    padding-right: 8px;
-  }  
-  .icon-link {
+    &:focus {
+      outline: none;
+    }
+  }    
+  .icon-settings {
+    background: url(/img/icon-settings.png) center no-repeat;
+    &:hover { background: url(/img/icon-settings-hover.png) center no-repeat; }
     cursor: pointer;
-    display: table-cell;
-    background: url(/img/icon-link.png) center no-repeat;
-    &:hover { background: url(/img/icon-link-hover.png) center no-repeat; }
-    width: 32px;
-    margin-right:20px;
-  }  
-  .content {
-    background-color: $color-white;
+    float: right;
+    height: 21px;
+    width: 20px;
+    margin-right: 14px;
+    padding: 14px;
   }
-  .todo {
-    display: table-cell;
-    width: 327px; 
-    line-height: 16px;
-    overflow: hidden;
-    vertical-align: middle;
-    div {
-      display: table;
+}
+
+.toggle-content {
+  color: $color-white;
+  display: inline-block;
+  font-size: 24px;
+  position: relative;
+  text-align: center;
+  top: 3px;
+  width: $first-column-width;
+}
+
+section, dd {
+  overflow: hidden;
+}
+dl {
+  max-height: 520px;
+  overflow: auto;
+  width: 520px;
+}
+dt {
+  border-bottom: 1px solid $color-dark-border;
+  cursor: pointer;
+  &:hover {
+    background: $color-blue;
+    border-bottom: 1px solid $color-blue;
+    .count-todos {
+      background: $color-light-blue;
+    }
+  }
+  .toggle-content:after {
+    content: '+';
+  }
+}
+#overdues {
+  &.active, &:hover, &.active_overdues {
+    background: $color-red;
+    border-bottom: 1px solid $color-red;
+  }
+  .count-todos {
+    background: $color-light-red;
+  }
+  .date {
+    color: $color-red;
+  }
+}
+dt.active {
+  background: $color-blue;
+  border-bottom: 1px solid $color-blue;
+  .toggle-content:after {
+    content: '-';
+  }
+  .count-todos {
+    background: $color-light-blue;
+  }
+}
+
+.count-todos {
+  background: $color-dark-grey;
+  border-radius: 50%;
+  color: $color-white;
+  display: inline-block;
+  height: 15px;
+  line-height: 16px;
+  padding: 8px;
+  text-align: center;
+  width: 15px;
+}
+.date {
+  color: $color-grey-date;
+  display: table-cell;
+  font-size: 18px;
+  height: 50px;
+  line-height: 18px;
+  text-align: center;
+  vertical-align: middle;
+  width: $first-column-width;
+  p { font-size: 9px; }
+  &.overdues {
+    color: $color-red;
+  }
+}
+.comments { 
+  background: url(/img/icon-comment.png) left no-repeat;
+  &:hover { 
+    background: url(/img/icon-comment-hover.png) left no-repeat;
+    p { color: $color-blue; }
+  }    
+  color: $color-grey;
+  cursor: pointer;
+  display: table-cell;
+  padding-right: 8px;
+  text-align: right;
+  width: 30px;
+}
+.void { 
+  display: table-cell;
+  padding-right: 8px;
+  width: 30px;
+}
+.icon-link {
+  background: url(/img/icon-link.png) center no-repeat;
+  &:hover { background: url(/img/icon-link-hover.png) center no-repeat; }
+  cursor: pointer;
+  display: table-cell;
+  margin-right: 20px;
+  width: 32px;
+}
+.content {
+  background-color: $color-white;
+}
+.todo {
+  display: table-cell;
+  line-height: 16px;
+  overflow: hidden;
+  vertical-align: middle;
+  width: 327px; 
+  div {
+    display: table;
+    margin-left: -30px;
+    width: 325px;
+    .checkbox {
+      background: url(/img/icon-checkbox.png) center no-repeat;
+      &:hover { background: url(/img/icon-checkbox-hover.png) center no-repeat; }
+      cursor: pointer;
+      display: table-cell;
+      width: 24px;
+    }
+    .todo-text {
+      padding-left: 12px;
       width: 325px;
-      margin-left: -30px;
-      .checkbox {
-        cursor: pointer;
-        display: table-cell;
-        width: 24px;
-        background: url(/img/icon-checkbox.png) center no-repeat;
-        &:hover {
-          background: url(/img/icon-checkbox-hover.png) center no-repeat;
-        }     
-      }
-      .todo-text {
-        padding-left: 12px;
-        width: 325px;
-        cursor: default;
-        display: table-cell;
-        vertical-align: middle;
-        word-break: break-word;
+      display: table-cell;
+      vertical-align: middle;
+      word-break: break-word;
+    }
+  }
+}
+li {
+  border-bottom: 1px solid $color-border;
+  left: -520px;
+  position: relative;
+  width: 1040px;
+  &:first-child { border-top: 1px solid $color-border; } 
+  &:last-child { border-bottom: 0; } 
+  &:hover {
+    background-color: $color-light-grey;
+    .todo {
+      color: black;
+      div {
+        -webkit-animation-duration: 0.5s;
+        -webkit-animation-fill-mode: forwards;
+        -webkit-animation-name: checkboxSlide;
+        -webkit-animation-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000); /* easeOutQuart */
       }
     }
   }
-  li {
-    border-bottom: 1px solid $color-border;
-    &:first-child { border-top: 1px solid $color-border; } 
-    &:last-child { border-bottom: 0; } 
-    &:hover {
-      background-color: $color-light-grey;
-      .todo {
-        color: black;
-        div {
-          -webkit-animation-fill-mode: forwards;
-          -webkit-animation-duration: 0.5s;
-          -webkit-animation-name: slideout;
-          -webkit-animation-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000); /* easeOutQuart */
-        }
-      }
+  .achievement {
+    background: $color-green;
+    color: $color-white;
+    display: table-cell;
+    font-size: 16px;
+    padding-left: 83px;
+    width: 437px;
+    img {
+      padding-right: 15px;
+      vertical-align: middle;
     }
   }
-  a { @include unstyled-link; }
+  .visible {
+    width: 520px;
+  }
 }
 
 #allow-access {
-  display: table-row;
   background: -webkit-linear-gradient(top, #f4f4f4, white);
+  display: table-row;
   line-height: 14px;
   img {
+    border-right : 1px solid $color-grey;
     display: table-cell;
-    vertical-align: middle;
     margin : 24px;
     padding-right: 24px;
-    border-right : 1px solid $color-grey;
   }
-  span {
+  #allow {
     color: #68bb4f;
     font-weight: bold;
   }
   p {
     color: $color-grey-text;
-    line-height: 18px;  
     display: table-cell;
+    line-height: 18px;  
     vertical-align: middle;
-    &:last-child { padding-right: 24px;}
+    &:last-child { 
+      padding-right: 24px;
+      width: 100%;
+    }
   }
 }
 
-@-webkit-keyframes slideout {
+/**  Define animations  **/
+@-webkit-keyframes checkboxSlide {
   from { margin-left: -30px; }
   to { margin-left: 0px; }
 }
-
-@-webkit-keyframes scaledown {
-  0% { -webkit-transform: scaleY(1); }
-  100% { -webkit-transform: scaleY(0); }
+@-webkit-keyframes achievementSlide {
+  from { margin-left: 0px; }
+  to { margin-left: 520px; }
 }
 
-.disappear {
+/* Style applied when a todo is checked */
+.achieved {
+  -webkit-animation-duration: 0.5s;
   -webkit-animation-fill-mode: forwards;
-  -webkit-animation-duration: 0.2s;
-  -webkit-animation-name: scaledown;
+  -webkit-animation-name: achievementSlide;
+  -webkit-animation-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000); /* easeOutQuart */  
 }
 
+/* Style applied to the found string */
 .highlight { background: yellow; }
+
+/** Scrollbar style **/
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-button:start:decrement,
+::-webkit-scrollbar-button:end:increment {
+  background-color: transparent;
+  display: block;
+  height: 0px;
+}
+::-webkit-scrollbar-track-piece {
+  background-color: $color-white;
+}
+::-webkit-scrollbar-thumb:vertical {
+  background-color: $color-grey;
+  height: 50px;
+}

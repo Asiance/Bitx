@@ -5,13 +5,13 @@
   <title>basecampExtension</title>
   <link href="css/app.css" rel="stylesheet" media="screen">
 </head>
-<body>
-  
-  <div ng-controller="MainController">
+
+<body ng-controller="MainController" class="{{lang}}">
+  <div>
     <ng-view ng-show="online"></ng-view>
     <div id="allow-access" ng-hide="online">
       <p><img src="/img/logo-header.png"></p>    
-      <p>Click on <span>"Yes, I'll allow access"</span> to synchronize your basecamp account with the extension.</p>
+      <p><span id="needAuth1"></span> <span id="allow">"Yes, I'll allow access"</span> <span id="needAuth2"></span></p>
     </div>
   </div>
 
@@ -27,6 +27,13 @@
   <script src="js/controllers.js"></script>
   <script src="js/filters.js"></script>
   <script src="js/services.js"></script>
+
+  <script src="js/lang/en.js"></script>
+  <script src="js/lang/fr.js"></script>
+  <script src="js/lang/ko.js"></script>
+  <script src="js/lang/it.js"></script>
+  <script src="js/lang/ja.js"></script>
+  <script src="js/lang/pt.js"></script>
 
 </body>
 </html>

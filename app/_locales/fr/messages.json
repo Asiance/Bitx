@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "Bitx",
+    "description": "Extension name (original: Bitx)."
+  },
+  "extDesc": {
+    "message": "Se synchronise avec votre compte Basecamp et affiche vos todos.",
+    "description": "Extension description shown in Chrome > Extensions."    
+  }
+}
