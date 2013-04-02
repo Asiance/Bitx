@@ -6,15 +6,17 @@
 function countTodos(input, status) {
 
   var todayDate = new Date();
+  todayDate.setHours(0,0,0,0);  
   var inputDate = null;
   var count = 0; 
 
   for (var i = 0; i < input.length; i++) {
       if (input[i].due_at != null && status != 'no_due_date') {
         inputDate = new Date(input[i].due_at);
-        if ((status == 'overdues') && (inputDate < todayDate)) count++;
-        else if ((status == 'today') && (inputDate == todayDate)) count++;
-        else if ((status == 'upcoming') && (inputDate > todayDate)) count++;
+        inputDate.setHours(0,0,0,0);        
+        if ((status == 'overdues') && (inputDate.getTime() < todayDate.getTime())) count++;
+        else if ((status == 'today') && (inputDate.getTime() == todayDate.getTime())) count++;
+        else if ((status == 'upcoming') && (inputDate.getTime() > todayDate.getTime())) count++;
       } 
       else if (input[i].due_at == null && (status == 'no_due_date')) count++;
   }      

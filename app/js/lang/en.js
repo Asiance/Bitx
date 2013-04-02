@@ -7,7 +7,7 @@ window.en = {
   "header_upcoming": "Upcoming",
   "header_noduedate": "No due date",
 
-  "addedDate": "Added:",
+  "createdDate": "Created:",
 
   "dayLate": "day late",
   "daysLate": "days late",
@@ -15,7 +15,7 @@ window.en = {
   "dayLeft": "day left",
   "daysLeft": "days left",
 
-  "lastUpdate": "Last update",
+  "lastUpdate": "Last update:",
   "minutesAgo":"minute(s) ago",
   "hoursAgo":"hour(s) ago",
   "daysAgo":"day(s) ago",
@@ -43,4 +43,5 @@ window.en = {
   "achievement1":"Good work!",
   "achievement2":"Well done!",
   "achievement3":"Excellent!"
+
 };

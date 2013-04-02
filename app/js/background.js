@@ -2,7 +2,7 @@
  * Background script of the Chrome extension
  * Loaded by background.html
  */
-window.onload = function () {
+window.onload = function() {
   var userLang = (navigator.language) ? navigator.language : navigator.userLanguage; 
   var locale = userLang.substring(0,2);
   localStorage['language'] = localStorage['language'] ? localStorage['language'] : locale;  
@@ -27,9 +27,7 @@ function getAuthorization() {
         getUser();
         console.log('LOG: getAuthorization XHR');
       } else if (xhr.readyState === 4) {
-        localStorage.myTodolists = "";
-        localStorage.myTodos = "";
-        localStorage.myTodosByProject = "";
+        localStorage['myTodos'] = "";
         updateBadge();
         console.log('ERROR: getAuthorization XHR');
       }
@@ -110,22 +108,8 @@ function getMyTodos() {
             });  
           }
 
-          var projects = [];
-          var projectName = 'NO_PROJECT';
-          for (var i = 0; i < myTodos.length; i++) {
-            var myTodo = myTodos[i];
-            if (myTodo.project !== projectName) {
-              var project = {name: myTodo.project, id: myTodo.project_id, assignedTodos: []};
-              projectName = myTodo.project;
-              projects.push(project);
-            }
-            project.assignedTodos.push(myTodo);
-          }
-
           // Update localStorage
           localStorage['myTodos'] = JSON.stringify(myTodos); 
-          localStorage['myTodolists'] = JSON.stringify(data);
-          localStorage['myTodosByProject'] = JSON.stringify(projects);
           updateBadge();
           console.log('LOG: getMyTodos XHR');
         } else if (xhr.readyState === 4) {
@@ -134,7 +118,7 @@ function getMyTodos() {
         }
       };
       xhr.send();
-    } else if (!localStorage['basecampId'] && !localStorage['userId']) getAuthorization();
+    } else if (!localStorage['basecampId'] || !localStorage['userId']) getAuthorization();
   } catch(e) {
     console.log(e);
   }

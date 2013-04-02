@@ -6,7 +6,7 @@ angular
 /**
  * Controller linked to todos.html
  */
-.controller('TodosController', function($scope, $filter, Authorization, People, User, AssignedTodolists, Todo, completeTodo, AllTodolists, Todolist, $q, $http) {
+.controller('TodosController', function($scope, $filter, $q, $http, Authorization, People, User, completeTodo, AllTodolists, Todolist) {
 
   /**
    * After OAuth2 signin, retrieve a Basecamp Account
@@ -66,12 +66,12 @@ angular
    * Fetch Todolists
    * and remove the 'Todolist level' to keep only remaining Todos
    */
-  $scope.getAssignedTodos = function(paramUserId) {
+  $scope.getAssignedTodos = function() {
     console.log('LOG: getAssignedTodos');
     try { 
       AllTodolists.query({basecampId: $scope.basecampId}, function(todolists) {
         var allTodos = [];          
-        var promise = syncRequests(todolists);
+        var promise = asyncRequests(todolists);
         promise.then(function(allTodolists) {
           _.forEach(allTodolists, function (todolist) {
             _.forEach(todolist.todos.remaining, function(todo) {
@@ -84,12 +84,12 @@ angular
           console.log(allTodos);       
           allTodos = _.sortBy(allTodos, function(todo) { return todo.id; });
           // Update only if new todos
-          // Works only because Basecamp give the JSON in the same order
+          // Works only because we sorted todos by ID
           if (angular.toJson(allTodos) !== localStorage['assignedTodos']) {
             $scope.assignedTodos = allTodos;
             localStorage['assignedTodos'] = angular.toJson(allTodos);
             $scope.groupByProject();
-          } 
+          }
         });
       }, function(response) {
         console.log('ERROR: Failed to connect!')
@@ -99,7 +99,11 @@ angular
     }
   };
 
-  function syncRequests(todolists) {
+  /**
+   * Fetch every active Todolist, return them when each of them are fetched
+   * @param  {object}  todolists  Object return by GET /todolists.json
+   */
+  function asyncRequests(todolists) {
     var deferred = $q.defer();
     var done = todolists.length;
     var allTodolists = [];
@@ -107,6 +111,7 @@ angular
     function checkIfDone() {
       if (--done == 0) deferred.resolve(allTodolists);
     }
+
     _.forEach(todolists, function (todolist) {
       $http({
         method: 'GET', 
@@ -146,7 +151,7 @@ angular
     }
 
     // Update only if new todos
-    // Works only because Basecamp give the JSON in the same order
+    // Works only because we sorted todos by ID
     if (angular.toJson(projects) !== localStorage['assignedTodosByProject']) {
       localStorage['assignedTodosByProject'] = angular.toJson(projects);
       $scope.projects = projects;
@@ -155,20 +160,13 @@ angular
   };
 
   /**
-   * Custom sort function to compare date in YYYYMMDD format
-   */
-  $scope.sortByDate = function(assignedTodo) {
-    if (assignedTodo.due_at != null) return assignedTodo.due_at.replace(/-/g, "");
-    else return "99999999"; // Default value for undefined due date
-  };
-
-  /**
    * Open tab to view todo on basecamp.com
+   * @param  {number}  projectId
+   * @param  {number}  todoId
    */
   $scope.openTodo = function(projectId, todoId) {
-    console.log('LOG: openTodo');
+    console.log('LOG: openTodo ' + projectId + " " + todoId);
     try { 
-      console.log(projectId + " " + todoId);
       chrome.tabs.create({url: "https://basecamp.com/" + $scope.basecampId + "/projects/" + projectId + "/todos/" + todoId});
     } catch(e) {
       console.log(e);
@@ -177,10 +175,12 @@ angular
 
   /**
    * Check a todo
+   * @param  {number}  projectId
+   * @param  {number}  todoId
    */
   $scope.completeTodo = function(projectId, todoId) {
     console.log('LOG: completeTodo ' + projectId + ' ' + todoId);
-    try { 
+    try {
       completeTodo.completeTodo($scope.basecampId, projectId, todoId);
       $scope.assignedTodos = _.filter($scope.assignedTodos, function(item) {
         return item.id !== todoId;
@@ -254,6 +254,14 @@ angular
       $scope.daysLate = window[lang]["daysLate"];
       $scope.dayLeft = window[lang]["dayLeft"];
       $scope.daysLeft = window[lang]["daysLeft"];
+
+      $scope.countOverdues = window[lang]["countOverdues"];
+      $scope.countToday = window[lang]["countToday"];
+      $scope.countUpcoming = window[lang]["countUpcoming"];
+      $scope.countNoDueDate = window[lang]["countNoDueDate"];
+      
+      $scope.lastUpdate = window[lang]["lastUpdate"];
+      $scope.createdDate = window[lang]["createdDate"];
     } catch(e) {
       console.log("ERROR: i18n" + e)
     }
@@ -264,9 +272,10 @@ angular
    * Event triggered by AngularJS
    */
   $scope.$watch('search', function() {
-    $scope.assignedTodosK = $scope.assignedTodos;
     // If '@someone' has been typed, look for 'someone' among the people on Basecamp
-    if ($scope.search && (new RegExp("^@.{2}", "gi")).test($scope.search)) {    
+    if ($scope.search &&
+            ((new RegExp("^@.{2}", "gi")).test($scope.search)
+            || (new RegExp("^:created", "gi")).test($scope.search))) {    
       highlight($scope.search.substring($scope.search.indexOf(" ") + 1));
     }
     // If a any word has been typed
@@ -283,6 +292,7 @@ angular
 
   /**
    * Hightlight found string when using search input
+   * @param  {string}  string  String to hightlight.
    */
   function highlight(string) {
     $(".todo-text, h2").each(function(i, v) {
@@ -339,7 +349,7 @@ angular
       return false;
     }
   });
-if (localStorage['scrollbar'] === '1') document.getElementsByTagName("dl")[0].style.width = '500px';
+  if (localStorage['scrollbar'] === '1') document.getElementsByTagName("dl")[0].style.width = '500px';
 
 })
 
@@ -349,7 +359,7 @@ if (localStorage['scrollbar'] === '1') document.getElementsByTagName("dl")[0].st
 .controller('MainController', function($scope) {
 
   /**
-   * Logout by clearing localStorage
+   * Open options page in a new tab
    */
   $scope.openOptions = function() {
     chrome.tabs.create({url: "views/options.html"});

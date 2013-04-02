@@ -1,34 +1,34 @@
 <header>
   <img id="logo" src="/img/logo-header.png">
-  <input autocomplete="off" id="search-input" type="text" ng-model="search" list="keywords">
+  <input autocomplete="off" id="search-input" type="text" ng-model="search" list="keywords" autofocus>
   <datalist id="keywords">
     <option value=":created" label="See todos I created"/>
     <option value="@" label="Type a user name"/>
     <option ng-repeat="user in people" value="@{{user.email_address | removeDomain}}" label="{{user.name}}"  />
   </datalist>
-  <a ng-click="openOptions()"><img id="settings" src="/img/icon-settings.png"></a>
+  <a ng-click="openOptions()"><span class="icon-settings"></span></a>
 </header>
 
 <section>
 <dl class="todos">
   <dt ng-class="overdue" id="overdues"><a>
     <span class="toggle-content"></span>
-    <span><h1 id="header_overdues">OVERDUES</h1></span>
-    <span ng-show="(assignedTodos | keywordSearch:search | status :'1').length" title="{{(assignedTodos | keywordSearch:search | status :'1').length}} overdue todo(s)" class="count-todos">{{(assignedTodos | keywordSearch:search | status :'1').length}}</span>
+    <h1 id="header_overdues">OVERDUES</h1>
+    <span ng-show="(assignedTodos | keywordSearch:search | status :'1').length" title="{{(assignedTodos | keywordSearch:search | status :'1').length}} {{countOverdues}}" class="count-todos">{{(assignedTodos | keywordSearch:search | status :'1').length}}</span>
   </a></dt>
   <dd id="overdue_content">
   <div class="content" ng-show="filteredOverdue.length" ng-repeat="project in projects">
     <h2>{{project.name | uppercase}}</h2>
     <ul>
-      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredOverdue = (project.assignedTodos | keywordSearch:search | orderBy: sortByDate | status: 1)">
+      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredOverdue = (project.assignedTodos | keywordSearch:search | orderBy: project.assignedTodos.due_at | status: 1)">
         <span class="achievement"><p><img src="/img/icon-check.png">{{congratulation}}</p></span>
-        <span class="date overdues" title='Added: {{assignedTodo.created_at | elapsedTime}}'>{{assignedTodo.due_at | daysLate}}<br>
-          <p><ng-pluralize count="assignedTodo.days_late" when="{'1': '{{dayLate}}', 'other': '{{daysLate}}'}"></ng-pluralize></p>
+        <span class="date overdues" title='{{createdDate}} {{assignedTodo.created_at | elapsedTime}}'>{{assignedTodo.due_at | daysLate}}<br>
+          <p><ng-pluralize count="assignedTodo.days_late" when='{"1": "{{dayLate}}", "other": "{{daysLate}}"}'></ng-pluralize></p>
         </span>
         <div class="todo">
           <div><span ng-click="completeTodo(project.id, assignedTodo.id)" class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
         </div>
-        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="comments" ng-show="assignedTodo.comments_count" title="Last update: {{assignedTodo.updated_at | elapsedTime}}">
+        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="comments" ng-show="assignedTodo.comments_count" title="{{lastUpdate}} {{assignedTodo.updated_at | elapsedTime}}">
           <p>{{assignedTodo.comments_count}}</p>
         </span>
         <span class="void" ng-hide="assignedTodo.comments_count"></span>
@@ -40,20 +40,20 @@
 
   <dt ng-class="today" id="today"><a>
     <span class="toggle-content"></span>
-    <span><h1 id="header_today">TODAY</h1></span>
-    <span ng-show="(assignedTodos | keywordSearch:search | status :'2').length" title="{{(assignedTodos | keywordSearch:search | status :'2').length}} todo(s) for today" class="count-todos">{{(assignedTodos | keywordSearch:search | status :'2').length}}
+    <h1 id="header_today">TODAY</h1>
+    <span ng-show="(assignedTodos | keywordSearch:search | status :'2').length" title="{{(assignedTodos | keywordSearch:search | status :'2').length}} {{countToday}}" class="count-todos">{{(assignedTodos | keywordSearch:search | status :'2').length}}
     </span></a></dt>
   <dd id="today_content">
   <div class="content" ng-show="filteredToday.length" ng-repeat="project in projects">
     <h2>{{project.name | uppercase}}</h2>
     <ul>
-      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredToday = (project.assignedTodos | keywordSearch:search | orderBy: sortByDate | status: 2)">
+      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredToday = (project.assignedTodos | keywordSearch:search | orderBy: project.assignedTodos.due_at | status: 2)">
         <span class="achievement"><p><img src="/img/icon-check.png">{{congratulation}}</p></span>
-        <span class="date" title='Added: {{assignedTodo.created_at | elapsedTime}}'></span>
+        <span class="date" title='{{createdDate}} {{assignedTodo.created_at | elapsedTime}}'></span>
         <div class="todo">
           <div><span ng-click="completeTodo(project.id, assignedTodo.id)" class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
         </div>
-        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="comments" ng-show="assignedTodo.comments_count" title="Last update: {{assignedTodo.updated_at | elapsedTime}}">
+        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="comments" ng-show="assignedTodo.comments_count" title="{{lastUpdate}} {{assignedTodo.updated_at | elapsedTime}}">
           <p>{{assignedTodo.comments_count}}</p>
         </span>
         <span class="void" ng-hide="assignedTodo.comments_count"></span>
@@ -64,22 +64,22 @@
 
   <dt ng-class="upcoming" id="upcoming"><a>
       <span class="toggle-content"></span>
-      <span><h1 id="header_upcoming">UPCOMING</h1></span>
-      <span ng-show="(assignedTodos | keywordSearch:search | status :'3').length" title="{{(assignedTodos | keywordSearch:search | status :'3').length}} upcoming todo(s)" class="count-todos">{{(assignedTodos | keywordSearch:search | status :'3').length}}</span>
+      <h1 id="header_upcoming">UPCOMING</h1>
+      <span ng-show="(assignedTodos | keywordSearch:search | status :'3').length" title="{{(assignedTodos | keywordSearch:search | status :'3').length}} {{countUpcoming}}" class="count-todos">{{(assignedTodos | keywordSearch:search | status :'3').length}}</span>
   </a></dt>
   <dd id="upcoming_content">
   <div class="content" ng-show="filteredUpcoming.length" ng-repeat="project in projects">
     <h2>{{project.name | uppercase}}</h2>
     <ul>
-      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredUpcoming = (project.assignedTodos | keywordSearch:search | orderBy: sortByDate | status: 3)">
+      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredUpcoming = (project.assignedTodos | keywordSearch:search | orderBy: project.assignedTodos.due_at | status: 3)">
         <span class="achievement"><p><img src="/img/icon-check.png">{{congratulation}}</p></span>
-        <span class="date" title='Added: {{assignedTodo.created_at | elapsedTime}}'>{{assignedTodo.due_at | daysRemaining}}<br>
+        <span class="date" title='{{createdDate}} {{assignedTodo.created_at | elapsedTime}}'>{{assignedTodo.due_at | daysRemaining}}<br>
           <p><ng-pluralize count="assignedTodo.remaining_days" when="{'1': '{{dayLeft}}', 'other': '{{daysLeft}}'}"></ng-pluralize></p>
         </span>
         <div class="todo">
           <div><span ng-click="completeTodo(project.id, assignedTodo.id)" class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
         </div>
-        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)"  class="comments" ng-show="assignedTodo.comments_count" title="Last update: {{assignedTodo.updated_at | elapsedTime}}">
+        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)"  class="comments" ng-show="assignedTodo.comments_count" title="{{lastUpdate}} {{assignedTodo.updated_at | elapsedTime}}">
           <p>{{assignedTodo.comments_count}}</p>
         </span>
         <span class="void" ng-hide="assignedTodo.comments_count"></span>
@@ -91,20 +91,20 @@
 
   <dt ng-class="no_due_date" id="no-due-date"><a>
     <span class="toggle-content"></span>
-    <span><h1 id="header_noduedate">NO DUE DATE</h1></span>
-    <span ng-show="(assignedTodos | keywordSearch:search | status :'4').length" title="{{(assignedTodos | keywordSearch:search | status :'4').length}} todo(s) without due date" class="count-todos">{{(assignedTodos | keywordSearch:search | status :'4').length}}</span>
+    <h1 id="header_noduedate">NO DUE DATE</h1>
+    <span ng-show="(assignedTodos | keywordSearch:search | status :'4').length" title="{{(assignedTodos | keywordSearch:search | status :'4').length}} {{countNoDueDate}}" class="count-todos">{{(assignedTodos | keywordSearch:search | status :'4').length}}</span>
   </a></dt>
   <dd id="no_due_date_content">
   <div class="content" ng-show="filteredUndetermined.length" ng-repeat="project in projects">
     <h2>{{project.name | uppercase}}</h2>
     <ul>
-      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredUndetermined = (project.assignedTodos | keywordSearch:search | orderBy: sortByDate | status: 4)">
+      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredUndetermined = (project.assignedTodos | keywordSearch:search | orderBy: project.assignedTodos.due_at | status: 4)">
         <span class="achievement"><p><img src="/img/icon-check.png">{{congratulation}}</p></span>
-        <span class="date" title='Added: {{assignedTodo.created_at | elapsedTime}}'></span>
+        <span class="date" title='{{createdDate}} {{assignedTodo.created_at | elapsedTime}}'></span>
         <div class="todo">
           <div><span ng-click="completeTodo(project.id, assignedTodo.id)" class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
         </div>
-        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="comments" ng-show="assignedTodo.comments_count" title="Last update: {{assignedTodo.updated_at | elapsedTime}}">
+        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="comments" ng-show="assignedTodo.comments_count" title="{{lastUpdate}} {{assignedTodo.updated_at | elapsedTime}}">
           <p>{{assignedTodo.comments_count}}</p>
         </span>
         <span class="void" ng-hide="assignedTodo.comments_count"></span>

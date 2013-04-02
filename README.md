@@ -13,8 +13,26 @@ Features
   - Notification on new Todo
   - Instant search through Todos
 
+Tips for search todos
+--------------------
+<table>
+  <tr>
+    <th>Keyword</th>
+    <th>Filters</th>
+  </tr>
+  <tr>
+    <th>@someone</th>
+    <td>Display current todos assigned to someone else</td>
+  </tr>
+  <tr>
+    <th>:created</th>
+    <td>Display todos I created</td>
+  </tr>
+</table>
+
 Installation
 --------------------
+
 1. Visit `chrome://extension` or in Chrome menu, **Settings > Extensions**
 2. Check **Developer Mode** in the top right-hand corner
 3. Click **Load unpacked extension…**
@@ -22,6 +40,7 @@ Installation
 
 Default configuration
 --------------------
+
 *  The extension is preconfigured to choose the **first** Basecamp account that matches `{"product": "bcx"}`. In `js/background.js` and `js/controller.js`:
 
         localStorage['basecampId'] = _.findWhere(data.accounts, {product: "bcx"}).id;
@@ -34,6 +53,7 @@ Settings
   - Period refresh
   - Category to display on open
   - Languages (English, French, Italian, Japanese, Korean, Portuguese)
+  - Scrollbar on/off
   - Logout
 
 Dependencies

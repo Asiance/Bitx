@@ -7,7 +7,7 @@ window.it = {
   "header_upcoming": "Prossimo",
   "header_noduedate": "Nessuna scadenza",
 
-  "addedDate": "Added:",
+  "createdDate": "Created:",
   
   "dayLate": "giorno in ritardo",
   "daysLate": "giorni in ritardo",

@@ -7,7 +7,7 @@ window.ko = {
   "header_upcoming": "다가오는 일정",
   "header_noduedate": "기한 없는 일정",
 
-  "addedDate": "Added:",
+  "createdDate": "Created:",
 
   "dayLate": "일 늦음",
   "daysLate": "일 늦음",
@@ -43,4 +43,5 @@ window.ko = {
   "achievement1":"수고하셨습니다!",
   "achievement2":"참 잘했어요!",
   "achievement3":"대단합니다!"
+
 };

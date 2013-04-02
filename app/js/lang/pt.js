@@ -7,7 +7,7 @@ window.pt = {
   "header_upcoming": "à vir",
   "header_noduedate": "Sem prazo",
 
-  "addedDate": "Added:",
+  "createdDate": "Created:",
   
   "dayLate": "dia de atraso",
   "daysLate": "dias de atraso",
@@ -15,7 +15,7 @@ window.pt = {
   "dayLeft": "dia restante",
   "daysLeft": " dias restantes",
 
-  "lastUpdate": "Últimas atualizações",
+  "lastUpdate": "Últimas atualizações:",
   "minutesAgo":"minuto(s) atrás",
   "hoursAgo":"hora(s) atrás",
   "daysAgo":"dia(s) atrás",

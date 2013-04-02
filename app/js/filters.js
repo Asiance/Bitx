@@ -16,22 +16,22 @@ angular
         var todayDate = new Date();
         todayDate.setHours(0,0,0,0);
         var inputDate = null;
-        var out = []; 
+        var out = [];
         for (var i = 0; i < input.length; i++) {
-            if (input[i].due_at != null && status != '4') {
-              inputDate = new Date(input[i].due_at);
-              inputDate.setHours(0,0,0,0);
-              if ((status == '1') && (inputDate < todayDate)) {
-                input[i].days_late =  $filter('daysLate')(input[i].due_at);
-                out.push(input[i]);
-              }
-              else if ((status == '2') && (inputDate == todayDate)) out.push(input[i]);
-              else if ((status == '3') && (inputDate > todayDate)) {
-                input[i].remaining_days =  $filter('daysRemaining')(input[i].due_at);
-                out.push(input[i]);
-              }
+          if (input[i].due_at != null && status != '4') {
+            inputDate = new Date(input[i].due_at);
+            inputDate.setHours(0,0,0,0);
+            if ((status == '1') && (inputDate.getTime() < todayDate.getTime())) {
+              input[i].days_late =  $filter('daysLate')(input[i].due_at);
+              out.push(input[i]);
             }
-            else if (input[i].due_at == null && status == '4') out.push(input[i])
+            else if ((status == '2') && (inputDate.getTime() == todayDate.getTime())) out.push(input[i]);
+            else if ((status == '3') && (inputDate.getTime() > todayDate.getTime())) {
+              input[i].remaining_days =  $filter('daysRemaining')(input[i].due_at);
+              out.push(input[i]);
+            }
+          }
+          else if (input[i].due_at == null && status == '4') out.push(input[i]);
         }
         return out;
       } else return [];
@@ -43,14 +43,15 @@ angular
    */
   .filter('elapsedTime', function() {
     var today = new Date();
+    var lang = localStorage['language'];
     return function(input) {
       if(input) {
         var diff = today - new Date(input);
         if (diff/(1000*60*60*24) < 1) // If last update is less than one day ago
           if (diff/(1000*60*60) < 1) // If last update is less than one hour ago
-            return Math.round(diff/(1000*60)) + " " + "minute(s) ago";
-          else return Math.round(diff/(1000*60*60)) + " " + "hour(s) ago";
-        else return Math.round(diff/(1000*60*60*24)) + " " + "day(s) ago";
+            return Math.round(diff/(1000*60)) + " " + window[lang]['minutesAgo'];
+          else return Math.round(diff/(1000*60*60)) + " " + window[lang]['hoursAgo'];
+        else return Math.round(diff/(1000*60*60*24)) + " " + window[lang]['daysAgo'];
       } else return "";
     };
   })
@@ -84,7 +85,7 @@ angular
       if(input) return input.split("@")[0];
     };
   })
- 
+
   /**
    * Advanced search
    */
@@ -97,45 +98,57 @@ angular
           // If '@someone' has been type
           case (new RegExp("^@.+", "gi")).test(search):
             var user = _.find(angular.fromJson(localStorage['people']), function(user) {
-              if ( user['email_address'].match(new RegExp(search.substring(1).split(" ")[0], "gi")) ||
-                    user['name'].match(new RegExp(search.substring(1), "gi")) )
+              if ( user['email_address'].match(new RegExp(search.substring(1).split(" ")[0], "gi"))
+                  || user['name'].match(new RegExp(search.substring(1), "gi")) )
                 return true;
             });
-            if (user) { 
+            // If '@someone has been found, look for his todos'
+            if (user) {
               out = _.filter(input, function(item) { 
                 if ( item['assignee'] && item['assignee']['id'] == user.id ) return true;
               });
-              return out;
-            }
+            } else out = [];
             // If nothing follows '@someone'
-            if(search.indexOf(" ") == -1) return $filter('filter')(input, "");
+            if(search.indexOf(" ") == -1) return out;
             // If something follows '@someone'
-            // Look in the todo description or in the project name
+            // Look in the todo description or in the project name or in the todolist title
             else {
               realSearch = search.substring(search.indexOf(" ") + 1);
-              out = _.filter(input, function(item) { 
-                if ( item['content'].match(new RegExp(realSearch, "gi")) ||
-                      item['project'].match(new RegExp(realSearch, "gi")) ) return true;
+              out = _.filter(out, function(item) { 
+                if ( item['content'].match(new RegExp(realSearch, "gi"))
+                    || item['project'].match(new RegExp(realSearch, "gi"))
+                    || item['todolist'].match(new RegExp(realSearch, "gi")) ) return true;
               });
-              return out; 
+              return out;
             }
             break;
-          case (search == ":created"):
-            out = _.filter(input, function(item) { 
+          // If the keyword ':created' has been typed
+          case (new RegExp("^:created", "gi")).test(search):
+            out = _.filter(input, function(item) {
               if ( item['creator']['id'] == localStorage['userId'] ) return true;
             });
+            // If something follows ':created'
+            // Look in the todo description or in the project name or in the todolist title
+            if(search.indexOf(" ") != -1) {
+              realSearch = search.substring(search.indexOf(" ") + 1);
+              out = _.filter(out, function(item) { 
+                if ( item['content'].match(new RegExp(realSearch, "gi"))
+                    || item['project'].match(new RegExp(realSearch, "gi"))
+                    || item['todolist'].match(new RegExp(realSearch, "gi")) ) return true;
+              });
+            }
             return out;
             break;
           // If any word has been typed, load the regular search filter
           default:
-            out = _.filter(input, function(item) { 
+            out = _.filter(input, function(item) {
               if ( item['assignee'] && item['assignee']['id'] == localStorage['userId'] ) return true;
             });          
             return $filter('filter')(out, search);
         }
       // If nothing has been type
       } else {
-        out = _.filter(input, function(item) { 
+        out = _.filter(input, function(item) {
           if ( item['assignee'] && item['assignee']['id'] == localStorage['userId'] ) return true;
         });
         return out;

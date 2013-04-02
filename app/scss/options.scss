@@ -6,31 +6,45 @@ body {
   font-family: "Droid Sans";
   font-style: normal;
   font-weight: 400;
-  width: 100%;
-  min-height: 100%;
-  height: auto !important;
   height: 100%;
+  height: auto !important;
   margin: 0px 0px 0px 0px;
+  min-height: 100%;
+  width: 100%;
   a { @include unstyled-link; }
 }
 
 fieldset { 
   border: 1px solid grey;
-}
-form {
-  width: 500px;
   margin: 50px auto;
+  width: 600px;
 }
 label {
-  position: relative;
-  top: 3px;
-  width: 200px;
+  float: left;
   font-weight: bold;
   padding: 0px 10px;
+  position: relative;
   text-align: right;
-  float: left;
+  top: 3px;
+  width: 200px;
 }
 input {
-  width: 300px;
   float: right;
+  width: 300px;
+}
+button {
+  float:right;
+}
+
+dt {
+  clear: left;
+  float: left;
+  font-weight: bold;
+  padding: 0px 40px;  
+  text-align: right;
+  width: 120px;
+}
+
+dd {
+  margin-left: 130px;
 }

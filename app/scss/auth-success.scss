@@ -13,10 +13,10 @@ html, body {
 }
 
 body {
+  background: url('../img/background.jpg') center;
+  font-family: $fonts_en;
   margin: 0px;
   padding: 0px;
-  background: url('../img/background.jpg') center;
-  font-family: $fonts_en;  
   &.ja { 
     p { font-family: $fonts_ja; }
   };
@@ -27,19 +27,19 @@ body {
   font-weight: 400;
   color: white;
   text-align: center;
-  a { @include unstyled-link; }  
+  a { @include unstyled-link; }
 }
 
 div#wrapper {
-  width: 100%;
-  min-height: 100%;
-  height: auto !important;
   height: 100%;
+  height: auto !important;
   margin: 0px 0px -100px 0px;
+  min-height: 100%;
+  width: 100%;
   #logo {
-    margin-top: 130px;
-    margin-bottom: 90px;
     height: 220px;
+    margin-bottom: 90px;
+    margin-top: 130px;
   }  
   h1 {
     font-size: 52px;
@@ -47,10 +47,10 @@ div#wrapper {
     font-weight: 700;
   }
   p {
-    margin: 0 auto;
     font-size: 20px;
-    font-style: italic;    
+    font-style: italic;
     line-height: 28px;
+    margin: 0 auto;
     max-width: 400px;
     &:last-child { padding-bottom: 50px; }
   }
@@ -63,9 +63,9 @@ div#wrapper {
 }
 
 div#footer_wrapper {
-  width: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
   height: 100px;
-  background-color: rgba(0, 0, 0, 0.4);  
+  width: 100%;
 }
 
 div#footer_inner_wrapper {
@@ -81,16 +81,16 @@ div#footer_inner_wrapper {
     width:100%;
   }
   #right {
-    text-align: right;
-    width:100%;        
     position: relative;
+    text-align: right;
     top: -5px;
+    width:100%;
   } 
 }
 
 div#content_wrapper {
+  padding: 0px 0px 100px 0px;
   width: 100%;
-  padding: 0px 0px 100px 0px;  
 }
 
 div#footer_wrapper, div#content_wrapper {
@@ -98,6 +98,6 @@ div#footer_wrapper, div#content_wrapper {
 }
 
 div#footer_inner_wrapper, div#content_inner_wrapper {
-  width: 750px;  
   margin: 0px auto;
+  width: 750px;
 }

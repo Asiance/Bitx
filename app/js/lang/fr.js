@@ -7,7 +7,7 @@ window.fr = {
   "header_upcoming": "A venir",
   "header_noduedate": "Sans date",
 
-  "addedDate": "Ajouté il y a",
+  "createdDate": "Ajouté il y a",
   
   "dayLate": "jour de retard",
   "daysLate": "jours de retard",

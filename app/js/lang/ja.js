@@ -7,7 +7,7 @@ window.ja = {
   "header_upcoming": "今後",
   "header_noduedate": "期限なし",
 
-  "addedDate": "Added:",
+  "createdDate": "Created:",
   
   "dayLate": "日遅れ",
   "daysLate": "日遅れ",
