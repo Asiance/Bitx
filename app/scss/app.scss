@@ -211,6 +211,9 @@ dt.active {
     display: table;
     margin-left: -30px;
     width: 325px;
+    -webkit-transition-property: margin-left;
+    -webkit-transition-duration: 0.5s;
+    -webkit-transition-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000); /* easeOutQuart */    
     .checkbox {
       background: url(/img/icon-checkbox.png) center no-repeat;
       &:hover { background: url(/img/icon-checkbox-hover.png) center no-repeat; }
@@ -239,13 +242,13 @@ li {
     .todo {
       color: black;
       div {
-        -webkit-animation-duration: 0.5s;
-        -webkit-animation-fill-mode: forwards;
-        -webkit-animation-name: checkboxSlide;
-        -webkit-animation-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000); /* easeOutQuart */
+        margin-left: 0px;
+        -webkit-transition-property: margin-left;
+        -webkit-transition-duration: 0.5s;
+        -webkit-transition-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000); /* easeOutQuart */
       }
     }
-  }
+  } 
   .achievement {
     background: $color-green;
     color: $color-white;
@@ -289,11 +292,7 @@ li {
   }
 }
 
-/**  Define animations  **/
-@-webkit-keyframes checkboxSlide {
-  from { margin-left: -30px; }
-  to { margin-left: 0px; }
-}
+/* Define animation to display achievement */
 @-webkit-keyframes achievementSlide {
   from { margin-left: 0px; }
   to { margin-left: 520px; }
@@ -310,7 +309,7 @@ li {
 /* Style applied to the found string */
 .highlight { background: yellow; }
 
-/** Scrollbar style **/
+/* Scrollbar style */
 ::-webkit-scrollbar {
   width: 3px;
 }

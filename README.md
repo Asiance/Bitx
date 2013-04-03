@@ -13,7 +13,7 @@ Features
   - Notification on new Todo
   - Instant search through Todos
 
-Tips for search todos
+Tips for searching todos
 --------------------
 <table>
   <tr>
@@ -45,12 +45,10 @@ Default configuration
 
         localStorage['basecampId'] = _.findWhere(data.accounts, {product: "bcx"}).id;
 
-*  Refresh period is set in `js/background.js` to **five seconds**.
-
 Settings
 --------------------
 
-  - Period refresh
+  - Refresh period
   - Category to display on open
   - Languages (English, French, Italian, Japanese, Korean, Portuguese)
   - Scrollbar on/off
@@ -67,7 +65,7 @@ Dependencies
 Authors
 --------------------
 
-  - [Laurent Le Graverend](https://github.com/laurent-le-graverend)
-  - [Adrien Desbiaux](https://github.com/AdrienFromToulouse)
   - Antoine Blancher
+  - [Adrien Desbiaux](https://github.com/AdrienFromToulouse)
+  - [Laurent Le Graverend](https://github.com/laurent-le-graverend)
   - [Gilles Piou](https://github.com/pioug)

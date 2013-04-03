@@ -20,7 +20,7 @@ angular
         $scope.getUser();
         $scope.getPeople();
       }, function(response) {
-        console.log('ERROR: Failed to connect!')
+        console.log('ERROR: Failed to connect!');
       });
     } catch(e) {
       console.log(e);
@@ -38,7 +38,7 @@ angular
         localStorage['userId'] = data.id;
         $scope.getAssignedTodos();
       }, function(response) {
-        console.log('ERROR: Failed to connect!')
+        console.log('ERROR: Failed to connect!');
       });
     } catch(e) {
       console.log(e);
@@ -55,7 +55,7 @@ angular
         $scope.people = _.sortBy(data, function(user) { return user.name; });
         localStorage['people'] = angular.toJson($scope.people);
       }, function(response) {
-        console.log('ERROR: Failed to connect!')
+        console.log('ERROR: Failed to connect!');
       });
     } catch(e) {
       console.log(e);
@@ -81,8 +81,9 @@ angular
               allTodos.push(todo);
             })
           })
-          console.log(allTodos);       
-          allTodos = _.sortBy(allTodos, function(todo) { return todo.id; });
+          allTodos = _.chain(allTodos).sortBy(function(todo) { return todo.id; })
+                      .sortBy(function(todo) { return todo.project_id; })
+                      .value();
           // Update only if new todos
           // Works only because we sorted todos by ID
           if (angular.toJson(allTodos) !== localStorage['assignedTodos']) {
@@ -92,7 +93,7 @@ angular
           }
         });
       }, function(response) {
-        console.log('ERROR: Failed to connect!')
+        console.log('ERROR: Failed to connect!');
       });
     } catch(e) {
       console.log(e);
@@ -149,6 +150,7 @@ angular
       }
       project.assignedTodos.push(assignedTodo);
     }
+    console.log(projects);
 
     // Update only if new todos
     // Works only because we sorted todos by ID
@@ -313,19 +315,19 @@ angular
   if (localStorage['basecampId'] && localStorage['userId'] && localStorage['people']) {
     $scope.basecampId = localStorage['basecampId'];
     $scope.userId = localStorage['userId'];
-    $scope.people = JSON.parse(localStorage['people']);
+    $scope.people = angular.fromJson(localStorage['people']);
   } else {
     $scope.getBasecampAccount();
     fullInit = true;
   }
   if (localStorage['assignedTodos']) {
-    $scope.assignedTodos = JSON.parse(localStorage['assignedTodos']);
+    $scope.assignedTodos = angular.fromJson(localStorage['assignedTodos']);
   }
   if (localStorage['assignedTodosByProject']) {
-    $scope.projects = JSON.parse(localStorage['assignedTodosByProject']);
+    $scope.projects = angular.fromJson(localStorage['assignedTodosByProject']);
   }
   if (localStorage['people']) {
-    $scope.people = JSON.parse(localStorage['people']);
+    $scope.people = angular.fromJson(localStorage['people']);
   }
   if (!fullInit) {
     // Trigger a refresh on launch

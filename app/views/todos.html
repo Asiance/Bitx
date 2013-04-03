@@ -4,7 +4,7 @@
   <datalist id="keywords">
     <option value=":created" label="See todos I created"/>
     <option value="@" label="Type a user name"/>
-    <option ng-repeat="user in people" value="@{{user.email_address | removeDomain}}" label="{{user.name}}"  />
+    <option ng-repeat="user in people" value="@{{user.email_address | removeDomain}}" label="{{user.name}}" />
   </datalist>
   <a ng-click="openOptions()"><span class="icon-settings"></span></a>
 </header>
@@ -79,7 +79,7 @@
         <div class="todo">
           <div><span ng-click="completeTodo(project.id, assignedTodo.id)" class="checkbox"></span><span class="todo-text">{{assignedTodo.content}}<span></div>
         </div>
-        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)"  class="comments" ng-show="assignedTodo.comments_count" title="{{lastUpdate}} {{assignedTodo.updated_at | elapsedTime}}">
+        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="comments" ng-show="assignedTodo.comments_count" title="{{lastUpdate}} {{assignedTodo.updated_at | elapsedTime}}">
           <p>{{assignedTodo.comments_count}}</p>
         </span>
         <span class="void" ng-hide="assignedTodo.comments_count"></span>
