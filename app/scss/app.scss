@@ -20,19 +20,11 @@ $color-red: #e56c69;
 $color-white: #ffffff;
 $first-column-width: 80px;
 
-$fonts_en: "Droid Sans", Verdana, arial, helvetica, clean, sans-serif;
-$fonts_ja: "Meiryo UI", 'Meiryo', 'MS UI Gothic', 'MS PGothic', 'MS Gothic','Microsoft YaHei',"Arial Unicode", "Arial", sans-serif;
-$fonts_ko: "Nanum Gothic", "나눔고딕", "NanumGothic", "Malgun Gothic", '돋움', "Dotum", "AppleGothic", "Gulim", "Arial Unicode", "Arial", sans-serif;
+$fonts_en: "Droid Sans", "Verdana", "Arial Unicode", "Arial", "Helvetica", "clean", "sans-serif";
+$fonts_ja: "Droid Sans", "Meiryo UI", 'Meiryo', 'MS UI Gothic', 'MS PGothic', 'MS Gothic','Microsoft YaHei',"Arial Unicode", "Arial", "sans-serif";
+$fonts_ko: "Droid Sans", "Nanum Gothic", "나눔고딕", "NanumGothic", "Malgun Gothic", '돋움', "Dotum", "AppleGothic", "Gulim", "Arial Unicode", "Arial", "sans-serif";
 
 body {
-  &.ja { 
-    header, h1, .date p, .achievement, #search-input::-webkit-input-placeholder { font-family: $fonts_ja; }
-  };
-  &.ko { 
-    header, h1, .date p, .achievement, #search-input::-webkit-input-placeholder { font-family: $fonts_ko; }
-    .date p { font-size: 12px; }
-    h1 { font-size: 15px; }
-  }
   h1 {
     color: $color-white;
     display: inline-block;
@@ -49,10 +41,18 @@ body {
   cursor: default;
   font-size: 12px;
   font-style: normal;
-  font-family: $fonts_en;
   font-weight: 400;
   line-height: 50px;
   width: 500px;
+  font-family: $fonts_en;
+  &.ja { 
+    font-family: $fonts_ja;
+  };
+  &.ko { 
+    font-family: $fonts_ko;
+    .date p { font-size: 12px; }
+    h1 { font-size: 15px; }
+  }
 }
 
 header {
@@ -200,6 +200,7 @@ dt.active {
 }
 .content {
   background-color: $color-white;
+  overflow: hidden;
 }
 .todo {
   display: table-cell;
@@ -211,9 +212,9 @@ dt.active {
     display: table;
     margin-left: -30px;
     width: 325px;
-    -webkit-transition-property: margin-left;
-    -webkit-transition-duration: 0.5s;
-    -webkit-transition-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000); /* easeOutQuart */    
+    @include transition-property(margin-left);
+    @include transition-duration(0.5s);
+    @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000);
     .checkbox {
       background: url(/img/icon-checkbox.png) center no-repeat;
       &:hover { background: url(/img/icon-checkbox-hover.png) center no-repeat; }
@@ -243,9 +244,9 @@ li {
       color: black;
       div {
         margin-left: 0px;
-        -webkit-transition-property: margin-left;
-        -webkit-transition-duration: 0.5s;
-        -webkit-transition-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000); /* easeOutQuart */
+        @include transition-property(margin-left);
+        @include transition-duration(0.5s);
+        @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000));
       }
     }
   } 
