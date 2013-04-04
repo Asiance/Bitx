@@ -7,7 +7,7 @@ window.ja = {
   "header_upcoming": "今後",
   "header_noduedate": "期限なし",
 
-  "createdDate": "Created:",
+  "createdDate": "作成",
   
   "dayLate": "日遅れ",
   "daysLate": "日遅れ",
@@ -40,8 +40,8 @@ window.ja = {
   "category": "すべてのリスト",
   "default": "標準",
 
-  "achievement1":"Good work!",
-  "achievement2":"Well done!",
-  "achievement3":"Excellent!"
+  "achievement1":"よくできました!", //
+  "achievement2":"よくやった!", //
+  "achievement3":"優秀な作品!" //
 
 };

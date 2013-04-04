@@ -242,7 +242,7 @@ angular
   }
 
   /**
-   * Custom sort function to compare date in YYYYMMDD format
+   * Custom sort function to compare date in string format as integer
    */
   $scope.sortByDate = function(assignedTodo) {
     if (assignedTodo.due_at != null) return assignedTodo.due_at.replace(/-/g, "");

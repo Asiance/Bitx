@@ -7,7 +7,7 @@ window.pt = {
   "header_upcoming": "à vir",
   "header_noduedate": "Sem prazo",
 
-  "createdDate": "Created:",
+  "createdDate": "Criado:",
   
   "dayLate": "dia de atraso",
   "daysLate": "dias de atraso",
@@ -40,8 +40,8 @@ window.pt = {
   "category": "Mostrar categoria",
   "default": "Omitir",
 
-  "achievement1":"Good work!",
-  "achievement2":"Well done!",
-  "achievement3":"Excellent!"
+  "achievement1":"Bom trabalho!",
+  "achievement2":"Bem feitoe!",
+  "achievement3":"Excelente!"
 
 };

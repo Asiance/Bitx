@@ -7,7 +7,7 @@ window.ko = {
   "header_upcoming": "다가오는 일정",
   "header_noduedate": "기한 없는 일정",
 
-  "createdDate": "Created:",
+  "createdDate": "추가 됨:", // Not match perfectly
 
   "dayLate": "일 늦음",
   "daysLate": "일 늦음",

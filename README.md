@@ -1,17 +1,17 @@
 Asiance-Basecamp-Crx
 ====================
 
-Chrome extension for Basecamp based on the [new Basecamp API](https://github.com/37signals/bcx-api).
+Chrome extension based on the [last Basecamp API](https://github.com/37signals/bcx-api).
 
 Features
 --------------------
 
   - OAuth2 for authentification
-  - Display Todos
-  - Sort Todos by due date
-  - Use badge as Todos counters
-  - Notification on new Todo
-  - Instant search through Todos
+  - Display todos of Basecamp projects
+  - Sort todos by due date
+  - Use badge as todos counters
+  - Notification on new todo
+  - Instant search through todos
 
 Tips for searching todos
 --------------------

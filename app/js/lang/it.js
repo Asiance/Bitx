@@ -7,7 +7,7 @@ window.it = {
   "header_upcoming": "Prossimo",
   "header_noduedate": "Nessuna scadenza",
 
-  "createdDate": "Created:",
+  "createdDate": "Creato:", //
   
   "dayLate": "giorno in ritardo",
   "daysLate": "giorni in ritardo",
@@ -40,8 +40,8 @@ window.it = {
   "category": "Mostrare categoria",
   "default": "Omettere",
 
-  "achievement1":"Good work!",
-  "achievement2":"Well done!",
-  "achievement3":"Excellent!"
+  "achievement1":"Ben fatto !",
+  "achievement2":"Buon lavoro !",
+  "achievement3":"Eccellente!"
 
 };
