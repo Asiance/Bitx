@@ -242,6 +242,14 @@ angular
   }
 
   /**
+   * Custom sort function to compare date in YYYYMMDD format
+   */
+  $scope.sortByDate = function(assignedTodo) {
+    if (assignedTodo.due_at != null) return assignedTodo.due_at.replace(/-/g, "");
+    else return "99999999"; // Default value for undefined due date
+  };
+
+  /**
    * Initialization of i18n
    */
   $scope.i18n = function() {
