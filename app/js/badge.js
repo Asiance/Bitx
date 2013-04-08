@@ -30,29 +30,29 @@ function countTodos(input, status) {
 function updateBadge() {
   try {
     var counter_todos = localStorage['counter_todos'] ? localStorage['counter_todos'] : "default";
-    var jsonTodos = JSON.parse(localStorage.getItem('myTodos'));
+    var jsonTodos = JSON.parse(localStorage['myTodos']);
     var counter = countTodos(jsonTodos, 'overdue');
     var color;
     
     if ((counter_todos == 'overdues') || 
       (counter_todos == 'default' && countTodos(jsonTodos, 'overdues'))) {
         counter = countTodos(jsonTodos, 'overdues');
-        color = {color: '#FF0000'};
+        color = {color: 'rgb(245, 78, 74)'};
     }      
     else if ((counter_todos == 'today') || 
       (counter_todos == 'default' && countTodos(jsonTodos, 'today'))) {
         counter = countTodos(jsonTodos, 'today');
-        color = {color: '#FF9100'};
+        color = {color: '#5e9ac9'};
     }
     else if ((counter_todos == 'upcoming') || 
       (counter_todos == 'default' && countTodos(jsonTodos, 'upcoming'))) {
         counter = countTodos(jsonTodos, 'upcoming');
-        color = {color: '#00AAFF'};
+        color = {color: '#5e9ac9'};
     }
     else if ((counter_todos == 'no_due_date') || 
       (counter_todos == 'default' && countTodos(jsonTodos, 'no_due_date'))) {
         counter = countTodos(jsonTodos, 'no_due_date');
-        color = {color: '#000000'};
+        color = {color: '#5e9ac9'};
     }
     else {
       counter = '';

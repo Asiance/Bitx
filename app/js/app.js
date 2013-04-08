@@ -2,9 +2,9 @@
 
 angular
   .module('basecampExtension', 
-  	['basecampExtension.controllers',
+    ['basecampExtension.controllers',
     'basecampExtension.services', 
-  	'basecampExtension.filters'])
+    'basecampExtension.filters'])
   
   .config([
     '$routeProvider', '$locationProvider', '$httpProvider', '$resourceProvider', function($routeProvider) {

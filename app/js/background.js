@@ -6,7 +6,6 @@ window.onload = function() {
   var userLang = (navigator.language) ? navigator.language : navigator.userLanguage; 
   var locale = userLang.substring(0,2);
   localStorage['language'] = localStorage['language'] ? localStorage['language'] : locale;  
-  localStorage['scrollbar'] = localStorage['scrollbar'] ? localStorage['scrollbar'] : 1;
   refresh_period = localStorage['refresh_period'] ? localStorage['refresh_period'] : 5000;
   setInterval(getMyTodos, refresh_period);
 }

@@ -9,9 +9,6 @@ function save_options() {
   select = document.getElementById("language");
   localStorage["language"] = select.children[select.selectedIndex].value;
 
-  select = document.getElementById("scrollbar");
-  localStorage["scrollbar"] = select.children[select.selectedIndex].value;
-
   // Update status to let user know options were saved.
   var status = document.getElementById("status");
   status.innerHTML = "Options Saved.";
@@ -26,7 +23,6 @@ function restore_options() {
   selectOption("refresh_period");
   selectOption("counter_todos");
   selectOption("language");
-  selectOption("scrollbar");
 }
 
 function selectOption(variableString) {

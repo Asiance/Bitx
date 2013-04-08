@@ -1,17 +1,21 @@
 <header>
   <img id="logo" src="/img/logo-header.png">
-  <input autocomplete="off" id="search-input" type="text" ng-model="search" list="keywords" autofocus>
-  <datalist id="keywords">
-    <option value=":created" label="See todos I created"/>
-    <option value="@" label="Type a user name"/>
-    <option ng-repeat="user in people" value="@{{user.email_address | removeDomain}}" label="{{user.name}}" />
-  </datalist>
+  <input id="search-input" type="text" class="dropdown-toggle" ng-model="search" autofocus>
+  <div id="suggestions" ng-show="suggestionsVisible">
+    <ul>
+      <li class='person' ng-class="{active: suggestionsPosition == $index}" ng-repeat="person in people | suggestionSearch: search | limitTo : 4" ng-click="setSearch(person.email_address)" ng-mouseover="setActive($index)" >
+        <img class="username" ng-src="{{person.avatar_url}}">
+        <span class="username">@{{person.email_address | removeDomain}}</span><br>
+        <span class="fullname">{{person.name}}</span>
+      </li>
+    </ul>
+  </div>
   <a ng-click="openOptions()"><span class="icon-settings"></span></a>
 </header>
 
 <section>
-<dl class="todos">
-  <dt ng-class="overdue" id="overdues"><a>
+<dl id="todos">
+  <dt ng-class="{active_overdues: (assignedTodos | keywordSearch:search | status :'1').length > 0}" id="overdues" ><a ng-click="toggleContent('overdues')">
     <span class="toggle-content"></span>
     <h1 id="header_overdues">OVERDUES</h1>
     <span ng-show="(assignedTodos | keywordSearch:search | status :'1').length" title="{{(assignedTodos | keywordSearch:search | status :'1').length}} {{countOverdues}}" class="count-todos">{{(assignedTodos | keywordSearch:search | status :'1').length}}</span>
@@ -32,13 +36,13 @@
           <p>{{assignedTodo.comments_count}}</p>
         </span>
         <span class="void" ng-hide="assignedTodo.comments_count"></span>
-        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link"></span>
+        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link" title="Visit this todo"></span>
       </li>
     </ul>
   </div>
   </dd>
 
-  <dt ng-class="today" id="today"><a>
+  <dt ng-class="today" id="today"><a ng-click="toggleContent('today')">
     <span class="toggle-content"></span>
     <h1 id="header_today">TODAY</h1>
     <span ng-show="(assignedTodos | keywordSearch:search | status :'2').length" title="{{(assignedTodos | keywordSearch:search | status :'2').length}} {{countToday}}" class="count-todos">{{(assignedTodos | keywordSearch:search | status :'2').length}}
@@ -57,12 +61,12 @@
           <p>{{assignedTodo.comments_count}}</p>
         </span>
         <span class="void" ng-hide="assignedTodo.comments_count"></span>
-        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link"></span>
+        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link" title="Visit this todo"></span>
     </ul>
   </div>
   </dd>
 
-  <dt ng-class="upcoming" id="upcoming"><a>
+  <dt ng-class="upcoming" id="upcoming"><a ng-click="toggleContent('upcoming')">
       <span class="toggle-content"></span>
       <h1 id="header_upcoming">UPCOMING</h1>
       <span ng-show="(assignedTodos | keywordSearch:search | status :'3').length" title="{{(assignedTodos | keywordSearch:search | status :'3').length}} {{countUpcoming}}" class="count-todos">{{(assignedTodos | keywordSearch:search | status :'3').length}}</span>
@@ -83,13 +87,13 @@
           <p>{{assignedTodo.comments_count}}</p>
         </span>
         <span class="void" ng-hide="assignedTodo.comments_count"></span>
-        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link"></span>
+        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link" title="Visit this todo"></span>
       </li>
     </ul>
   </div>
   </dd>
 
-  <dt ng-class="no_due_date" id="no-due-date"><a>
+  <dt ng-class="no_due_date" id="no-due-date"><a ng-click="toggleContent('no-due-date')">
     <span class="toggle-content"></span>
     <h1 id="header_noduedate">NO DUE DATE</h1>
     <span ng-show="(assignedTodos | keywordSearch:search | status :'4').length" title="{{(assignedTodos | keywordSearch:search | status :'4').length}} {{countNoDueDate}}" class="count-todos">{{(assignedTodos | keywordSearch:search | status :'4').length}}</span>
@@ -108,7 +112,7 @@
           <p>{{assignedTodo.comments_count}}</p>
         </span>
         <span class="void" ng-hide="assignedTodo.comments_count"></span>
-        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link"></span>
+        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link" title="Visit this todo"></span>
       </li>
     </ul>
   </div>
