@@ -312,7 +312,8 @@ angular
    */
   $scope.$watch('search', function() {
     if ($scope.search && $scope.search == "@") {
-      $scope.suggestionsVisible = true;  
+      $scope.suggestionsVisible = true;
+      $scope.suggestionsFrame = 0;
     } else if ($scope.search == "") {
       $scope.suggestionsVisible = false;
     }
@@ -406,15 +407,16 @@ angular
       case 'no-due-date' : statusVal = 4; break;
       default : statusVal = 1; break;
     }
-    if ($('#' + category).hasClass('active')) {
-      $('#' + category).next().slideUp(500, 'easeOutQuad');
-      $('#' + category).removeClass('active');
-    }
-    else {
-      $('#todos').find('dt').removeClass('active');
-      $('#' + category).addClass('active');
-      $('#todos').find('dd').slideUp();      
-      if (status(keywordSearch($scope.assignedTodos, $scope.search), statusVal).length > 0) {
+
+    if (status(keywordSearch($scope.assignedTodos, $scope.search), statusVal).length > 0) {    
+      if ($('#' + category).hasClass('active')) {
+        $('#' + category).next().slideUp(500, 'easeOutQuad');
+        $('#' + category).removeClass('active');
+      }
+      else {
+        $('#todos').find('dt').removeClass('active');
+        $('#' + category).addClass('active');
+        $('#todos').find('dd').slideUp();      
         $('#' + category).next().slideDown({
           duration: 500,
           easing: 'easeOutQuad',
@@ -429,15 +431,24 @@ angular
    * @param  {number}  key  Code related to key event.
    */
   $scope.handleKeypress = function(key) {
-    console.log($scope.people);
-    if (key == 40 &&  $scope.suggestionsPosition < 3 && $scope.suggestionsPosition < $filter('suggestionSearch')($scope.people, $scope.search).length -1) {
+    if (key == 40 && $scope.suggestionsPosition < $filter('suggestionSearch')($scope.people, $scope.search).length -1) {
       $scope.suggestionsPosition += 1;
+      if ($scope.suggestionsFrame == 4) {
+        document.getElementById('suggestions').scrollTop += 50;
+      } else {
+        $scope.suggestionsFrame += 1;
+      }
     } else if (key == 38 && $scope.suggestionsPosition > -1) {
       $scope.suggestionsPosition -= 1;
-    } else if (key == 13|| key == 39) {
-      $scope.setSearch($filter('suggestionSearch')($scope.people, $scope.search)[$scope.suggestionsPosition]['email_address']);
+      if ($scope.suggestionsFrame == 1) {
+        document.getElementById('suggestions').scrollTop -= 50;      
+      } else {
+        $scope.suggestionsFrame -= 1;
+      }
     } else if (key == 8) {
       $scope.suggestionsVisible = true;
+    } else if (key == 13 && $scope.search.indexOf(" ") == -1 && $scope.suggestionsVisible) {
+      $scope.setSearch($filter('suggestionSearch')($scope.people, $scope.search)[0]['email_address']);
     }
   };
 
@@ -462,9 +473,6 @@ angular
   $('#search-input').keydown(function(evt) {  
     $scope.$apply(function() {
       $scope.handleKeypress.call($scope, evt.which);
-      if (evt.which == 32 && $scope.search.indexOf(" ") == -1 && $scope.suggestionsVisible) {
-        $scope.setSearch($filter('suggestionSearch')($scope.people, $scope.search)[0]['email_address']);
-      }
     });
     if (evt.which == 38 || evt.which == 40) {
       return false;
@@ -478,7 +486,7 @@ angular
  */
 .controller('MainController', function($scope) {
 
-  /**
+  /** 
    * Open options page in a new tab
    */
   $scope.openOptions = function() {

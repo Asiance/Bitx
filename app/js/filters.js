@@ -168,11 +168,11 @@ angular
       if (new RegExp("^@", "gi").test(search)) {
         realSearch = search.substring(1);
         // Use a custom filter function to give more relevant suggestion
-        out = _.filter(input, function(item) { 
+        out = _.filter(input, function(item) {
           if ( item['name'].match(new RegExp("^" + realSearch, "gi"))
               || item['email_address'].match(new RegExp("^" + realSearch, "gi")) ) return true;
         });      
-        return _.uniq(out.concat($filter('filter')(input, realSearch)));
+        return out;
       }
     }
   });

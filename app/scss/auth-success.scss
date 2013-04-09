@@ -4,7 +4,10 @@
 @import url(http://fonts.googleapis.com/css?family=Droid+Sans:400,700);
 @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
 
-$fonts_en: "Droid Sans", Verdana, arial, helvetica, clean, sans-serif;
+$color-dark: #232323;
+$color-red-asiance: #e02d45;
+
+$fonts_en: "Droid Sans", arial, helvetica, clean, sans-serif;
 $fonts_ko: "Nanum Gothic", "나눔고딕", "NanumGothic", "Malgun Gothic", '돋움', "Dotum", "AppleGothic", "Gulim", "Arial Unicode", "Arial", sans-serif;
 $fonts_ja: "Meiryo UI", 'Meiryo', 'MS UI Gothic', 'MS PGothic', 'MS Gothic','Microsoft YaHei',"Arial Unicode", "Arial", sans-serif;
 
@@ -13,7 +16,7 @@ html, body {
 }
 
 body {
-  background: url('../img/background.jpg') center;
+  background: $color-dark;
   font-family: $fonts_en;
   margin: 0px;
   padding: 0px;
@@ -55,7 +58,7 @@ div#wrapper {
     &:last-child { padding-bottom: 50px; }
   }
   hr {
-    background-color: #a0afd7;
+    background-color: $color-red-asiance;
     border: 0 none;
     height: 1px;
     margin: 50px auto;

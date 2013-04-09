@@ -29,7 +29,7 @@ window.fr = {
   "needAuth2":"pour synchroniser votre compte Basecamp avec l'extension.",
 
   "thankYou":"Merci !",
-  "syncMess":"Votre Todo extension pour Basecamp est maintenant connecté à votre compte ! Vous pouvez commencer à utiliser l'extension.",
+  "syncMess":"Votre Todo extension pour Basecamp est maintenant connectée à votre compte ! Vous pouvez commencer à utiliser l'extension.",
 
   "settings": "Paramètres",
   "logout": "Déconnexion",

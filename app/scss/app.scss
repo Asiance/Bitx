@@ -13,10 +13,12 @@ $color-dark: #232323;
 $color-green: #339a63;
 $color-gray-date: #a3a3a3;
 $color-gray-text: #a0a0a0;
+$color-gray-project: #a3a3a3;
 $color-gray: #a7a7a7;
 $color-light-blue: rgba(255, 255, 255, 0.15);
 $color-light-gray: #f5f5f5;
 $color-light-red: #e9827f;
+$color-red-counter: rgb(214, 67, 62);
 $color-red: #e56c69;
 $color-white: #ffffff;
 $first-column-width: 80px;
@@ -31,12 +33,14 @@ body {
     display: inline-block;
     font-size: 14px;
     font-weight: 700;
+    line-height: 55px;
+    vertical-align: middle;
     width: 360px;
   }
   h2 {
-    color: $color-red;
     font-weight: 700;
     margin-left: 38px;
+    color: $color-gray-project;
   }
   background: $color-white;
   cursor: default;
@@ -58,7 +62,7 @@ body {
 
 header {
   background: $color-close-white;
-  height: 50px;
+  height: 55px;
   #logo {
     vertical-align: middle;
     position: relative;
@@ -97,12 +101,15 @@ header {
   color: $color-white;
   display: inline-block;
   font-size: 24px;
-  position: relative;
+  line-height: 10px;
   text-align: center;
-  top: 3px;
+  vertical-align: middle;
   width: $first-column-width;
 }
-
+.void {
+  display: inline-block;  
+  width: $first-column-width; 
+}
 section {
   max-height: 520px;
   width: 500px;
@@ -113,6 +120,11 @@ dt {
   background: $color-dark;
   border-bottom: 1px solid $color-dark-border;
   cursor: pointer;
+
+  @include transition-property(background, border-bottom);
+  @include transition-duration(0.5s);
+  @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000));
+
   &:hover {
     background: $color-blue;
     border-bottom: 1px solid $color-blue;
@@ -120,22 +132,17 @@ dt {
       background: $color-light-blue;
     }
   }
-  .toggle-content:after {
+  .toggle:after {
     content: '+';
   }
 }
 #overdues {
-  &.active, &.active_overdues {
+  &.active, &:hover {
     background: $color-red;
     border-bottom: 1px solid $color-red;
   }
-  &:hover {
-    background: $color-dark-red;
-    border-bottom: 1px solid $color-dark-red;
-
-  }  
   .count-todos {
-    background: $color-light-red;
+    background: $color-red-counter;
   }
   .date {
     color: $color-red;
@@ -144,8 +151,10 @@ dt {
 dt.active {
   background: $color-blue;
   border-bottom: 1px solid $color-blue;
-  .toggle-content:after {
+  .toggle:after {
     content: '-';
+    position: relative;
+    top: -2px;
   }
   .count-todos {
     background: $color-light-blue;
@@ -161,14 +170,22 @@ dt.active {
   line-height: 16px;
   padding: 8px;
   text-align: center;
+  vertical-align: middle;
   width: 15px;
+  @include transition-property(background);
+  @include transition-duration(0.5s);
+  @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000));  
+}
+.day-number {
+  font-family: Arial;
+  line-height: 17px;
 }
 .date {
   color: $color-gray-date;
   display: table-cell;
   font-size: 18px;
   height: 50px;
-  line-height: 18px;
+  line-height: 16px;
   text-align: center;
   vertical-align: middle;
   width: $first-column-width;
@@ -176,6 +193,12 @@ dt.active {
   &.overdues {
     color: $color-red;
   }
+}
+.icon-today {
+  background: url(/img/icon-today.png) center 10px no-repeat;
+}
+.icon-coffee {
+  background: url(/img/icon-coffee.png) center 11px no-repeat;
 }
 .comments { 
   background: url(/img/icon-comment.png) left no-repeat;
@@ -219,7 +242,7 @@ dt.active {
     width: 325px;
     @include transition-property(margin-left);
     @include transition-duration(0.5s);
-    @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000);
+    @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000));
     .checkbox {
       background: url(/img/icon-checkbox.png) center no-repeat;
       &:hover { background: url(/img/icon-checkbox-hover.png) center no-repeat; }
@@ -238,6 +261,7 @@ dt.active {
 }
 #todos li {
   border-bottom: 1px solid $color-border;
+  height: 50px;
   left: -520px;
   overflow: hidden;
   position: relative;
@@ -274,7 +298,7 @@ dt.active {
 }
 
 #allow-access {
-  background: -webkit-linear-gradient(top, #f4f4f4, white);
+  background: $color-close-white;
   display: table-row;
   line-height: 14px;
   img {
@@ -322,7 +346,9 @@ dt.active {
   box-shadow: 2px 2px 2px $color-gray;  
   line-height: 16px;
   margin-left: 122px;
-  margin-top: -7px;
+  overflow: hidden;
+  margin-top: -10px;
+  max-height: 200px;
   overflow: auto;
   position: absolute;
   width: 262px;

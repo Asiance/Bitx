@@ -29,7 +29,7 @@ window.en = {
   "needAuth2": "to synchronize your basecamp account with the extension.",
 
   "thankYou": "Thank you!",
-  "syncMess": "Your Todo Basecamp Extension is now connected to your account! You can start using the extension.",
+  "syncMess": "Your Todo Basecamp Extension is now connected to your account! You can start using it.",
 
   "settings": "Settings",
   "logout": "Logout",

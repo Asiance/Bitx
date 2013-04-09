@@ -37,7 +37,7 @@ function updateBadge() {
     if ((counter_todos == 'overdues') || 
       (counter_todos == 'default' && countTodos(jsonTodos, 'overdues'))) {
         counter = countTodos(jsonTodos, 'overdues');
-        color = {color: 'rgb(245, 78, 74)'};
+        color = {color: '#f54e4a'};
     }      
     else if ((counter_todos == 'today') || 
       (counter_todos == 'default' && countTodos(jsonTodos, 'today'))) {

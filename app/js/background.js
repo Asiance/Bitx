@@ -5,8 +5,15 @@
 window.onload = function() {
   var userLang = (navigator.language) ? navigator.language : navigator.userLanguage; 
   var locale = userLang.substring(0,2);
-  localStorage['language'] = localStorage['language'] ? localStorage['language'] : locale;  
-  refresh_period = localStorage['refresh_period'] ? localStorage['refresh_period'] : 5000;
+  if (!localStorage['language']) {
+    localStorage['language'] = locale;
+  }
+  if (localStorage['refresh_period']) {
+    var refresh_period = localStorage['refresh_period'];
+  } else {
+    var refresh_period = 5000;
+    localStorage['refresh_period'] = refresh_period;
+  }
   setInterval(getMyTodos, refresh_period);
 }
 
