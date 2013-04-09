@@ -95,24 +95,35 @@ angular
     return function(input, search) {
        if(search && input) {
         switch(true) {
-          // If the keyword '@createdbyme' has been typed
-          case (new RegExp("^@createdbyme", "gi")).test(search):
-            console.log('@createdbyme');
-            out = _.filter(input, function(item) {
-              if ( item['creator']['id'] == localStorage['userId'] ) return true;
+          // If the keyword 'createdby:' has been typed
+          case (new RegExp("^createdby:@", "gi")).test(search):
+            var user = _.find(angular.fromJson(localStorage['people']), function(user) {
+              if ( user['email_address'].match(new RegExp(search.substr(search.lastIndexOf('@') + 1, search.lastIndexOf(' ')), "gi"))
+                  || user['name'].match(new RegExp(search.substring(1), "gi")) )
+                return true;
             });
-            // If something follows '@createdbyme'
+            // If '@someone has been found, look for his todos'
+            if (user) {
+              out = _.filter(input, function(item) { 
+                if ( item['assignee'] && item['creator']['id'] == user.id ) return true;
+              });
+            } else {
+              return [];
+            }
+            // If something follows 'createdby:@someone'
             // Look in the todo description or in the project name or in the todolist title
             if(search.indexOf(" ") != -1) {
-              realSearch = search.substring(search.indexOf(" ") + 1);
+              console.log('test');
               out = _.filter(out, function(item) { 
-                if ( item['content'].match(new RegExp(realSearch, "gi"))
-                    || item['project'].match(new RegExp(realSearch, "gi"))
-                    || item['todolist'].match(new RegExp(realSearch, "gi")) ) return true;
+              if ( item['content'].match(new RegExp(realSearch, "gi"))
+                  || item['project'].match(new RegExp(realSearch, "gi"))
+                  || item['todolist'].match(new RegExp(realSearch, "gi")) ) return true;
               });
             }
             return out;
-            break;          
+            break;
+
+
           // If '@someone' has been type
           case (new RegExp("^@.+", "gi")).test(search):
             var user = _.find(angular.fromJson(localStorage['people']), function(user) {
@@ -140,6 +151,8 @@ angular
               return out;
             }
             break;
+
+
           // If any word has been typed, load the regular search filter
           default:
             out = _.filter(input, function(item) {
@@ -147,6 +160,7 @@ angular
             });
             return $filter('filter')(out, search);
         }
+
       // If nothing has been type
       } else {
         out = _.filter(input, function(item) {
@@ -165,13 +179,24 @@ angular
     var realSearch = "";
     var out = []
     return function(input, search) {
-      if (new RegExp("^@", "gi").test(search)) {
-        realSearch = search.substring(1);
-        // Use a custom filter function to give more relevant suggestion
-        out = _.filter(input, function(item) {
-          if ( item['name'].match(new RegExp("^" + realSearch, "gi"))
-              || item['email_address'].match(new RegExp("^" + realSearch, "gi")) ) return true;
-        });      
+      if(search && input) {
+        // User suggestions
+        if (search.lastIndexOf("@") != -1) {
+          realSearch = search.substring(search.lastIndexOf("@") + 1);
+          out = _.filter(input, function(item) {
+            if ( item['id'] != -1
+                && (item['name'].match(new RegExp("^" + realSearch, "gi"))
+                  || item['email_address'].match(new RegExp("^" + realSearch, "gi"))) ) return true;
+          });
+        }
+
+        // Keyword suggestions
+        else {
+          out = _.filter(input, function(item) {
+            if (item['id'] == -1
+                && item['email_address'].match(new RegExp("^" + search, "gi"))) return true;
+          });
+        }
         return out;
       }
     }

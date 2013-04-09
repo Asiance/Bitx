@@ -56,12 +56,10 @@ angular
         _.each(data, function(item) { // Check each todo whether it is new or not
           if (!_.findWhere($scope.people, {id: item.id})) diff = true;
         });
-        if (true) {
+        if (diff) {
           $scope.people = _.sortBy(data, function(user) { return user.name; });
           localStorage['people'] = angular.toJson($scope.people);
-          var user = _.find($scope.people, function(user) { return user.id == localStorage['userId']});
-          $scope.people.push({"name":"Todos I assigned", "email_address":"createdbyme", "avatar_url": user.avatar_url});
-          console.log($scope.people);
+          $scope.people.push({"name":"Search by creator", "email_address":"createdby:", "avatar_url":"/img/icon-search.png", "id":-1});
         }
       }, function(response) {
         console.log('ERROR: Failed to connect!');
@@ -311,25 +309,15 @@ angular
    * Event triggered by AngularJS
    */
   $scope.$watch('search', function() {
-    if ($scope.search && $scope.search == "@") {
-      $scope.suggestionsVisible = true;
-      $scope.suggestionsFrame = 0;
-    } else if ($scope.search == "") {
-      $scope.suggestionsVisible = false;
-    }
-    $scope.suggestionsPosition = -1;
-    // If '@someone' has been typed, look for 'someone' among the people on Basecamp
-    if ($scope.search &&
-            ((new RegExp("^@.+", "gi")).test($scope.search)
-            || (new RegExp("^@createdbyme", "gi")).test($scope.search))) {
-      highlight($scope.search.substring($scope.search.indexOf(" ") + 1));
-    }
-    // If a any word has been typed
-    else if ($scope.search) {
-      highlight($scope.search);
+    $scope.suggestionsFrame = 0;
+    $scope.suggestionsPosition = -1; 
+    if ($scope.search) {
+      var todoString = $scope.search.substr($scope.search.indexOf("@") + 1);
+      todoString = todoString.substr(todoString.indexOf(" ") + 1);
+      highlight(todoString);      
     }
     // If nothing is typed, fetch your own todos    
-    else if ($scope.search === "") {
+    if ($scope.search === "") {
       $scope.getAssignedTodos();
     }
     // On key pressed, display the first category which is not empty
@@ -338,7 +326,7 @@ angular
 
   /**
    * Hightlight found string when using search input
-   * @param  {string}  string  String to hightlight.
+   * @param  {string}  string  String to highlight.
    */
   function highlight(string) {
     $(".todo-text, h2").each(function(i, v) {
@@ -368,8 +356,7 @@ angular
     $scope.basecampId = localStorage['basecampId'];
     $scope.userId = localStorage['userId'];
     $scope.people = angular.fromJson(localStorage['people']);
-    var user = _.find($scope.people, function(user) { return user.id == localStorage['userId']});
-    $scope.people.push({"name":"Todos I assigned", "email_address":"createdbyme", "avatar_url": user.avatar_url});
+    $scope.people.push({"name":"Search by creator", "email_address":"createdby:", "avatar_url":"/img/icon-search.png", "id":-1});
   } else {
     $scope.getBasecampAccount();
     fullInit = true;
@@ -431,6 +418,7 @@ angular
    * @param  {number}  key  Code related to key event.
    */
   $scope.handleKeypress = function(key) {
+    $scope.suggestionsVisible = true;
     if (key == 40 && $scope.suggestionsPosition < $filter('suggestionSearch')($scope.people, $scope.search).length -1) {
       $scope.suggestionsPosition += 1;
       if ($scope.suggestionsFrame == 4) {
@@ -445,8 +433,6 @@ angular
       } else {
         $scope.suggestionsFrame -= 1;
       }
-    } else if (key == 8) {
-      $scope.suggestionsVisible = true;
     } else if (key == 13 && $scope.search.indexOf(" ") == -1 && $scope.suggestionsVisible) {
       $scope.setSearch($filter('suggestionSearch')($scope.people, $scope.search)[0]['email_address']);
     }
@@ -458,7 +444,8 @@ angular
    * @param  {string}  email_address  Email address of the person selected.
    */
   $scope.setSearch = function(email_address) {
-    $scope.search = "@" + $filter('removeDomain')(email_address);
+    $scope.search = $scope.search.substr(0, $scope.search.lastIndexOf("@") + 1);
+    $scope.search += $filter('removeDomain')(email_address);
     $scope.suggestionsVisible = false;
   }
 
@@ -470,7 +457,7 @@ angular
     $scope.suggestionsPosition = index;
   }
 
-  $('#search-input').keydown(function(evt) {  
+  $('#search-input').keydown(function(evt) {
     $scope.$apply(function() {
       $scope.handleKeypress.call($scope, evt.which);
     });

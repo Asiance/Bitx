@@ -5,7 +5,10 @@
     <ul>
       <li class='person' ng-class="{active: suggestionsPosition == $index}" ng-repeat="person in people | suggestionSearch: search" ng-click="setSearch(person.email_address)" ng-mouseover="setActive($index)" >
         <img class="username" ng-src="{{person.avatar_url}}">
-        <span class="username">@{{person.email_address | removeDomain}}</span><br>
+        <span ng-switch on="person.id" class="username">
+          <span ng-switch-when="-1">{{person.email_address}}</span>
+          <span ng-switch-default>@{{person.email_address | removeDomain}}</span>
+        </span><br>
         <span class="fullname">{{person.name}}</span>
       </li>
     </ul>
