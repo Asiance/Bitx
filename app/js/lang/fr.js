@@ -8,7 +8,7 @@ window.fr = {
   "header_noduedate": "Sans date",
 
   "createdDate": "Créée il y a",
-  
+
   "dayLate": "jour de retard",
   "daysLate": "jours de retard",
 

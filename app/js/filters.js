@@ -57,7 +57,7 @@ angular
   })
 
   /**
-   * Determine number of days remaining 
+   * Determine number of days remaining
    */
   .filter('daysRemaining', function() {
     var today = new Date();
@@ -106,8 +106,8 @@ angular
             });
             // If '@someone has been found, look for his todos'
             if (user) {
-              console.log('user found');              
-              out = _.filter(input, function(item) { 
+              console.log('user found');
+              out = _.filter(input, function(item) {
                 if ( item['assignee'] && item['creator']['id'] == user.id ) return true;
               });
             } else {
@@ -118,7 +118,7 @@ angular
             // Look in the todo description or in the project name or in the todolist title
             realSearch = search.substr(search.indexOf(" ") + 1);
             if(search.indexOf(" ") != -1) {
-              out = _.filter(out, function(item) { 
+              out = _.filter(out, function(item) {
               if ( item['content'].match(new RegExp(realSearch, "gi"))
                   || item['project'].match(new RegExp(realSearch, "gi"))
                   || item['todolist'].match(new RegExp(realSearch, "gi")) ) return true;
@@ -137,7 +137,7 @@ angular
             });
             // If '@someone has been found, look for his todos'
             if (user) {
-              out = _.filter(input, function(item) { 
+              out = _.filter(input, function(item) {
                 if ( item['assignee'] && item['assignee']['id'] == user.id ) return true;
               });
             } else return [];
@@ -147,7 +147,7 @@ angular
             // Look in the todo description or in the project name or in the todolist title
             else {
               realSearch = search.substring(search.indexOf(" ") + 1);
-              out = _.filter(out, function(item) { 
+              out = _.filter(out, function(item) {
                 if ( item['content'].match(new RegExp(realSearch, "gi"))
                     || item['project'].match(new RegExp(realSearch, "gi"))
                     || item['todolist'].match(new RegExp(realSearch, "gi")) ) return true;

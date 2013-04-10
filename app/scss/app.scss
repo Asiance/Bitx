@@ -50,10 +50,10 @@ body {
   line-height: 50px;
   width: 500px;
   font-family: $fonts_en;
-  &.ja { 
+  &.ja {
     font-family: $fonts_ja;
   };
-  &.ko { 
+  &.ko {
     font-family: $fonts_ko;
     .date p { font-size: 12px; }
     h1 { font-size: 15px; }
@@ -85,7 +85,7 @@ header {
     &:focus {
       outline: none;
     }
-  }    
+  }
   .icon-settings {
     background: url(/img/icon-settings.png) center no-repeat;
     &:hover { background: url(/img/icon-settings-hover.png) center no-repeat; }
@@ -110,8 +110,8 @@ header {
   width: $first-column-width;
 }
 .void {
-  display: inline-block;  
-  width: $first-column-width; 
+  display: inline-block;
+  width: $first-column-width;
 }
 section {
   max-height: 520px;
@@ -183,7 +183,7 @@ dt.active {
   width: 15px;
   @include transition-property(background);
   @include transition-duration(0.5s);
-  @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000));  
+  @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000));
 }
 .day-number {
   font-family: Arial;
@@ -212,12 +212,12 @@ dt.active {
   background: url(/img/icon-coffee.png) center 8px no-repeat;
 }
 
-.comments { 
+.comments {
   background: url(/img/icon-comment.png) left no-repeat;
-  &:hover { 
+  &:hover {
     background: url(/img/icon-comment-hover.png) left no-repeat;
     p { color: $color-blue; }
-  }    
+  }
   color: $color-gray;
   cursor: pointer;
   display: table-cell;
@@ -225,7 +225,7 @@ dt.active {
   text-align: right;
   width: 30px;
 }
-.void { 
+.void {
   display: table-cell;
   padding-right: 8px;
   width: 30px;
@@ -248,7 +248,7 @@ dt.active {
   line-height: 16px;
   overflow: hidden;
   vertical-align: middle;
-  width: 327px; 
+  width: 327px;
   div {
     display: table;
     margin-left: -30px;
@@ -279,8 +279,8 @@ dt.active {
   overflow: hidden;
   position: relative;
   width: 1040px;
-  &:first-child { border-top: 1px solid $color-border; } 
-  &:last-child { border-bottom: 0; } 
+  &:first-child { border-top: 1px solid $color-border; }
+  &:last-child { border-bottom: 0; }
   &:hover {
     background-color: $color-light-gray;
     .todo {
@@ -292,7 +292,7 @@ dt.active {
         @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000));
       }
     }
-  } 
+  }
   .achievement {
     background: $color-green;
     color: $color-white;
@@ -327,9 +327,9 @@ dt.active {
   p {
     color: $color-gray-text;
     display: table-cell;
-    line-height: 18px;  
+    line-height: 18px;
     vertical-align: middle;
-    &:last-child { 
+    &:last-child {
       padding-right: 24px;
       width: 100%;
     }
@@ -347,7 +347,7 @@ dt.active {
   -webkit-animation-duration: 0.5s;
   -webkit-animation-fill-mode: forwards;
   -webkit-animation-name: achievementSlide;
-  -webkit-animation-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000); /* easeOutQuart */  
+  -webkit-animation-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000); /* easeOutQuart */
 }
 
 /* Style applied to the found string */
@@ -356,7 +356,7 @@ dt.active {
 
 #suggestions {
   background: $color-close-white;
-  box-shadow: 2px 2px 2px $color-gray;  
+  box-shadow: 2px 2px 2px $color-gray;
   line-height: 16px;
   margin-left: 122px;
   overflow: hidden;
@@ -371,7 +371,7 @@ dt.active {
       background: #e4e4e4;
     };
     border-bottom : 1px solid $color-border;
-    &:last-child { 
+    &:last-child {
       border: none;
     };
     cursor: pointer;

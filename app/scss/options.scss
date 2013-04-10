@@ -21,7 +21,7 @@ body {
   a { @include unstyled-link; }
 }
 
-fieldset { 
+fieldset {
   border: 1px solid $color-blue-asiance;
   margin: 50px auto;
   width: 600px;
@@ -47,7 +47,7 @@ dt {
   clear: left;
   float: left;
   font-weight: bold;
-  padding: 0px 40px;  
+  padding: 0px 40px;
   text-align: right;
   width: 120px;
 }

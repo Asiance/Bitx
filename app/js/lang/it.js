@@ -8,7 +8,7 @@ window.it = {
   "header_noduedate": "Nessuna scadenza",
 
   "createdDate": "Creato:", //
-  
+
   "dayLate": "giorno in ritardo",
   "daysLate": "giorni in ritardo",
 

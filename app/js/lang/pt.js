@@ -8,7 +8,7 @@ window.pt = {
   "header_noduedate": "Sem prazo",
 
   "createdDate": "Criado:",
-  
+
   "dayLate": "dia de atraso",
   "daysLate": "dias de atraso",
 

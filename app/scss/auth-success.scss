@@ -20,10 +20,10 @@ body {
   font-family: $fonts_en;
   margin: 0px;
   padding: 0px;
-  &.ja { 
+  &.ja {
     p { font-family: $fonts_ja; }
   };
-  &.ko { 
+  &.ko {
     p { font-family: $fonts_ko; }
   }
   font-style: normal;
@@ -43,7 +43,7 @@ div#wrapper {
     height: 220px;
     margin-bottom: 90px;
     margin-top: 130px;
-  }  
+  }
   h1 {
     font-size: 52px;
     font-style: italic;
@@ -62,7 +62,7 @@ div#wrapper {
     border: 0 none;
     height: 1px;
     margin: 50px auto;
-  }  
+  }
 }
 
 div#footer_wrapper {
@@ -88,7 +88,7 @@ div#footer_inner_wrapper {
     text-align: right;
     top: -5px;
     width:100%;
-  } 
+  }
 }
 
 div#content_wrapper {

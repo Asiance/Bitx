@@ -8,7 +8,7 @@ window.ja = {
   "header_noduedate": "期限なし",
 
   "createdDate": "作成",
-  
+
   "dayLate": "日遅れ",
   "daysLate": "日遅れ",
 
