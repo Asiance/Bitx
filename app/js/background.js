@@ -119,7 +119,8 @@ function getMyTodos() {
           updateBadge();
           console.log('LOG: getMyTodos XHR');
         } else if (xhr.readyState === 4) {
-          localStorage.clear();
+          localStorage['basecampId'] == null;
+          localStorage['userId'] == null;
           console.log('ERROR: getMyTodos XHR');
         }
       };

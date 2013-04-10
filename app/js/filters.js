@@ -97,23 +97,27 @@ angular
         switch(true) {
           // If the keyword 'createdby:' has been typed
           case (new RegExp("^createdby:@", "gi")).test(search):
+            var username = search.substr(search.lastIndexOf("@") + 1);
+            if (username.indexOf(" ") != -1) username = username.substr(0, username.indexOf(" "));
             var user = _.find(angular.fromJson(localStorage['people']), function(user) {
-              if ( user['email_address'].match(new RegExp(search.substr(search.lastIndexOf('@') + 1, search.lastIndexOf(' ')), "gi"))
-                  || user['name'].match(new RegExp(search.substring(1), "gi")) )
+              if ( user['email_address'].match(new RegExp(username, "gi"))
+                  || user['name'].match(new RegExp(username, "gi")) )
                 return true;
             });
             // If '@someone has been found, look for his todos'
             if (user) {
+              console.log('user found');              
               out = _.filter(input, function(item) { 
                 if ( item['assignee'] && item['creator']['id'] == user.id ) return true;
               });
             } else {
+              console.log('user not found');
               return [];
             }
             // If something follows 'createdby:@someone'
             // Look in the todo description or in the project name or in the todolist title
+            realSearch = search.substr(search.indexOf(" ") + 1);
             if(search.indexOf(" ") != -1) {
-              console.log('test');
               out = _.filter(out, function(item) { 
               if ( item['content'].match(new RegExp(realSearch, "gi"))
                   || item['project'].match(new RegExp(realSearch, "gi"))
@@ -198,6 +202,6 @@ angular
           });
         }
         return out;
-      }
+      };
     }
   });

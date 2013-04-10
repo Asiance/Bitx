@@ -1,9 +1,9 @@
 <header>
   <img id="logo" src="/img/logo-header.png">
   <input id="search-input" type="text" class="dropdown-toggle" ng-model="search" autofocus>
-  <div id="suggestions" ng-show="suggestionsVisible">
+  <div id="suggestions">
     <ul>
-      <li class='person' ng-class="{active: suggestionsPosition == $index}" ng-repeat="person in people | suggestionSearch: search" ng-click="setSearch(person.email_address)" ng-mouseover="setActive($index)" >
+      <li id="{{$index}}" class='person' ng-class="{active: suggestionsPosition == $index}" ng-repeat="person in people | suggestionSearch: search" ng-click="setSearch(person.email_address)" ng-mouseover="setActive($index)" >
         <img class="username" ng-src="{{person.avatar_url}}">
         <span ng-switch on="person.id" class="username">
           <span ng-switch-when="-1">{{person.email_address}}</span>
@@ -20,7 +20,7 @@
 <dl id="todos">
   <dt ng-class="overdue" id="overdues" ><a ng-click="toggleContent('overdues')">
     <span ng-switch on="(assignedTodos | keywordSearch:search | status :'1').length" class="toggle-content">
-      <span ng-switch-when="0" class="void"></span>
+      <span ng-switch-when="0" class="icon-check"></span>
       <span ng-switch-default class="toggle"></span>
     </span>
     <h1 id="header_overdues">OVERDUES</h1>
@@ -50,7 +50,7 @@
 
   <dt ng-class="today" id="today"><a ng-click="toggleContent('today')">
     <span ng-switch on="(assignedTodos | keywordSearch:search | status :'2').length" class="toggle-content">
-      <span ng-switch-when="0" class="void"></span>
+      <span ng-switch-when="0" class="icon-check"></span>
       <span ng-switch-default class="toggle"></span>
     </span>
     <h1 id="header_today">TODAY</h1>
@@ -77,8 +77,8 @@
 
   <dt ng-class="upcoming" id="upcoming"><a ng-click="toggleContent('upcoming')">
       <span ng-switch on="(assignedTodos | keywordSearch:search | status :'3').length" class="toggle-content">
-        <span ng-switch-when="0" class="void"></span>
-        <span ng-switch-default class="toggle"></span>
+      <span ng-switch-when="0" class="icon-check"></span>
+      <span ng-switch-default class="toggle"></span>
       </span>
       <h1 id="header_upcoming">UPCOMING</h1>
       <span ng-show="(assignedTodos | keywordSearch:search | status :'3').length" title="{{(assignedTodos | keywordSearch:search | status :'3').length}} {{countUpcoming}}" class="count-todos">{{(assignedTodos | keywordSearch:search | status :'3').length}}</span>
@@ -107,7 +107,7 @@
 
   <dt ng-class="no_due_date" id="no-due-date"><a ng-click="toggleContent('no-due-date')">
     <span ng-switch on="(assignedTodos | keywordSearch:search | status :'4').length" class="toggle-content">
-      <span ng-switch-when="0" class="void"></span>
+      <span ng-switch-when="0" class="icon-check"></span>
       <span ng-switch-default class="toggle"></span>
     </span>
     <h1 id="header_noduedate">NO DUE DATE</h1>

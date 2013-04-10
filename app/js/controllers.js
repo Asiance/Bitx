@@ -56,9 +56,10 @@ angular
         _.each(data, function(item) { // Check each todo whether it is new or not
           if (!_.findWhere($scope.people, {id: item.id})) diff = true;
         });
+
+        localStorage['people'] = angular.toJson(_.sortBy(data, function(user) { return user.name; }));        
         if (diff) {
           $scope.people = _.sortBy(data, function(user) { return user.name; });
-          localStorage['people'] = angular.toJson($scope.people);
           $scope.people.push({"name":"Search by creator", "email_address":"createdby:", "avatar_url":"/img/icon-search.png", "id":-1});
         }
       }, function(response) {
@@ -92,13 +93,9 @@ angular
                       .sortBy(function(todo) { return todo.project_id; })
                       .value();
 
-          var diff = false;
-          _.each(allTodos, function(item) { // Check each todo whether it is new or not
-            if (!_.findWhere($scope.assignedTodos, {id: item.id})) diff = true;
-          });
-          if (true) {
+          chrome.storage.local.set({'assignedTodos': angular.toJson(allTodos)});
+          if (!_.isEqual(allTodos, $scope.assignedTodos)) {
             $scope.assignedTodos = allTodos;
-            chrome.storage.local.set({'assignedTodos': angular.toJson(allTodos)});
             $scope.groupByProject(true);
           }
 
@@ -242,25 +239,21 @@ angular
           (counter_todos == 'default' && status(keywordSearch($scope.assignedTodos, $scope.search), 1).length > 0)) {
           $('#overdue_content').css('display', 'block');
           $scope.overdue = "active";
-          $('section').slimScroll({ height: 'auto' });          
         }
         else if (counter_todos == 'today' || 
           (counter_todos == 'default' && status(keywordSearch($scope.assignedTodos, $scope.search), 2).length > 0)) {
           $scope.today = "active";
           $('#overdue_content').css('display', 'block');
-          $('section').slimScroll({ height: 'auto' });
         }
         else if (counter_todos == 'upcoming' || 
           (counter_todos == 'default' && status(keywordSearch($scope.assignedTodos, $scope.search), 3).length > 0)) {
           $scope.upcoming = "active";
           $('#upcoming_content').css('display', 'block');
-          $('section').slimScroll({ height: 'auto' });
         }
         else if (counter_todos == 'no_due_date' || 
           (counter_todos == 'default' && status(keywordSearch($scope.assignedTodos, $scope.search), 4).length > 0)) {
           $scope.no_due_date = "active";
           $('#no_due_date_content').css('display', 'block');
-          $('section').slimScroll({ height: 'auto' });
         }
       }
     } catch(e) {
@@ -309,19 +302,22 @@ angular
    * Event triggered by AngularJS
    */
   $scope.$watch('search', function() {
-    $scope.suggestionsFrame = 0;
     $scope.suggestionsPosition = -1; 
     if ($scope.search) {
-      var todoString = $scope.search.substr($scope.search.indexOf("@") + 1);
-      todoString = todoString.substr(todoString.indexOf(" ") + 1);
-      highlight(todoString);      
+      highlight($scope.search);      
     }
     // If nothing is typed, fetch your own todos    
     if ($scope.search === "") {
       $scope.getAssignedTodos();
     }
     // On key pressed, display the first category which is not empty
-    $scope.displayCategory();
+    if ($scope.search && $scope.search.length != 0)
+      $scope.displayCategory();
+    else {
+      $('#suggestions').css({'z-index': '1'});
+      $("#ascrail2000").css({'z-index': '1'});
+      $("#ascrail2000-hr").css({'z-index': '1'});      
+    }
   });
 
   /**
@@ -341,7 +337,7 @@ angular
       var block = $(v);
       block.html(
         block.text().replace(
-          new RegExp(string.substring(1), "gi"), function(match) {
+          new RegExp(string, "gi"), function(match) {
             return ["<span class='strong'>", match, "</span>"].join("");
         }));
     });      
@@ -361,10 +357,10 @@ angular
     $scope.getBasecampAccount();
     fullInit = true;
   }
-
   chrome.storage.local.get('assignedTodos', function(data) {
     if (!_.isEmpty(data)) {
       $scope.assignedTodos = angular.fromJson(data['assignedTodos']);
+      $scope.$apply();
     } else {
       $scope.getAssignedTodos();
     }
@@ -372,13 +368,28 @@ angular
 
   chrome.storage.local.get('assignedTodosByProject', function(data) {
     $scope.projects = angular.fromJson(data['assignedTodosByProject']);
+    $scope.$apply();
   });  
 
   if (!fullInit) {
     $scope.getAssignedTodos(); // Trigger a refresh on launch
     $scope.getPeople();
   }
-
+  $scope.displayCategory();
+  $("#suggestions").niceScroll({
+    cursorcolor: '#a7a7a7',
+    cursoropacitymax: 0.8,
+    mousescrollstep : 20,
+    cursorborder: '0px',
+    cursorwidth: '8px',
+  });
+  $("section").niceScroll({
+    cursorcolor: '#a7a7a7',
+    cursoropacitymax: 0.8,
+    mousescrollstep : 50,
+    cursorborder: '0px',
+    cursorwidth: '8px',
+  })
   /**
    * Hightlight found string when using search input
    * @param  {string}  category  Name of the category to toggle ie. <dt id='{category}'>.
@@ -403,38 +414,54 @@ angular
       else {
         $('#todos').find('dt').removeClass('active');
         $('#' + category).addClass('active');
-        $('#todos').find('dd').slideUp();      
+        $('#todos').find('dd').slideUp();
         $('#' + category).next().slideDown({
           duration: 500,
           easing: 'easeOutQuad',
-          complete: $('section').slimScroll({ height: 'auto' })
+          progress: function() {
+            $("section").getNiceScroll().resize();
+          }
         });
       }
     }
   }
+
+  $('#search-input').keydown(function(evt) {
+    $scope.$apply(function() {      
+      $scope.handleKeypress.call($scope, evt.which);
+    });
+    if (evt.which == 38 || evt.which == 40) {
+      return false;
+    }
+  });
 
   /**
    * Allow to navigate through suggestions with keyboard (UP and DOWN)
    * @param  {number}  key  Code related to key event.
    */
   $scope.handleKeypress = function(key) {
-    $scope.suggestionsVisible = true;
+
+    var printableChar = 
+        (key > 47 && key < 58)   || // number keys
+        key == 32 || key == 13   || // spacebar & return key(s) (if you want to allow carriage returns)
+        (key > 64 && key < 91)   || // letter keys
+        (key > 95 && key < 112)  || // numpad keys
+        (key > 185 && key < 193) || // ;=,-./` (in order)
+        (key > 218 && key < 223);   // [\]' (in order)
+
+    if (printableChar) {
+      $('#suggestions').css({'z-index': '1'});
+      $("#ascrail2000").css({'z-index': '1'});
+      $("#ascrail2000-hr").css({'z-index': '1'});
+    }
     if (key == 40 && $scope.suggestionsPosition < $filter('suggestionSearch')($scope.people, $scope.search).length -1) {
       $scope.suggestionsPosition += 1;
-      if ($scope.suggestionsFrame == 4) {
-        document.getElementById('suggestions').scrollTop += 50;
-      } else {
-        $scope.suggestionsFrame += 1;
-      }
     } else if (key == 38 && $scope.suggestionsPosition > -1) {
       $scope.suggestionsPosition -= 1;
-      if ($scope.suggestionsFrame == 1) {
-        document.getElementById('suggestions').scrollTop -= 50;      
-      } else {
-        $scope.suggestionsFrame -= 1;
-      }
-    } else if (key == 13 && $scope.search.indexOf(" ") == -1 && $scope.suggestionsVisible) {
-      $scope.setSearch($filter('suggestionSearch')($scope.people, $scope.search)[0]['email_address']);
+    } else if (key == 13) {
+      if ($scope.suggestionsPosition == -1)
+        $scope.setSearch($filter('suggestionSearch')($scope.people, $scope.search)[0]['email_address']);
+      else $scope.setSearch($filter('suggestionSearch')($scope.people, $scope.search)[$scope.suggestionsPosition]['email_address']);
     }
   };
 
@@ -446,7 +473,9 @@ angular
   $scope.setSearch = function(email_address) {
     $scope.search = $scope.search.substr(0, $scope.search.lastIndexOf("@") + 1);
     $scope.search += $filter('removeDomain')(email_address);
-    $scope.suggestionsVisible = false;
+    $('#suggestions').css({'z-index': '-1'});
+    $("#ascrail2000").css({'z-index': '-1'});
+    $("#ascrail2000-hr").css({'z-index': '-1'});
   }
 
   /**
@@ -456,15 +485,6 @@ angular
   $scope.setActive = function(index) {
     $scope.suggestionsPosition = index;
   }
-
-  $('#search-input').keydown(function(evt) {
-    $scope.$apply(function() {
-      $scope.handleKeypress.call($scope, evt.which);
-    });
-    if (evt.which == 38 || evt.which == 40) {
-      return false;
-    }
-  });
 
 })
 

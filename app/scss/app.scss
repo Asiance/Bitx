@@ -66,7 +66,6 @@ header {
   #logo {
     vertical-align: middle;
     position: relative;
-    top: -2px;
     left: 20px;
   }
   #search-input {
@@ -76,6 +75,8 @@ header {
     font-size: 14px;
     margin-left: 80px;
     padding: 8px 10px;
+    position: relative;
+    top: 2px;
     vertical-align: middle;
     width: 240px;
     &::-webkit-input-placeholder {
@@ -89,6 +90,8 @@ header {
     background: url(/img/icon-settings.png) center no-repeat;
     &:hover { background: url(/img/icon-settings-hover.png) center no-repeat; }
     cursor: pointer;
+    position:relative;
+    top: 3px;
     float: right;
     height: 21px;
     width: 20px;
@@ -160,6 +163,12 @@ dt.active {
     background: $color-light-blue;
   }
 }
+.icon-check {
+  display: table-cell;
+  padding-right: 8px;
+  width: 80px;
+  height: 30px;
+}
 
 .count-todos {
   background: $color-dark-gray;
@@ -186,7 +195,9 @@ dt.active {
   font-size: 18px;
   height: 50px;
   line-height: 16px;
+  position: relative;
   text-align: center;
+  top: 2px;
   vertical-align: middle;
   width: $first-column-width;
   p { font-size: 9px; }
@@ -195,11 +206,12 @@ dt.active {
   }
 }
 .icon-today {
-  background: url(/img/icon-today.png) center 10px no-repeat;
+  background: url(/img/icon-today.png) center 8px no-repeat;
 }
 .icon-coffee {
-  background: url(/img/icon-coffee.png) center 11px no-repeat;
+  background: url(/img/icon-coffee.png) center 8px no-repeat;
 }
+
 .comments { 
   background: url(/img/icon-comment.png) left no-repeat;
   &:hover { 
@@ -217,6 +229,7 @@ dt.active {
   display: table-cell;
   padding-right: 8px;
   width: 30px;
+  height: 30px;
 }
 .icon-link {
   background: url(/img/icon-link.png) center no-repeat;
@@ -347,12 +360,12 @@ dt.active {
   line-height: 16px;
   margin-left: 122px;
   overflow: hidden;
-  margin-top: -10px;
+  margin-top: -5px;
   max-height: 200px;
   overflow: auto;
   position: absolute;
   width: 262px;
-  z-index: 100;
+  z-index: -1;
   li {
     &.active {
       background: #e4e4e4;

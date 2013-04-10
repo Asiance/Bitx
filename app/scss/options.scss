@@ -2,8 +2,15 @@
 @import "compass/typography/links/unstyled-link";
 @import url(http://fonts.googleapis.com/css?family=Droid+Sans:400,700);
 
+$color-blue-asiance: #2A3742;
+$color-dark: #232323;
+$color-red-asiance: #e02d45;
+
+$fonts_en: "Droid Sans", arial, helvetica, clean, sans-serif;
+
 body {
-  font-family: "Droid Sans";
+  color: $color-blue-asiance;
+  font-family: $fonts_en;
   font-style: normal;
   font-weight: 400;
   height: 100%;
@@ -15,7 +22,7 @@ body {
 }
 
 fieldset { 
-  border: 1px solid grey;
+  border: 1px solid $color-blue-asiance;
   margin: 50px auto;
   width: 600px;
 }
