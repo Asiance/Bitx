@@ -44,12 +44,12 @@ body {
   }
   background: $color-white;
   cursor: default;
+  font-family: $fonts_en;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
   line-height: 50px;
   width: 500px;
-  font-family: $fonts_en;
   &.ja {
     font-family: $fonts_ja;
   };
@@ -114,7 +114,6 @@ header {
   width: $first-column-width;
 }
 section {
-  max-height: 520px;
   width: 500px;
 }
 
@@ -125,7 +124,7 @@ dt {
   cursor: pointer;
 
   @include transition-property(background, border-bottom);
-  @include transition-duration(0.5s);
+  @include transition-duration(0.1s);
   @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000));
 
   &:hover {
@@ -140,10 +139,6 @@ dt {
   }
 }
 #overdues {
-  &.active, &:hover {
-    background: $color-red;
-    border-bottom: 1px solid $color-red;
-  }
   .count-todos {
     background: $color-red-counter;
   }
@@ -151,6 +146,12 @@ dt {
     color: $color-red;
   }
 }
+
+#overdues_content, #today_content, #upcoming_content, #no-due-date_content {
+  max-height: 306px;
+  display: none;
+}
+
 dt.active {
   background: $color-blue;
   border-bottom: 1px solid $color-blue;
@@ -182,7 +183,7 @@ dt.active {
   vertical-align: middle;
   width: 15px;
   @include transition-property(background);
-  @include transition-duration(0.5s);
+  @include transition-duration(0.1s);
   @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000));
 }
 .day-number {
@@ -390,4 +391,11 @@ dt.active {
     font-size: 12px;
     color: gray;
   }
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+::selection {
+  background: $color-blue;
 }

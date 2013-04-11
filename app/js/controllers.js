@@ -121,6 +121,7 @@ angular
     try {
       var deferred = $q.defer();
       var done = todolists.length;
+      console.log(todolists);
       var allTodolists = [];
 
       _.forEach(todolists, function (todolist) {
@@ -223,27 +224,27 @@ angular
   /**
    * Set the right class (with ng-class) et display (using jQuery) only one category on launch
    */
-  $scope.displayCategory = function() {
+  $scope.displayCategory = function(display) {
     try {
-      $scope.overdue = "";
+      $('#todos').find('dd').css('display', 'none');
+      $scope.overdues = "";
       $scope.today = "";
       $scope.upcoming = "";
       $scope.no_due_date = "";
-      $('#todos').find('dd').css('display', 'none');
       // If no category is active, display the first which is not empty
       var counter_todos = localStorage['counter_todos'] ? localStorage['counter_todos'] : "default";
-      if (!$scope.overdue && !$scope.today && !$scope.upcoming && !$scope.no_due_date) {
+      if (display) {
         var status = $filter('status');
         var keywordSearch = $filter('keywordSearch');
         if (counter_todos == 'overdues' ||
           (counter_todos == 'default' && status(keywordSearch($scope.assignedTodos, $scope.search), 1).length > 0)) {
-          $('#overdue_content').css('display', 'block');
-          $scope.overdue = "active";
+          $('#overdues_content').css('display', 'block');
+          $scope.overdues = "active";
         }
         else if (counter_todos == 'today' ||
           (counter_todos == 'default' && status(keywordSearch($scope.assignedTodos, $scope.search), 2).length > 0)) {
           $scope.today = "active";
-          $('#overdue_content').css('display', 'block');
+          $('#today_content').css('display', 'block');
         }
         else if (counter_todos == 'upcoming' ||
           (counter_todos == 'default' && status(keywordSearch($scope.assignedTodos, $scope.search), 3).length > 0)) {
@@ -253,7 +254,7 @@ angular
         else if (counter_todos == 'no_due_date' ||
           (counter_todos == 'default' && status(keywordSearch($scope.assignedTodos, $scope.search), 4).length > 0)) {
           $scope.no_due_date = "active";
-          $('#no_due_date_content').css('display', 'block');
+          $('#no-due-date_content').css('display', 'block');
         }
       }
     } catch(e) {
@@ -311,14 +312,20 @@ angular
       $scope.getAssignedTodos();
     }
     // On key pressed, display the first category which is not empty
-    if ($scope.search && $scope.search.length != 0)
-      $scope.displayCategory();
+    if ($scope.search)
+      $scope.displayCategory(true);
     else {
+      $scope.displayCategory(false);
       $('#suggestions').css({'z-index': '1'});
       $("#ascrail2000").css({'z-index': '1'});
       $("#ascrail2000-hr").css({'z-index': '1'});
     }
   });
+
+  $scope.isFiltered = function() {
+    if (new RegExp("^createdby:@", "gi").test($scope.search)) return true;
+    else false
+  }
 
   /**
    * Hightlight found string when using search input
@@ -326,10 +333,11 @@ angular
    */
   function highlight(string) {
     $(".todo-text, h2").each(function(i, v) {
+      var realSearch = string.substr(string.indexOf(" ") + 1);
       var block = $(v);
       block.html(
         block.text().replace(
-          new RegExp(string, "gi"), function(match) {
+          new RegExp(realSearch, "gi"), function(match) {
             return ["<span class='highlight'>", match, "</span>"].join("");
         }));
     });
@@ -375,7 +383,7 @@ angular
     $scope.getAssignedTodos(); // Trigger a refresh on launch
     $scope.getPeople();
   }
-  $scope.displayCategory();
+
   $("#suggestions").niceScroll({
     cursorcolor: '#a7a7a7',
     cursoropacitymax: 0.8,
@@ -383,10 +391,10 @@ angular
     cursorborder: '0px',
     cursorwidth: '8px',
   });
-  $("section").niceScroll({
+  $("#overdues_content, #today_content, #upcoming_content, #no-due-date_content").niceScroll({
     cursorcolor: '#a7a7a7',
     cursoropacitymax: 0.8,
-    mousescrollstep : 50,
+    mousescrollstep : 51,
     cursorborder: '0px',
     cursorwidth: '8px',
   })
@@ -407,19 +415,21 @@ angular
     }
 
     if (status(keywordSearch($scope.assignedTodos, $scope.search), statusVal).length > 0) {
+      $("#overdues_content, #today_content, #upcoming_content, #no-due-date_content").getNiceScroll().hide();
       if ($('#' + category).hasClass('active')) {
-        $('#' + category).next().slideUp(500, 'easeOutQuad');
+        $('#' + category).next().slideUp(300, 'easeOutQuad');
         $('#' + category).removeClass('active');
       }
       else {
         $('#todos').find('dt').removeClass('active');
         $('#' + category).addClass('active');
-        $('#todos').find('dd').slideUp();
+        $('#todos').find('dd').slideUp(300, 'easeOutQuad');
         $('#' + category).next().slideDown({
-          duration: 500,
+          duration: 300,
           easing: 'easeOutQuad',
-          progress: function() {
-            $("section").getNiceScroll().resize();
+          complete: function() {
+            $('#' + category + '_content').getNiceScroll().show();
+            $('#' + category + '_content').getNiceScroll().resize();
           }
         });
       }
@@ -441,28 +451,39 @@ angular
    */
   $scope.handleKeypress = function(key) {
 
+    var frameOffset = document.getElementById('suggestions').scrollTop;
     var printableChar =
         (key > 47 && key < 58)   || // number keys
         key == 32 || key == 13   || // spacebar & return key(s) (if you want to allow carriage returns)
         (key > 64 && key < 91)   || // letter keys
         (key > 95 && key < 112)  || // numpad keys
         (key > 185 && key < 193) || // ;=,-./` (in order)
-        (key > 218 && key < 223);   // [\]' (in order)
+        (key > 218 && key < 223) || // [\]' (in order)
+        key == 8;                   // backspace
 
     if (printableChar) {
       $('#suggestions').css({'z-index': '1'});
       $("#ascrail2000").css({'z-index': '1'});
       $("#ascrail2000-hr").css({'z-index': '1'});
     }
+
     if (key == 40 && $scope.suggestionsPosition < $filter('suggestionSearch')($scope.people, $scope.search).length -1) {
       $scope.suggestionsPosition += 1;
+      var framePosition = ($scope.suggestionsPosition+1) - (frameOffset+50)/ 50;
+      var objDiv = document.getElementById($scope.suggestionsPosition);
+      if (Math.round(framePosition) == 4) objDiv.scrollIntoView(false);
     } else if (key == 38 && $scope.suggestionsPosition > -1) {
       $scope.suggestionsPosition -= 1;
+      var framePosition = ($scope.suggestionsPosition+1) - (frameOffset-50)/ 50;
+      var objDiv = document.getElementById($scope.suggestionsPosition);
+      if (Math.round(framePosition) == 1) objDiv.scrollIntoView(true);
     } else if (key == 13) {
       if ($scope.suggestionsPosition == -1)
         $scope.setSearch($filter('suggestionSearch')($scope.people, $scope.search)[0]['email_address']);
       else $scope.setSearch($filter('suggestionSearch')($scope.people, $scope.search)[$scope.suggestionsPosition]['email_address']);
     }
+
+
   };
 
   /**

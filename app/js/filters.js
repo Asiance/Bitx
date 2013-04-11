@@ -77,6 +77,16 @@ angular
   })
 
   /**
+   * Print tooltip if filter 'createdby:' is on
+   */
+  .filter('filterOn', function() {
+    return function(input, isFilter) {
+      if (isFilter) return "assigned to " + input;
+      else return null;
+    };
+  })
+
+  /**
    * Remove domain name of email address
    * (Just for display)
    */
@@ -99,19 +109,20 @@ angular
           case (new RegExp("^createdby:@", "gi")).test(search):
             var username = search.substr(search.lastIndexOf("@") + 1);
             if (username.indexOf(" ") != -1) username = username.substr(0, username.indexOf(" "));
-            var user = _.find(angular.fromJson(localStorage['people']), function(user) {
-              if ( user['email_address'].match(new RegExp(username, "gi"))
-                  || user['name'].match(new RegExp(username, "gi")) )
-                return true;
-            });
+            if (username == 'me') {
+              var user= {'id': localStorage['userId']};
+            } else {
+              var user = _.find(angular.fromJson(localStorage['people']), function(user) {
+                if ( $filter('removeDomain')(user['email_address']) == username )
+                  return true;
+              });
+            }
             // If '@someone has been found, look for his todos'
             if (user) {
-              console.log('user found');
               out = _.filter(input, function(item) {
                 if ( item['assignee'] && item['creator']['id'] == user.id ) return true;
               });
             } else {
-              console.log('user not found');
               return [];
             }
             // If something follows 'createdby:@someone'
@@ -131,8 +142,7 @@ angular
           // If '@someone' has been type
           case (new RegExp("^@.+", "gi")).test(search):
             var user = _.find(angular.fromJson(localStorage['people']), function(user) {
-              if ( user['email_address'].match(new RegExp(search.substring(1).split(" ")[0], "gi"))
-                  || user['name'].match(new RegExp(search.substring(1), "gi")) )
+              if ($filter('removeDomain')(user['email_address']) == search.substring(1).split(" ")[0] )
                 return true;
             });
             // If '@someone has been found, look for his todos'

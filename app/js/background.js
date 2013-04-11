@@ -15,6 +15,7 @@ window.onload = function() {
     localStorage['refresh_period'] = refresh_period;
   }
   setInterval(getMyTodos, refresh_period);
+  setInterval(getTodos, refresh_period);
 }
 
 /*
@@ -80,7 +81,7 @@ function getMyTodos() {
       xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage['basecampToken']);
       xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 304)) {
-          data = JSON.parse(xhr.responseText);
+          var data = JSON.parse(xhr.responseText);
 
           // Flatten Todolists to keep only Todos
           var myTodos = new Array();
@@ -129,4 +130,62 @@ function getMyTodos() {
   } catch(e) {
     console.log(e);
   }
+}
+
+function getTodos() {
+
+  var allTodos = [];
+
+  $.ajax({
+    url: "https://basecamp.com/" + localStorage['basecampId'] + "/api/v1/todolists.json",
+    headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}
+  }).done(function(data) {
+
+    $.when(asyncEvent(data)).done(function(allTodolists) {
+      _.forEach(allTodolists, function (todolist) {
+        _.forEach(todolist.todos.remaining, function(todo) {
+          todo.todolist = todolist.name;
+          todo.project = todolist.project;
+          todo.project_id = todolist.project_id;
+          allTodos.push(todo);
+        })
+      })
+
+      allTodos = _.chain(allTodos).sortBy(function(todo) { return todo.id; })
+                  .sortBy(function(todo) { return todo.project_id; })
+                  .value();
+      chrome.storage.local.set({'assignedTodos': JSON.stringify(allTodos)});
+
+    });
+
+
+  });
+}
+
+function asyncEvent(todolists) {
+
+  function checkIfDone() {
+    if (--done == 0) {
+      return deferred.resolve(allTodolists);
+    }
+  }
+
+  var deferred = new jQuery.Deferred();
+  var done = todolists.length;
+  var allTodolists = []
+
+  _.each(todolists, function(todolist) {
+    $.ajax({
+      url: todolist.url,
+      headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}
+    }).done(function(data) {
+      data.project_id = todolist.bucket.id;
+      data.project = todolist.bucket.name;
+      allTodolists.push(data);
+      checkIfDone();
+    });
+  });
+
+  return deferred.promise()
+
 }

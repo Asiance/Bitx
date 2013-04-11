@@ -25,8 +25,8 @@ Tips for searching todos
     <td>Display current todos assigned to someone else</td>
   </tr>
   <tr>
-    <th>@createdbyme</th>
-    <td>Display todos I created</td>
+    <th>createdby:</th>
+    <td>Display todos someone created</td>
   </tr>
 </table>
 
