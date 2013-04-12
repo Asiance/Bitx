@@ -60,7 +60,8 @@ angular
         localStorage['people'] = angular.toJson(_.sortBy(data, function(user) { return user.name; }));
         if (diff) {
           $scope.people = _.sortBy(data, function(user) { return user.name; });
-          $scope.people.push({"name":"Search by creator", "email_address":"createdby:", "avatar_url":"/img/icon-search.png", "id":-1});
+          $scope.people.push({"name":"Search by creator", "email_address":"from:", "avatar_url":"/img/icon-search.png", "id":-1});
+          $scope.people.push({"name":"Search by assignee", "email_address":"to:", "avatar_url":"/img/icon-search.png", "id":-1});
         }
       }, function(response) {
         console.log('ERROR: Failed to connect!');
@@ -121,7 +122,6 @@ angular
     try {
       var deferred = $q.defer();
       var done = todolists.length;
-      console.log(todolists);
       var allTodolists = [];
 
       _.forEach(todolists, function (todolist) {
@@ -149,6 +149,7 @@ angular
 
   /**
    * Group assigned Todos by Project
+   * @param  {boolean}  update  If set, then view is updated
    */
   $scope.groupByProject = function(update) {
     console.log('LOG: groupByProject');
@@ -227,10 +228,7 @@ angular
   $scope.displayCategory = function(display) {
     try {
       $('#todos').find('dd').css('display', 'none');
-      $scope.overdues = "";
-      $scope.today = "";
-      $scope.upcoming = "";
-      $scope.no_due_date = "";
+      $('#todos').find('dt').removeClass('active');
       // If no category is active, display the first which is not empty
       var counter_todos = localStorage['counter_todos'] ? localStorage['counter_todos'] : "default";
       if (display) {
@@ -239,23 +237,25 @@ angular
         if (counter_todos == 'overdues' ||
           (counter_todos == 'default' && status(keywordSearch($scope.assignedTodos, $scope.search), 1).length > 0)) {
           $('#overdues_content').css('display', 'block');
-          $scope.overdues = "active";
+          $('#overdues').addClass('active');
         }
         else if (counter_todos == 'today' ||
           (counter_todos == 'default' && status(keywordSearch($scope.assignedTodos, $scope.search), 2).length > 0)) {
-          $scope.today = "active";
           $('#today_content').css('display', 'block');
+          $('#today').addClass('active');
         }
         else if (counter_todos == 'upcoming' ||
           (counter_todos == 'default' && status(keywordSearch($scope.assignedTodos, $scope.search), 3).length > 0)) {
           $scope.upcoming = "active";
           $('#upcoming_content').css('display', 'block');
+          $('#upcoming').addClass('active');
         }
         else if (counter_todos == 'no_due_date' ||
           (counter_todos == 'default' && status(keywordSearch($scope.assignedTodos, $scope.search), 4).length > 0)) {
           $scope.no_due_date = "active";
           $('#no-due-date_content').css('display', 'block');
-        }
+         $('#no-due-date').addClass('active');
+       }
       }
     } catch(e) {
       console.log(e);
@@ -285,6 +285,9 @@ angular
       $scope.daysLate = window[lang]["daysLate"];
       $scope.dayLeft = window[lang]["dayLeft"];
       $scope.daysLeft = window[lang]["daysLeft"];
+
+      $scope.visitTodo = window[lang]["visitTodo"];
+      $scope.assignedTo = window[lang]["assignedTo"];
 
       $scope.countOverdues = window[lang]["countOverdues"];
       $scope.countToday = window[lang]["countToday"];
@@ -320,10 +323,11 @@ angular
       $("#ascrail2000").css({'z-index': '1'});
       $("#ascrail2000-hr").css({'z-index': '1'});
     }
+    localStorage['lastSearch'] = $scope.search;
   });
 
   $scope.isFiltered = function() {
-    if (new RegExp("^createdby:@", "gi").test($scope.search)) return true;
+    if (new RegExp("^from:", "gi").test($scope.search)) return true;
     else false
   }
 
@@ -355,28 +359,33 @@ angular
    * Initialization of variables
    */
   $scope.i18n();
+  $scope.search = localStorage['lastSearch'];
+  $('#todos').find('dt').attr('unselectable', 'on').on('selectstart', false);
   var fullInit = false;
   if (localStorage['basecampId'] && localStorage['userId'] && localStorage['people']) {
     $scope.basecampId = localStorage['basecampId'];
     $scope.userId = localStorage['userId'];
     $scope.people = angular.fromJson(localStorage['people']);
-    $scope.people.push({"name":"Search by creator", "email_address":"createdby:", "avatar_url":"/img/icon-search.png", "id":-1});
+    $scope.people.push({"name":"Search by creator", "email_address":"from:", "avatar_url":"/img/icon-search.png", "id":-1});
+    $scope.people.push({"name":"Search by assignee", "email_address":"to:", "avatar_url":"/img/icon-search.png", "id":-1});
   } else {
     $scope.getBasecampAccount();
     fullInit = true;
   }
+
+  // Load data from cache
   chrome.storage.local.get('assignedTodos', function(data) {
     if (!_.isEmpty(data)) {
       $scope.assignedTodos = angular.fromJson(data['assignedTodos']);
       $scope.$apply();
-    } else {
-      $scope.getAssignedTodos();
     }
   });
 
   chrome.storage.local.get('assignedTodosByProject', function(data) {
-    $scope.projects = angular.fromJson(data['assignedTodosByProject']);
-    $scope.$apply();
+    if (!_.isEmpty(data)) {
+      $scope.projects = angular.fromJson(data['assignedTodosByProject']);
+      $scope.$apply();
+    }
   });
 
   if (!fullInit) {
@@ -384,6 +393,10 @@ angular
     $scope.getPeople();
   }
 
+  /*
+   * Init scrollbars for suggestions div and content div
+   * More infos: https://github.com/inuyaksa/jquery.nicescroll
+   */
   $("#suggestions").niceScroll({
     cursorcolor: '#a7a7a7',
     cursoropacitymax: 0.8,
@@ -394,10 +407,11 @@ angular
   $("#overdues_content, #today_content, #upcoming_content, #no-due-date_content").niceScroll({
     cursorcolor: '#a7a7a7',
     cursoropacitymax: 0.8,
-    mousescrollstep : 51,
+    mousescrollstep : 50,
     cursorborder: '0px',
     cursorwidth: '8px',
   })
+
   /**
    * Hightlight found string when using search input
    * @param  {string}  category  Name of the category to toggle ie. <dt id='{category}'>.
@@ -436,7 +450,11 @@ angular
     }
   }
 
+  /**
+   * Listen to keyboard event using jQuery
+   */
   $('#search-input').keydown(function(evt) {
+    console.log($scope.people);
     $scope.$apply(function() {
       $scope.handleKeypress.call($scope, evt.which);
     });
@@ -451,7 +469,8 @@ angular
    */
   $scope.handleKeypress = function(key) {
 
-    var frameOffset = document.getElementById('suggestions').scrollTop;
+    var frameOffset = document.getElementById('suggestions').scrollTop; // get how much pixels you have scrolled
+
     var printableChar =
         (key > 47 && key < 58)   || // number keys
         key == 32 || key == 13   || // spacebar & return key(s) (if you want to allow carriage returns)
@@ -460,7 +479,7 @@ angular
         (key > 185 && key < 193) || // ;=,-./` (in order)
         (key > 218 && key < 223) || // [\]' (in order)
         key == 8;                   // backspace
-
+    // if you type or delete a character, display the suggestions, and allows you to scroll
     if (printableChar) {
       $('#suggestions').css({'z-index': '1'});
       $("#ascrail2000").css({'z-index': '1'});
@@ -483,7 +502,6 @@ angular
       else $scope.setSearch($filter('suggestionSearch')($scope.people, $scope.search)[$scope.suggestionsPosition]['email_address']);
     }
 
-
   };
 
   /**
@@ -492,7 +510,7 @@ angular
    * @param  {string}  email_address  Email address of the person selected.
    */
   $scope.setSearch = function(email_address) {
-    $scope.search = $scope.search.substr(0, $scope.search.lastIndexOf("@") + 1);
+    $scope.search = $scope.search.substr(0, $scope.search.lastIndexOf(":") + 1);
     $scope.search += $filter('removeDomain')(email_address);
     $('#suggestions').css({'z-index': '-1'});
     $("#ascrail2000").css({'z-index': '-1'});

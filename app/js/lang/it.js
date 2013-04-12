@@ -20,6 +20,9 @@ window.it = {
   "hoursAgo":"ore fa",
   "daysAgo":"giorni fa",
 
+  "visitTodo": "Visita questo todo",
+  "assignedTo": "Assegnato a {x}",
+
   "countOverdues":"ToDo(s) in ritardo",
   "countToday":"ToDo(s) per oggi",
   "countUpcoming":"ToDo(s) a venire",

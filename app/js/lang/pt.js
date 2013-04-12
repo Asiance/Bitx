@@ -20,6 +20,9 @@ window.pt = {
   "hoursAgo":"hora(s) atrás",
   "daysAgo":"dia(s) atrás",
 
+  "visitTodo": "Visite este todo",
+  "assignedTo": "Atribuído a {x}",
+
   "countOverdues":"ToDo(s) atrasado(s)",
   "countToday":"ToDo(s) para hoje",
   "countUpcoming":"ToDo(s) à vir",

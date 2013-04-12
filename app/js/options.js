@@ -15,7 +15,13 @@ function save_options() {
 }
 
 function logout() {
-  localStorage.clear();
+  localStorage.removeItem('basecampId');
+  localStorage.removeItem('basecampToken');
+  localStorage.removeItem('myTodos');
+  localStorage.removeItem('people');
+  localStorage.removeItem('userId');
+  chrome.storage.local.set({'assignedTodos': null});
+  chrome.storage.local.set({'assignedTodosByProject': null});
 }
 
 // Restores select box state to saved value from localStorage.

@@ -20,6 +20,9 @@ window.ko = {
   "hoursAgo":"시간 전",
   "daysAgo":"일 전",
 
+  "visitTodo": "Visit this todo",
+  "assignedTo": "{x}에 할당",
+
   "countOverdues": "개의 기한 지난 일정",
   "countToday": "개의 일정",
   "countUpcoming": "개의 다가오는 일정",

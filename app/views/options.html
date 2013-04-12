@@ -7,51 +7,54 @@
 </head>
 <body>
 
-  <form>
-    <fieldset>
-      <legend>Settings</legend>
-      <p>
-        <label for="refresh_period">Refresh period</label>
-        <select id="refresh_period">
-          <option value="1000" id="onesecond">1</option>
-          <option value="5000" id="fiveseconds">5</option>
-          <option value="10000" id="tenseconds">10</option>
+  <fieldset id="wrapper">
+    <legend><img id="logo" src="http://dummyimage.com/175x130"></legend>
+    <form>
+      <fieldset class="inner-fieldset">
+        <legend>Settings</legend>
+        <p>
+          <label for="refresh_period">Refresh period</label>
+          <select id="refresh_period">
+            <option value="1000" id="onesecond">1</option>
+            <option value="5000" id="fiveseconds">5</option>
+            <option value="10000" id="tenseconds">10</option>
+          </select>
+        </p>
+        <p>
+          <label for="counter_todos">Counter todos</label>
+          <select id="counter_todos">
+            <option value="default" id="default"></option>
+            <option value="overdues" id="overdues"></option>
+            <option value="today" id="today"></option>
+            <option value="upcoming" id="upcoming"></option>
+            <option value="no_due_date" id="noduedate"></option>
+          </select>
+        </p>
+        <p>
+        <label for="language">Language</label>
+        <select id="language">
+          <option value="en" id="eng">English</option>
+          <option value="fr" id="fra">Français</option>
+          <option value="ko" id="kor">한국어</option>
+          <option value="it" id="ita">Italiano</option>
+          <option value="ja" id="jap">日本語</option>
+          <option value="pt" id="por">Português</option>
         </select>
-      </p>
-      <p>
-        <label for="counter_todos">Counter todos</label>
-        <select id="counter_todos">
-          <option value="default" id="default"></option>
-          <option value="overdues" id="overdues"></option>
-          <option value="today" id="today"></option>
-          <option value="upcoming" id="upcoming"></option>
-          <option value="no_due_date" id="noduedate"></option>
-        </select>
-      </p>
-      <p>
-      <label for="language">Language</label>
-      <select id="language">
-        <option value="en" id="eng">English</option>
-        <option value="fr" id="fra">Français</option>
-        <option value="ko" id="kor">한국어</option>
-        <option value="it" id="ita">Italiano</option>
-        <option value="ja" id="jap">日本語</option>
-        <option value="pt" id="por">Português</option>
-      </select>
-      </p>
-      <button id="save">Save</button>
-      <button id="logout">Logout</button>
-    </fieldset>
-  </form>
+        </p>
+        <button id="save">Save</button>
+        <button id="logout">Logout</button>
+      </fieldset>
+    </form>
 
-  <fieldset>
-      <legend>Filters</legend>
-      <dl>
-      <dt>@username</dt>
-      <dd>Display current todos assigned to someone else</dd>
-      <dt>createdby:</dt>
-      <dd>Display todos someone created</dd>
-    </dl>
+    <fieldset class="inner-fieldset">
+        <legend>Filters</legend>
+        <dl>
+        <dt>to:</dt>
+        <dd>Display current todos assigned to someone else</dd>
+        <dt>from:</dt>
+        <dd>Display todos someone created</dd>
+      </dl>
+    </fieldset>
   </fieldset>
 
   <script src="/js/lang/en.js"></script>

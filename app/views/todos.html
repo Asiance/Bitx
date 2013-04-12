@@ -1,13 +1,14 @@
 <header>
   <img id="logo" src="/img/logo-header.png">
   <input id="search-input" type="text" class="dropdown-toggle" ng-model="search" autofocus>
+  <span ng-show="search" class="icon-clear" ng-click="search = ''">X</span>
   <div id="suggestions">
     <ul>
       <li id="{{$index}}" class='person' ng-class="{active: suggestionsPosition == $index}" ng-repeat="person in people | suggestionSearch: search" ng-click="setSearch(person.email_address)" ng-mouseover="setActive($index)" >
         <img class="username" ng-src="{{person.avatar_url}}">
         <span ng-switch on="person.id" class="username">
           <span ng-switch-when="-1">{{person.email_address}}</span>
-          <span ng-switch-default>@{{person.email_address | removeDomain}}</span>
+          <span ng-switch-default>{{person.email_address | removeDomain}}</span>
         </span><br>
         <span class="fullname">{{person.name}}</span>
       </li>
@@ -18,7 +19,7 @@
 
 <section>
 <dl id="todos">
-  <dt ng-class="overdues" id="overdues" ><a ng-click="toggleContent('overdues')">
+  <dt ng-class=" {true:'disabled', false:'enabled'}[(assignedTodos | keywordSearch:search | status :'1').length==0]" id="overdues" ><a ng-click="toggleContent('overdues')">
     <span ng-switch on="(assignedTodos | keywordSearch:search | status :'1').length" class="toggle-content">
       <span ng-switch-when="0" class="icon-check"></span>
       <span ng-switch-default class="toggle"></span>
@@ -42,13 +43,13 @@
           <p>{{assignedTodo.comments_count}}</p>
         </span>
         <span class="void" ng-hide="assignedTodo.comments_count"></span>
-        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link" title="Visit this todo"></span>
+        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link" title="{{visitTodo}}"></span>
       </li>
     </ul>
   </div>
   </dd>
 
-  <dt ng-class="today" id="today"><a ng-click="toggleContent('today')">
+  <dt ng-class=" {true:'disabled', false:'enabled'}[(assignedTodos | keywordSearch:search | status :'2').length == 0]" id="today"><a ng-click="toggleContent('today')">
     <span ng-switch on="(assignedTodos | keywordSearch:search | status :'2').length" class="toggle-content">
       <span ng-switch-when="0" class="icon-check"></span>
       <span ng-switch-default class="toggle"></span>
@@ -70,12 +71,12 @@
           <p>{{assignedTodo.comments_count}}</p>
         </span>
         <span class="void" ng-hide="assignedTodo.comments_count"></span>
-        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link" title="Visit this todo"></span>
+        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link" title="{{visitTodo}}"></span>
     </ul>
   </div>
   </dd>
 
-  <dt ng-class="upcoming" id="upcoming"><a ng-click="toggleContent('upcoming')">
+  <dt ng-class=" {true:'disabled', false:'enabled'}[(assignedTodos | keywordSearch:search | status :'3').length == 0]" id="upcoming"><a ng-click="toggleContent('upcoming')">
       <span ng-switch on="(assignedTodos | keywordSearch:search | status :'3').length" class="toggle-content">
       <span ng-switch-when="0" class="icon-check"></span>
       <span ng-switch-default class="toggle"></span>
@@ -99,13 +100,13 @@
           <p>{{assignedTodo.comments_count}}</p>
         </span>
         <span class="void" ng-hide="assignedTodo.comments_count"></span>
-        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link" title="Visit this todo"></span>
+        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link" title="{{visitTodo}}"></span>
       </li>
     </ul>
   </div>
   </dd>
 
-  <dt ng-class="no_due_date" id="no-due-date"><a ng-click="toggleContent('no-due-date')">
+  <dt ng-class=" {true:'disabled', false:'enabled'}[(assignedTodos | keywordSearch:search | status :'4').length == 0]" id="no-due-date"><a ng-click="toggleContent('no-due-date')">
     <span ng-switch on="(assignedTodos | keywordSearch:search | status :'4').length" class="toggle-content">
       <span ng-switch-when="0" class="icon-check"></span>
       <span ng-switch-default class="toggle"></span>
@@ -127,7 +128,7 @@
           <p>{{assignedTodo.comments_count}}</p>
         </span>
         <span class="void" ng-hide="assignedTodo.comments_count"></span>
-        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link" title="Visit this todo"></span>
+        <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link" title="{{visitTodo}}"></span>
       </li>
     </ul>
   </div>

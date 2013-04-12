@@ -80,8 +80,9 @@ angular
    * Print tooltip if filter 'createdby:' is on
    */
   .filter('filterOn', function() {
+    var lang = localStorage['language'];
     return function(input, isFilter) {
-      if (isFilter) return "assigned to " + input;
+      if (isFilter) return window[lang]['assignedTo'].replace(/\{x\}/g, input);
       else return null;
     };
   })
@@ -105,9 +106,9 @@ angular
     return function(input, search) {
        if(search && input) {
         switch(true) {
-          // If the keyword 'createdby:' has been typed
-          case (new RegExp("^createdby:@", "gi")).test(search):
-            var username = search.substr(search.lastIndexOf("@") + 1);
+          // If the keyword 'from:' has been typed
+          case (new RegExp("^from:", "gi")).test(search):
+            var username = search.substr(search.lastIndexOf(":") + 1);
             if (username.indexOf(" ") != -1) username = username.substr(0, username.indexOf(" "));
             if (username == 'me') {
               var user= {'id': localStorage['userId']};
@@ -117,7 +118,7 @@ angular
                   return true;
               });
             }
-            // If '@someone has been found, look for his todos'
+            // If 'someone' has been found, look for his todos'
             if (user) {
               out = _.filter(input, function(item) {
                 if ( item['assignee'] && item['creator']['id'] == user.id ) return true;
@@ -125,7 +126,7 @@ angular
             } else {
               return [];
             }
-            // If something follows 'createdby:@someone'
+            // If something follows 'from:someone'
             // Look in the todo description or in the project name or in the todolist title
             realSearch = search.substr(search.indexOf(" ") + 1);
             if(search.indexOf(" ") != -1) {
@@ -138,22 +139,23 @@ angular
             return out;
             break;
 
-
-          // If '@someone' has been type
-          case (new RegExp("^@.+", "gi")).test(search):
+          // If 'to:' has been type
+          case (new RegExp("^to:", "gi")).test(search):
+            var username = search.substr(search.lastIndexOf(":") + 1);
+            if (username.indexOf(" ") != -1) username = username.substr(0, username.indexOf(" "));
             var user = _.find(angular.fromJson(localStorage['people']), function(user) {
-              if ($filter('removeDomain')(user['email_address']) == search.substring(1).split(" ")[0] )
+              if ($filter('removeDomain')(user['email_address']) == username)
                 return true;
             });
-            // If '@someone has been found, look for his todos'
+            // If 'someone has been found, look for his todos'
             if (user) {
               out = _.filter(input, function(item) {
                 if ( item['assignee'] && item['assignee']['id'] == user.id ) return true;
               });
             } else return [];
-            // If nothing follows '@someone'
+            // If nothing follows 'someone'
             if(search.indexOf(" ") == -1) return out;
-            // If something follows '@someone'
+            // If something follows 'someone'
             // Look in the todo description or in the project name or in the todolist title
             else {
               realSearch = search.substring(search.indexOf(" ") + 1);
@@ -195,8 +197,8 @@ angular
     return function(input, search) {
       if(search && input) {
         // User suggestions
-        if (search.lastIndexOf("@") != -1) {
-          realSearch = search.substring(search.lastIndexOf("@") + 1);
+        if (search.lastIndexOf(":") != -1) {
+          realSearch = search.substring(search.lastIndexOf(":") + 1);
           out = _.filter(input, function(item) {
             if ( item['id'] != -1
                 && (item['name'].match(new RegExp("^" + realSearch, "gi"))
