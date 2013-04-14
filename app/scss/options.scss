@@ -21,6 +21,10 @@ body {
   a { @include unstyled-link; }
 }
 
+h1 {
+  text-align: center;
+}
+
 #logo {
   padding-left: 60px;
 }
@@ -46,7 +50,7 @@ label {
   position: relative;
   text-align: right;
   top: 3px;
-  width: 200px;
+  width: 210px;
 }
 input {
   float: right;
