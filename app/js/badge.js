@@ -18,21 +18,21 @@ function countTodos(input, status) {
 
   switch (status) {
     case "no_due_date":
-    return _.where(input, {due_at: null}).length;
-	  break;
-	case "today":
-	  return _.where(input, {due_at: dateToYMD(new Date())}).length;
-	  break;
-	case "upcoming":
-	  return _.countBy(input, function(todo) {
+      return _.where(input, {due_at: null}).length;
+      break;
+    case "today":
+      return _.where(input, {due_at: dateToYMD(new Date())}).length;
+      break;
+    case "upcoming":
+      return _.countBy(input, function(todo) {
         return (dateToYMD(new Date(todo.due_at)) > dateToYMD(new Date()));
       }).true;
-	  break;
-	case "overdues":
-	  return _.countBy(input, function(todo) {
+      break;
+    case "overdues":
+      return _.countBy(input, function(todo) {
         return (dateToYMD(new Date(todo.due_at)) < dateToYMD(new Date()));
       }).true;
-	  break;
+      break;
   }
 }
 
