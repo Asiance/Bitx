@@ -1,26 +1,39 @@
 /**
+ * Returns the date under the format "YYYY-MM-DD"
+ * @param {date} a javascript date object
+ */
+function dateToYMD(date) {
+    var d = date.getDate(),
+        m = date.getMonth() + 1,
+        y = date.getFullYear();
+    return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+}
+
+/**
  * Count Todos in one category
  * @param {string} status Count overdue, today, upcoming or undefined Todos
  * @param {string} input JSON string containing all myTodos
  */
 function countTodos(input, status) {
 
-  var todayDate = new Date();
-  todayDate.setHours(0,0,0,0);
-  var inputDate = null;
-  var count = 0;
-
-  for (var i = 0; i < input.length; i++) {
-      if (input[i].due_at != null && status != 'no_due_date') {
-        inputDate = new Date(input[i].due_at);
-        inputDate.setHours(0,0,0,0);
-        if ((status == 'overdues') && (inputDate.getTime() < todayDate.getTime())) count++;
-        else if ((status == 'today') && (inputDate.getTime() == todayDate.getTime())) count++;
-        else if ((status == 'upcoming') && (inputDate.getTime() > todayDate.getTime())) count++;
-      }
-      else if (input[i].due_at == null && (status == 'no_due_date')) count++;
+  switch (status) {
+    case "no_due_date":
+    return _.where(input, {due_at: null}).length;
+	  break;
+	case "today":
+	  return _.where(input, {due_at: dateToYMD(new Date())}).length;
+	  break;
+	case "upcoming":
+	  return _.countBy(input, function(todo) {
+        return (dateToYMD(new Date(todo.due_at)) > dateToYMD(new Date()));
+      }).true;
+	  break;
+	case "overdues":
+	  return _.countBy(input, function(todo) {
+        return (dateToYMD(new Date(todo.due_at)) < dateToYMD(new Date()));
+      }).true;
+	  break;
   }
-  return count;
 }
 
 /**
