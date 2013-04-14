@@ -1,17 +1,19 @@
 <!doctype html>
 <html>
 <head>
-  <meta charset='utf-8'>
+  <meta charset="utf-8">
   <title id="title">Bitx - Options</title>
+  <link rel="icon" href="/icon.png" type="image/png">
+  <link rel="shortcut icon" href="/icon.png" type="image/png">
   <link href="/css/options.css" rel="stylesheet" media="screen">
 </head>
 <body>
-
   <fieldset id="wrapper">
-    <legend><img id="logo" src="http://dummyimage.com/175x130"></legend>
+    <legend><img id="logo" src="http://dummyimage.com/175x130" alt="Bitx Logo"></legend>
+  <h1>Bitx - Basecamp Instant To-dos eXtension</h1>
     <form>
       <fieldset class="inner-fieldset">
-        <legend>Settings</legend>
+        <legend>Extension settings</legend>
         <p>
           <label for="refresh_period">Refresh period</label>
           <select id="refresh_period">
@@ -21,13 +23,12 @@
           </select>
         </p>
         <p>
-          <label for="counter_todos">Counter todos</label>
+          <label for="counter_todos">To-dos counter in the icon</label>
           <select id="counter_todos">
-            <option value="default" id="default"></option>
-            <option value="overdues" id="overdues"></option>
-            <option value="today" id="today"></option>
-            <option value="upcoming" id="upcoming"></option>
-            <option value="no_due_date" id="noduedate"></option>
+            <option value="overdues" id="overdues">Overdues (default)</option>
+            <option value="today" id="today">Today</option>
+            <option value="upcoming" id="upcoming">Upcoming</option>
+            <option value="no_due_date" id="noduedate">No due date</option>
           </select>
         </p>
         <p>
@@ -50,9 +51,9 @@
         <legend>Filters</legend>
         <dl>
         <dt>to:</dt>
-        <dd>Display current todos assigned to someone else</dd>
+        <dd>Display current to-dos assigned to someone</dd>
         <dt>from:</dt>
-        <dd>Display todos someone created</dd>
+        <dd>Display to-dos created by someone</dd>
       </dl>
     </fieldset>
   </fieldset>
