@@ -3,15 +3,17 @@
 @import url(http://fonts.googleapis.com/css?family=Droid+Sans:400,700);
 
 $color-blue-asiance: #2A3742;
+$color-white-close: #f3f3f3;
 $color-dark: #232323;
 $color-red-asiance: #e02d45;
-$color-beige-basecamp: #f8f3ed;
+$color-blue: #5e9bca;
 
 $fonts_en: "Droid Sans", arial, helvetica, clean, sans-serif;
 
 body {
-  background: $color-beige-basecamp;
+  background: $color-blue;
   color: $color-blue-asiance;
+  cursor: default;
   font-family: $fonts_en;
   font-style: normal;
   font-weight: 400;
@@ -26,23 +28,25 @@ h1 {
 }
 
 #logo {
-  padding-left: 60px;
+  display: block;
+  margin: 30px auto;
 }
 
 #wrapper {
-  border-radius: 5px;
+  background: $color-white-close;
+  border-radius: 3px;
   border: none;
-  background: white;
-  box-shadow: 0px 0px 6px rgba(0,0,0,0.2);
-  margin: 50px auto;
+  box-shadow: 0px 0px 5px rgba(0,0,0,0.4);
+  margin: 0 auto;
+  padding: 60px;
   width: 760px;
 }
 
 .inner-fieldset {
   border: 1px solid $color-blue-asiance;
-  margin: 50px auto;
-  width: 600px;
+  margin: 30px auto;
 }
+
 label {
   float: left;
   font-weight: bold;
@@ -50,7 +54,7 @@ label {
   position: relative;
   text-align: right;
   top: 3px;
-  width: 210px;
+  width: 350px;
 }
 input {
   float: right;

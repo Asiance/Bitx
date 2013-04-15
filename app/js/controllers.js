@@ -94,12 +94,16 @@ angular
                       .sortBy(function(todo) { return todo.project_id; })
                       .value();
 
-          chrome.storage.local.set({'assignedTodos': angular.toJson(allTodos)});
-          if (!_.isEqual(allTodos, $scope.assignedTodos)) {
-            $scope.assignedTodos = allTodos;
-            $scope.groupByProject(true);
-          }
+          chrome.storage.local.set({'assignedTodos': angular.toJson(allTodos)}); // Always update local cache
 
+          var diff = false;
+          _.each(allTodos, function(item) { // Check each todo whether it is new or not
+            if (!_.findWhere($scope.assignedTodos, {id: item.id})) diff = true;
+          });
+          if (diff || !$scope.projects) {
+            $scope.assignedTodos = allTodos;
+            $scope.groupByProject();
+          }
         });
       }, function(response) {
         console.log('ERROR: Failed to connect!');
@@ -149,9 +153,8 @@ angular
 
   /**
    * Group assigned Todos by Project
-   * @param  {boolean}  update  If set, then view is updated
    */
-  $scope.groupByProject = function(update) {
+  $scope.groupByProject = function() {
     console.log('LOG: groupByProject');
     var projects = [];
     var projectName = 'NO_PROJECT';
@@ -167,8 +170,7 @@ angular
     }
 
     chrome.storage.local.set({'assignedTodosByProject': angular.toJson(projects)});
-    if (update) $scope.projects = projects;
-
+    $scope.projects = projects;
   };
 
   /**
@@ -226,35 +228,31 @@ angular
    * Set the right class (with ng-class) et display (using jQuery) only one category on launch
    */
   $scope.displayCategory = function(display) {
+    console.log('LOG: displayCategory');
     try {
       $('#todos').find('dd').css('display', 'none');
       $('#todos').find('dt').removeClass('active');
       // If no category is active, display the first which is not empty
-      var counter_todos = localStorage['counter_todos'] ? localStorage['counter_todos'] : "default";
       if (display) {
         var status = $filter('status');
         var keywordSearch = $filter('keywordSearch');
-        if (counter_todos == 'overdues' ||
-          (counter_todos == 'default' && status(keywordSearch($scope.assignedTodos, $scope.search), 1).length > 0)) {
+        if (_.size(status(keywordSearch($scope.assignedTodos, $scope.search), 'overdues')) > 0) {
           $('#overdues_content').css('display', 'block');
           $('#overdues').addClass('active');
         }
-        else if (counter_todos == 'today' ||
-          (counter_todos == 'default' && status(keywordSearch($scope.assignedTodos, $scope.search), 2).length > 0)) {
+        else if (_.size(status(keywordSearch($scope.assignedTodos, $scope.search), 'today')) > 0) {
           $('#today_content').css('display', 'block');
           $('#today').addClass('active');
         }
-        else if (counter_todos == 'upcoming' ||
-          (counter_todos == 'default' && status(keywordSearch($scope.assignedTodos, $scope.search), 3).length > 0)) {
+        else if (_.size(status(keywordSearch($scope.assignedTodos, $scope.search), 'upcoming')) > 0) {
           $scope.upcoming = "active";
           $('#upcoming_content').css('display', 'block');
           $('#upcoming').addClass('active');
         }
-        else if (counter_todos == 'no_due_date' ||
-          (counter_todos == 'default' && status(keywordSearch($scope.assignedTodos, $scope.search), 4).length > 0)) {
+        else if (_.size(status(keywordSearch($scope.assignedTodos, $scope.search), 'no-due-date')) > 0) {
           $scope.no_due_date = "active";
           $('#no-due-date_content').css('display', 'block');
-         $('#no-due-date').addClass('active');
+          $('#no-due-date').addClass('active');
        }
       }
     } catch(e) {
@@ -268,6 +266,16 @@ angular
   $scope.sortByDate = function(assignedTodo) {
     if (assignedTodo.due_at != null) return assignedTodo.due_at.replace(/-/g, "");
     else return "99999999"; // Default value for undefined due date
+  };
+
+  /**
+   * Return the number of todos of one category
+   * @param  {string}  category  Name of the category.
+   */
+  $scope.getNumberTodos = function(category) {
+    var status = $filter('status');
+    var keywordSearch = $filter('keywordSearch');
+    return _.size(status(keywordSearch($scope.assignedTodos, $scope.search), category));
   };
 
   /**
@@ -306,29 +314,22 @@ angular
    * Event triggered by AngularJS
    */
   $scope.$watch('search', function() {
+    localStorage['lastSearch'] = $scope.search;
     $scope.suggestionsPosition = -1;
     if ($scope.search) {
       highlight($scope.search);
     }
-    // If nothing is typed, fetch your own todos
-    if ($scope.search === "") {
-      $scope.getAssignedTodos();
-    }
     // On key pressed, display the first category which is not empty
-    if ($scope.search)
-      $scope.displayCategory(true);
-    else {
+    else if (!$scope.search) {
       $scope.displayCategory(false);
       $('#suggestions').css({'z-index': '1'});
       $("#ascrail2000").css({'z-index': '1'});
       $("#ascrail2000-hr").css({'z-index': '1'});
     }
-    localStorage['lastSearch'] = $scope.search;
   });
 
   $scope.isFiltered = function() {
-    if (new RegExp("^from:", "gi").test($scope.search)) return true;
-    else false
+    return (new RegExp("from:", "gi").test($scope.search));
   }
 
   /**
@@ -336,8 +337,19 @@ angular
    * @param  {string}  string  String to highlight.
    */
   function highlight(string) {
+
+    var fromUser = string.match(/\bfrom:(\w*)\b/g);
+    if (fromUser) fromUser = fromUser[0].substr('from:'.length);
+    var toUser = string.match(/\bto:(\w*)\b/g);
+    if (toUser) toUser = toUser[0].substr('to:'.length);
+    var indexOfFrom = fromUser ? string.indexOf(fromUser) : -1;
+    var indexOfTo = toUser ? string.indexOf(toUser) : -1;
+
+    if (indexOfFrom > indexOfTo) var realSearch = string.substr(indexOfFrom + fromUser.length + 1);
+    else if (indexOfFrom < indexOfTo) var realSearch = string.substr(indexOfTo + toUser.length + 1);
+    else realSearch = string;
+
     $(".todo-text, h2").each(function(i, v) {
-      var realSearch = string.substr(string.indexOf(" ") + 1);
       var block = $(v);
       block.html(
         block.text().replace(
@@ -349,17 +361,130 @@ angular
       var block = $(v);
       block.html(
         block.text().replace(
-          new RegExp(string, "gi"), function(match) {
+          new RegExp(string.match(/[^ ||^:]*$/), "gi"), function(match) {
             return ["<span class='strong'>", match, "</span>"].join("");
         }));
     });
   }
 
   /**
+   * Hightlight found string when using search input
+   * @param  {string}  category  Name of the category to toggle ie. <dt id='{category}'>.
+   */
+  $scope.toggleContent = function(category) {
+    var statusVal;
+    var status = $filter('status');
+    var keywordSearch = $filter('keywordSearch');
+    if (_.size(status(keywordSearch($scope.assignedTodos, $scope.search), category)) > 0) {
+      $("#overdues_content, #today_content, #upcoming_content, #no-due-date_content").getNiceScroll().hide();
+      if ($('#' + category).hasClass('active')) {
+        $('#' + category).next().slideUp(300, 'easeOutQuad');
+        $('#' + category).removeClass('active');
+      }
+      else {
+        $('#todos').find('dt').removeClass('active');
+        $('#' + category).addClass('active');
+        $('#todos').find('dd').slideUp(300, 'easeOutQuad');
+        $('#' + category).next().slideDown({
+          duration: 300,
+          easing: 'easeOutQuad',
+          complete: function() {
+            $('#' + category + '_content').getNiceScroll().show();
+            $('#' + category + '_content').getNiceScroll().resize();
+          }
+        });
+      }
+    }
+  }
+
+  /**
+   * Listen to keyboard event using jQuery
+   */
+  $('#search-input').keydown(function(evt) {
+    $scope.$apply(function() {
+      $scope.handleKeypress.call($scope, evt.which);
+    });
+    if (evt.which == 38 || evt.which == 40) {
+      return false;
+    }
+  });
+
+  /**
+   * Allow to navigate through suggestions with keyboard (UP and DOWN)
+   * @param  {number}  key  Code related to key event.
+   */
+  $scope.handleKeypress = function(key) {
+
+    var frameOffset = document.getElementById('suggestions').scrollTop; // get how much pixels you have scrolled
+
+    var printableChar =
+        (key > 47 && key < 58)   || // number keys
+        key == 32 || key == 13   || // spacebar & return key(s) (if you want to allow carriage returns)
+        (key > 64 && key < 91)   || // letter keys
+        (key > 95 && key < 112)  || // numpad keys
+        (key > 185 && key < 193) || // ;=,-./` (in order)
+        (key > 218 && key < 223) || // [\]' (in order)
+        key == 8;                   // backspace
+    // if you type or delete a character, display the suggestions, and allows you to scroll
+    if (printableChar) {
+      $scope.displayCategory(true);
+      $('#suggestions').css({'z-index': '1'});
+      $("#ascrail2000").css({'z-index': '1'});
+      $("#ascrail2000-hr").css({'z-index': '1'});
+    }
+
+    if (key == 40 && $scope.suggestionsPosition < $filter('suggestionSearch')($scope.people, $scope.search).length -1) {
+      $scope.suggestionsPosition += 1;
+      var framePosition = ($scope.suggestionsPosition+1) - (frameOffset+50)/ 50;
+      var objDiv = document.getElementById($scope.suggestionsPosition);
+      if (Math.round(framePosition) == 4) {
+        objDiv.scrollIntoView(false);
+      }
+    } else if (key == 38 && $scope.suggestionsPosition > -1) {
+      $scope.suggestionsPosition -= 1;
+      var framePosition = ($scope.suggestionsPosition+1) - (frameOffset-50)/ 50;
+      var objDiv = document.getElementById($scope.suggestionsPosition);
+      if (Math.round(framePosition) == 1) {
+        objDiv.scrollIntoView(true);
+      }
+    } else if (key == 13) {
+      if ($scope.suggestionsPosition == -1)
+        $scope.setSearch($filter('suggestionSearch')($scope.people, $scope.search)[0]);
+      else $scope.setSearch($filter('suggestionSearch')($scope.people, $scope.search)[$scope.suggestionsPosition]);
+    }
+
+  };
+
+  /**
+   * When press ENTER or click on a suggestion, set the new value to the search input
+   * We use the email address to extract a username
+   * @param  {string}  email_address  Email address of the person selected.
+   */
+  $scope.setSearch = function(person) {
+    if (person) {
+      if (person.id != -1) $scope.search = $scope.search.substr(0, $scope.search.lastIndexOf(":") + 1);
+      else $scope.search = $scope.search.substr(0, $scope.search.lastIndexOf(" ") + 1);
+      $scope.search += $filter('removeDomain')(person.email_address);
+      $('#suggestions').css({'z-index': '-1'});
+      $("#ascrail2000").css({'z-index': '-1'});
+      $("#ascrail2000-hr").css({'z-index': '-1'});
+    }
+  }
+
+  /**
+   * Function called on ng-mouseover of suggestion box to highlight hovered selection
+   * @param  {number}  index  Index of the selected suggestion in the array.
+   */
+  $scope.setActive = function(index) {
+    $scope.suggestionsPosition = index;
+  }
+
+
+  /**
    * Initialization of variables
    */
   $scope.i18n();
-  $scope.search = localStorage['lastSearch'];
+  $scope.search = localStorage['lastSearch'] ? localStorage['lastSearch'] : "";
   $('#todos').find('dt').attr('unselectable', 'on').on('selectstart', false);
   var fullInit = false;
   if (localStorage['basecampId'] && localStorage['userId'] && localStorage['people']) {
@@ -411,119 +536,6 @@ angular
     cursorborder: '0px',
     cursorwidth: '8px',
   })
-
-  /**
-   * Hightlight found string when using search input
-   * @param  {string}  category  Name of the category to toggle ie. <dt id='{category}'>.
-   */
-  $scope.toggleContent = function(category) {
-    var statusVal;
-    var status = $filter('status');
-    var keywordSearch = $filter('keywordSearch');
-    switch (category) {
-      case 'overdues': statusVal = 1; break;
-      case 'today' : statusVal = 2; break;
-      case 'upcoming' : statusVal = 3; break;
-      case 'no-due-date' : statusVal = 4; break;
-      default : statusVal = 1; break;
-    }
-
-    if (status(keywordSearch($scope.assignedTodos, $scope.search), statusVal).length > 0) {
-      $("#overdues_content, #today_content, #upcoming_content, #no-due-date_content").getNiceScroll().hide();
-      if ($('#' + category).hasClass('active')) {
-        $('#' + category).next().slideUp(300, 'easeOutQuad');
-        $('#' + category).removeClass('active');
-      }
-      else {
-        $('#todos').find('dt').removeClass('active');
-        $('#' + category).addClass('active');
-        $('#todos').find('dd').slideUp(300, 'easeOutQuad');
-        $('#' + category).next().slideDown({
-          duration: 300,
-          easing: 'easeOutQuad',
-          complete: function() {
-            $('#' + category + '_content').getNiceScroll().show();
-            $('#' + category + '_content').getNiceScroll().resize();
-          }
-        });
-      }
-    }
-  }
-
-  /**
-   * Listen to keyboard event using jQuery
-   */
-  $('#search-input').keydown(function(evt) {
-    console.log($scope.people);
-    $scope.$apply(function() {
-      $scope.handleKeypress.call($scope, evt.which);
-    });
-    if (evt.which == 38 || evt.which == 40) {
-      return false;
-    }
-  });
-
-  /**
-   * Allow to navigate through suggestions with keyboard (UP and DOWN)
-   * @param  {number}  key  Code related to key event.
-   */
-  $scope.handleKeypress = function(key) {
-
-    var frameOffset = document.getElementById('suggestions').scrollTop; // get how much pixels you have scrolled
-
-    var printableChar =
-        (key > 47 && key < 58)   || // number keys
-        key == 32 || key == 13   || // spacebar & return key(s) (if you want to allow carriage returns)
-        (key > 64 && key < 91)   || // letter keys
-        (key > 95 && key < 112)  || // numpad keys
-        (key > 185 && key < 193) || // ;=,-./` (in order)
-        (key > 218 && key < 223) || // [\]' (in order)
-        key == 8;                   // backspace
-    // if you type or delete a character, display the suggestions, and allows you to scroll
-    if (printableChar) {
-      $('#suggestions').css({'z-index': '1'});
-      $("#ascrail2000").css({'z-index': '1'});
-      $("#ascrail2000-hr").css({'z-index': '1'});
-    }
-
-    if (key == 40 && $scope.suggestionsPosition < $filter('suggestionSearch')($scope.people, $scope.search).length -1) {
-      $scope.suggestionsPosition += 1;
-      var framePosition = ($scope.suggestionsPosition+1) - (frameOffset+50)/ 50;
-      var objDiv = document.getElementById($scope.suggestionsPosition);
-      if (Math.round(framePosition) == 4) objDiv.scrollIntoView(false);
-    } else if (key == 38 && $scope.suggestionsPosition > -1) {
-      $scope.suggestionsPosition -= 1;
-      var framePosition = ($scope.suggestionsPosition+1) - (frameOffset-50)/ 50;
-      var objDiv = document.getElementById($scope.suggestionsPosition);
-      if (Math.round(framePosition) == 1) objDiv.scrollIntoView(true);
-    } else if (key == 13) {
-      if ($scope.suggestionsPosition == -1)
-        $scope.setSearch($filter('suggestionSearch')($scope.people, $scope.search)[0]['email_address']);
-      else $scope.setSearch($filter('suggestionSearch')($scope.people, $scope.search)[$scope.suggestionsPosition]['email_address']);
-    }
-
-  };
-
-  /**
-   * When press ENTER or click on a suggestion, set the new value to the search input
-   * We use the email address to extract a username
-   * @param  {string}  email_address  Email address of the person selected.
-   */
-  $scope.setSearch = function(email_address) {
-    $scope.search = $scope.search.substr(0, $scope.search.lastIndexOf(":") + 1);
-    $scope.search += $filter('removeDomain')(email_address);
-    $('#suggestions').css({'z-index': '-1'});
-    $("#ascrail2000").css({'z-index': '-1'});
-    $("#ascrail2000-hr").css({'z-index': '-1'});
-  }
-
-  /**
-   * Function called on ng-mouseover of suggestion box to highlight hovered selection
-   * @param  {number}  index  Index of the selected suggestion in the array.
-   */
-  $scope.setActive = function(index) {
-    $scope.suggestionsPosition = index;
-  }
 
 })
 

@@ -94,11 +94,11 @@ header {
     }
   }
   .icon-clear {
-    &:hover { background: $color-gray; }
+    &:hover { background: $color-blue; }
     @include transition-duration(0.1s);
     @include transition-property(background);
     @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000));
-    background: $color-border;
+    background: $color-gray;
     border-radius: 50%;
     color: #FFF;
     display: inline-block;

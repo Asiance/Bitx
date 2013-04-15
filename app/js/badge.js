@@ -30,7 +30,8 @@ function countTodos(input, status) {
       break;
     case "overdues":
       return _.countBy(input, function(todo) {
-        return (dateToYMD(new Date(todo.due_at)) < dateToYMD(new Date()));
+        if (todo.due_at != null)
+          return (dateToYMD(new Date(todo.due_at)) < dateToYMD(new Date()));
       }).true;
       break;
   }
@@ -38,40 +39,17 @@ function countTodos(input, status) {
 
 /**
  * Draw the extension badge in Chrome based on the Todos counter
- * localStorage['myTodos'] must to be set
+ * localStorage['myTodos'] must be set
  */
 function updateBadge() {
   try {
-    var counter_todos = localStorage['counter_todos'] ? localStorage['counter_todos'] : "default";
+    var counter_todos = localStorage['counter_todos'];
     var jsonTodos = JSON.parse(localStorage['myTodos']);
-    var counter = countTodos(jsonTodos, 'overdue');
     var color;
 
-    if ((counter_todos == 'overdues') ||
-      (counter_todos == 'default' && countTodos(jsonTodos, 'overdues'))) {
-        counter = countTodos(jsonTodos, 'overdues');
-        color = {color: '#f54e4a'};
-    }
-    else if ((counter_todos == 'today') ||
-      (counter_todos == 'default' && countTodos(jsonTodos, 'today'))) {
-        counter = countTodos(jsonTodos, 'today');
-        color = {color: '#5e9ac9'};
-    }
-    else if ((counter_todos == 'upcoming') ||
-      (counter_todos == 'default' && countTodos(jsonTodos, 'upcoming'))) {
-        counter = countTodos(jsonTodos, 'upcoming');
-        color = {color: '#5e9ac9'};
-    }
-    else if ((counter_todos == 'no_due_date') ||
-      (counter_todos == 'default' && countTodos(jsonTodos, 'no_due_date'))) {
-        counter = countTodos(jsonTodos, 'no_due_date');
-        color = {color: '#5e9ac9'};
-    }
-    else {
-      counter = '';
-      color = {color: '#000000'};
-    }
-
+    counter = countTodos(jsonTodos, counter_todos);
+    if (counter_todos == 'overdues') color = {color: '#f54e4a'};
+    else color = {color: '#5e9ac9'};
     chrome.browserAction.setBadgeBackgroundColor(color);
     chrome.browserAction.setBadgeText({text: counter.toString()});
     console.log('LOG: updateBadge');

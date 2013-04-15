@@ -34,15 +34,6 @@ window.ja = {
   "thankYou":"ありがとうございます！",
   "syncMess":"あなたのTodo ベースキャンプのエクステンションは只今接続されました！今から拡張機能を使用して楽しんでください。",
 
-  "settings": "設定",
-  "logout": "ログアウト",
-  "languages": "言語",
-  "refreshPeriod": "更新間隔",
-  "second": "秒",
-  "seconds": "秒",
-  "category": "すべてのリスト",
-  "default": "標準",
-
   "achievement1":"よくできました!", //
   "achievement2":"よくやった!", //
   "achievement3":"優秀な作品!" //

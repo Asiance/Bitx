@@ -4,9 +4,9 @@
   <span ng-show="search" class="icon-clear" ng-click="search = ''">X</span>
   <div id="suggestions">
     <ul>
-      <li id="{{$index}}" class='person' ng-class="{active: suggestionsPosition == $index}" ng-repeat="person in people | suggestionSearch: search" ng-click="setSearch(person.email_address)" ng-mouseover="setActive($index)" >
+      <li id="{{$index}}" class='person' ng-class="{active: suggestionsPosition == $index}" ng-repeat="person in people | suggestionSearch: search" ng-click="setSearch(person)" ng-mouseover="setActive($index)" >
         <img class="username" ng-src="{{person.avatar_url}}">
-        <span ng-switch on="person.id" class="username">
+        <span ng-switch="person.id" class="username">
           <span ng-switch-when="-1">{{person.email_address}}</span>
           <span ng-switch-default>{{person.email_address | removeDomain}}</span>
         </span><br>
@@ -19,19 +19,19 @@
 
 <section>
 <dl id="todos">
-  <dt ng-class=" {true:'disabled', false:'enabled'}[(assignedTodos | keywordSearch:search | status :'1').length==0]" id="overdues" ><a ng-click="toggleContent('overdues')">
-    <span ng-switch on="(assignedTodos | keywordSearch:search | status :'1').length" class="toggle-content">
+  <dt ng-class=" {true:'disabled', false:'enabled'}[(assignedTodos | keywordSearch:search | status :'overdues').length==0]" id="overdues" ><a ng-click="toggleContent('overdues')">
+    <span ng-switch="(assignedTodos | keywordSearch:search | status :'overdues').length" class="toggle-content">
       <span ng-switch-when="0" class="icon-check"></span>
       <span ng-switch-default class="toggle"></span>
     </span>
     <h1 id="header_overdues">OVERDUES</h1>
-    <span ng-show="(assignedTodos | keywordSearch:search | status :'1').length" title="{{(assignedTodos | keywordSearch:search | status :'1').length}} {{countOverdues}}" class="count-todos">{{(assignedTodos | keywordSearch:search | status :'1').length}}</span>
+    <span ng-show="getNumberTodos('overdues')" title="{{getNumberTodos('overdues')}} {{countOverdues}}" class="count-todos">{{getNumberTodos('overdues')}}</span>
   </a></dt>
   <dd id="overdues_content">
   <div class="content" ng-show="filteredOverdue.length" ng-repeat="project in projects">
     <h2>{{project.name | uppercase}}</h2>
     <ul>
-      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredOverdue = (project.assignedTodos | keywordSearch:search | orderBy: sortByDate | status: 1)">
+      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredOverdue = (project.assignedTodos | keywordSearch:search | orderBy: sortByDate | status: 'overdues')">
         <span class="achievement"><p><img src="/img/icon-check.png">{{congratulation}}</p></span>
         <span class="date overdues" title='{{createdDate}} {{assignedTodo.created_at | elapsedTime}}'><span class ="day-number">{{assignedTodo.due_at | daysLate}}</span><br>
           <p><ng-pluralize count="assignedTodo.days_late" when='{"1": "{{dayLate}}", "other": "{{daysLate}}"}'></ng-pluralize></p>
@@ -49,19 +49,20 @@
   </div>
   </dd>
 
-  <dt ng-class=" {true:'disabled', false:'enabled'}[(assignedTodos | keywordSearch:search | status :'2').length == 0]" id="today"><a ng-click="toggleContent('today')">
-    <span ng-switch on="(assignedTodos | keywordSearch:search | status :'2').length" class="toggle-content">
+  <dt ng-class=" {true:'disabled', false:'enabled'}[getNumberTodos('today') == 0]" id="today"><a ng-click="toggleContent('today')">
+    <span ng-switch="getNumberTodos('today')" class="toggle-content">
       <span ng-switch-when="0" class="icon-check"></span>
       <span ng-switch-default class="toggle"></span>
     </span>
     <h1 id="header_today">TODAY</h1>
-    <span ng-show="(assignedTodos | keywordSearch:search | status :'2').length" title="{{(assignedTodos | keywordSearch:search | status :'2').length}} {{countToday}}" class="count-todos">{{(assignedTodos | keywordSearch:search | status :'2').length}}
-    </span></a></dt>
+    <span ng-show="getNumberTodos('today')" title="{{getNumberTodos('today')}} {{countToday}}" class="count-todos">{{getNumberTodos('today')}}</span>
+    </span>
+  </a></dt>
   <dd id="today_content">
   <div class="content" ng-show="filteredToday.length" ng-repeat="project in projects">
     <h2>{{project.name | uppercase}}</h2>
     <ul>
-      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredToday = (project.assignedTodos | keywordSearch:search | orderBy: sortByDate | status: 2)">
+      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredToday = (project.assignedTodos | keywordSearch:search | orderBy: sortByDate | status: 'today')">
         <span class="achievement"><p><img src="/img/icon-check.png">{{congratulation}}</p></span>
         <span class="date icon-today" title='{{createdDate}} {{assignedTodo.created_at | elapsedTime}}'></span>
         <div class="todo">
@@ -76,19 +77,19 @@
   </div>
   </dd>
 
-  <dt ng-class=" {true:'disabled', false:'enabled'}[(assignedTodos | keywordSearch:search | status :'3').length == 0]" id="upcoming"><a ng-click="toggleContent('upcoming')">
-      <span ng-switch on="(assignedTodos | keywordSearch:search | status :'3').length" class="toggle-content">
+  <dt ng-class=" {true:'disabled', false:'enabled'}[getNumberTodos('upcoming') == 0]" id="upcoming"><a ng-click="toggleContent('upcoming')">
+      <span ng-switch="getNumberTodos('upcoming')" class="toggle-content">
       <span ng-switch-when="0" class="icon-check"></span>
       <span ng-switch-default class="toggle"></span>
       </span>
       <h1 id="header_upcoming">UPCOMING</h1>
-      <span ng-show="(assignedTodos | keywordSearch:search | status :'3').length" title="{{(assignedTodos | keywordSearch:search | status :'3').length}} {{countUpcoming}}" class="count-todos">{{(assignedTodos | keywordSearch:search | status :'3').length}}</span>
+      <span ng-show="getNumberTodos('upcoming')" title="{{getNumberTodos('upcoming')}} {{countToday}}" class="count-todos">{{getNumberTodos('upcoming')}}</span>
   </a></dt>
   <dd id="upcoming_content">
   <div class="content" ng-show="filteredUpcoming.length" ng-repeat="project in projects">
     <h2>{{project.name | uppercase}}</h2>
     <ul>
-      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredUpcoming = (project.assignedTodos | keywordSearch:search | orderBy: sortByDate | status: 3)">
+      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredUpcoming = (project.assignedTodos | keywordSearch:search | orderBy: sortByDate | status: 'upcoming')">
         <span class="achievement"><p><img src="/img/icon-check.png">{{congratulation}}</p></span>
         <span class="date" title='{{createdDate}} {{assignedTodo.created_at | elapsedTime}}'><span class ="day-number">{{assignedTodo.due_at | daysRemaining}}</span><br>
           <p><ng-pluralize count="assignedTodo.remaining_days" when="{'1': '{{dayLeft}}', 'other': '{{daysLeft}}'}"></ng-pluralize></p>
@@ -106,19 +107,19 @@
   </div>
   </dd>
 
-  <dt ng-class=" {true:'disabled', false:'enabled'}[(assignedTodos | keywordSearch:search | status :'4').length == 0]" id="no-due-date"><a ng-click="toggleContent('no-due-date')">
-    <span ng-switch on="(assignedTodos | keywordSearch:search | status :'4').length" class="toggle-content">
+  <dt ng-class=" {true:'disabled', false:'enabled'}[getNumberTodos('no-due-date') == 0]" id="no-due-date"><a ng-click="toggleContent('no-due-date')">
+    <span ng-switch="getNumberTodos('no-due-date')" class="toggle-content">
       <span ng-switch-when="0" class="icon-check"></span>
       <span ng-switch-default class="toggle"></span>
     </span>
     <h1 id="header_noduedate">NO DUE DATE</h1>
-    <span ng-show="(assignedTodos | keywordSearch:search | status :'4').length" title="{{(assignedTodos | keywordSearch:search | status :'4').length}} {{countNoDueDate}}" class="count-todos">{{(assignedTodos | keywordSearch:search | status :'4').length}}</span>
+    <span ng-show="getNumberTodos('no-due-date')" title="{{getNumberTodos('no-due-date')}} {{countToday}}" class="count-todos">{{getNumberTodos('no-due-date')}}</span>
   </a></dt>
   <dd id="no-due-date_content">
   <div class="content" ng-show="filteredUndetermined.length" ng-repeat="project in projects">
     <h2>{{project.name | uppercase}}</h2>
     <ul>
-      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredUndetermined = (project.assignedTodos | keywordSearch:search | orderBy: sortByDate | status: 4)">
+      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredUndetermined = (project.assignedTodos | keywordSearch:search | orderBy: sortByDate | status: 'no-due-date')">
         <span class="achievement"><p><img src="/img/icon-check.png">{{congratulation}}</p></span>
         <span class="date icon-coffee" title='{{createdDate}} {{assignedTodo.created_at | elapsedTime}}'></span>
         <div class="todo">

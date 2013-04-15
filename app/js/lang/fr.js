@@ -34,15 +34,6 @@ window.fr = {
   "thankYou":"Merci !",
   "syncMess":"Votre Todo extension pour Basecamp est maintenant connectée à votre compte ! Vous pouvez commencer à l'utiliser.",
 
-  "settings": "Paramètres",
-  "logout": "Déconnexion",
-  "languages": "Langues",
-  "refreshPeriod": "Refresh period",
-  "second": " seconde",
-  "seconds": " secondes",
-  "category": "Catégorie à afficher",
-  "default": "Défaut",
-
   "achievement1":"Bon travail!",
   "achievement2":"Bravo!",
   "achievement3":"Excellent!"

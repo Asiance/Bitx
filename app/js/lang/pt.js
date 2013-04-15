@@ -34,15 +34,6 @@ window.pt = {
   "thankYou":"Obrigado!",
   "syncMess":"A sua exteção ToDo-Basecamp já está conectada à sua conta! Vocè está pronto para começar a usar a sua extenção.",
 
-  "settings": "Configurações",
-  "logout": "Desconectar",
-  "languages": "Línguas",
-  "refreshPeriod": "Última atualização feita á",
-  "second": " segundo",
-  "seconds": " segundos",
-  "category": "Mostrar categoria",
-  "default": "Omitir",
-
   "achievement1":"Bom trabalho!",
   "achievement2":"Bem feitoe!",
   "achievement3":"Excelente!"

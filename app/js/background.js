@@ -8,6 +8,9 @@ window.onload = function() {
   if (!localStorage['language']) {
     localStorage['language'] = locale;
   }
+  if (!localStorage['counter_todos']) {
+    localStorage['counter_todos'] = 'overdues';
+  }
   if (localStorage['refresh_period']) {
     var refresh_period = localStorage['refresh_period'];
   } else {
