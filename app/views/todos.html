@@ -4,7 +4,7 @@
   <span ng-show="search" class="icon-clear" ng-click="search = ''">X</span>
   <div id="suggestions">
     <ul>
-      <li id="{{$index}}" class='person' ng-class="{active: suggestionsPosition == $index}" ng-repeat="person in people | suggestionSearch: search" ng-click="setSearch(person)" ng-mouseover="setActive($index)" >
+      <li id="{{$index}}" class='person' ng-class="{active: suggestionsPosition == $index}" ng-repeat="person in people | suggestionSearch: search" ng-click="setSearch(person)" ng-mouseover="setActive($index)">
         <img class="username" ng-src="{{person.avatar_url}}">
         <span ng-switch="person.id" class="username">
           <span ng-switch-when="-1">{{person.email_address}}</span>
@@ -19,8 +19,8 @@
 
 <section>
 <dl id="todos">
-  <dt ng-class=" {true:'disabled', false:'enabled'}[(assignedTodos | keywordSearch:search | status :'overdues').length==0]" id="overdues" ><a ng-click="toggleContent('overdues')">
-    <span ng-switch="(assignedTodos | keywordSearch:search | status :'overdues').length" class="toggle-content">
+  <dt ng-class=" {true:'disabled', false:'enabled'}[(assignedTodos | keywordSearch:search:people | status :'overdues').length==0]" id="overdues" ><a ng-click="toggleContent('overdues')">
+    <span ng-switch="(assignedTodos | keywordSearch:search:people | status :'overdues').length" class="toggle-content">
       <span ng-switch-when="0" class="icon-check"></span>
       <span ng-switch-default class="toggle"></span>
     </span>
@@ -31,7 +31,7 @@
   <div class="content" ng-show="filteredOverdue.length" ng-repeat="project in projects">
     <h2>{{project.name | uppercase}}</h2>
     <ul>
-      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredOverdue = (project.assignedTodos | keywordSearch:search | orderBy: sortByDate | status: 'overdues')">
+      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredOverdue = (project.assignedTodos | keywordSearch:search:people | orderBy: sortByDate | status: 'overdues')">
         <span class="achievement"><p><img src="/img/icon-check.png">{{congratulation}}</p></span>
         <span class="date overdues" title='{{createdDate}} {{assignedTodo.created_at | elapsedTime}}'><span class ="day-number">{{assignedTodo.due_at | daysLate}}</span><br>
           <p><ng-pluralize count="assignedTodo.days_late" when='{"1": "{{dayLate}}", "other": "{{daysLate}}"}'></ng-pluralize></p>
@@ -62,7 +62,7 @@
   <div class="content" ng-show="filteredToday.length" ng-repeat="project in projects">
     <h2>{{project.name | uppercase}}</h2>
     <ul>
-      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredToday = (project.assignedTodos | keywordSearch:search | orderBy: sortByDate | status: 'today')">
+      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredToday = (project.assignedTodos | keywordSearch:search:people | orderBy: sortByDate | status: 'today')">
         <span class="achievement"><p><img src="/img/icon-check.png">{{congratulation}}</p></span>
         <span class="date icon-today" title='{{createdDate}} {{assignedTodo.created_at | elapsedTime}}'></span>
         <div class="todo">
@@ -89,7 +89,7 @@
   <div class="content" ng-show="filteredUpcoming.length" ng-repeat="project in projects">
     <h2>{{project.name | uppercase}}</h2>
     <ul>
-      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredUpcoming = (project.assignedTodos | keywordSearch:search | orderBy: sortByDate | status: 'upcoming')">
+      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredUpcoming = (project.assignedTodos | keywordSearch:search:people | orderBy: sortByDate | status: 'upcoming')">
         <span class="achievement"><p><img src="/img/icon-check.png">{{congratulation}}</p></span>
         <span class="date" title='{{createdDate}} {{assignedTodo.created_at | elapsedTime}}'><span class ="day-number">{{assignedTodo.due_at | daysRemaining}}</span><br>
           <p><ng-pluralize count="assignedTodo.remaining_days" when="{'1': '{{dayLeft}}', 'other': '{{daysLeft}}'}"></ng-pluralize></p>
@@ -119,7 +119,7 @@
   <div class="content" ng-show="filteredUndetermined.length" ng-repeat="project in projects">
     <h2>{{project.name | uppercase}}</h2>
     <ul>
-      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredUndetermined = (project.assignedTodos | keywordSearch:search | orderBy: sortByDate | status: 'no-due-date')">
+      <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredUndetermined = (project.assignedTodos | keywordSearch:search:people | orderBy: sortByDate | status: 'no-due-date')">
         <span class="achievement"><p><img src="/img/icon-check.png">{{congratulation}}</p></span>
         <span class="date icon-coffee" title='{{createdDate}} {{assignedTodo.created_at | elapsedTime}}'></span>
         <div class="todo">

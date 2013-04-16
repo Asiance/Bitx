@@ -101,7 +101,8 @@ angular
    * Advanced search that look through todos
    */
   .filter('keywordSearch', function($filter) {
-    return function(input, search) {
+    return function(input, search, people) {
+      console.log(people);
        if(search && input) {
           var out = input;
           var fromUser = search.match(/\bfrom:(\w*)\b/g);
@@ -114,7 +115,7 @@ angular
             if (fromUser == 'me') {
               var user = {'id': localStorage['userId']};
             } else {
-              var user = _.find(angular.fromJson(localStorage['people']), function(user) {
+              var user = _.find(people, function(user) {
                 if ( $filter('removeDomain')(user['email_address']) == fromUser )
                   return true;
               });
@@ -132,7 +133,7 @@ angular
             if (toUser == 'me') {
               var user = {'id': localStorage['userId']};
             } else {
-              var user = _.find(angular.fromJson(localStorage['people']), function(user) {
+              var user = _.find(people, function(user) {
               if ($filter('removeDomain')(user['email_address']) == toUser)
                 return true;
               });
