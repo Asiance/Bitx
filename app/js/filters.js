@@ -15,7 +15,7 @@ angular
               return (Utils.dateToYMD(new Date(todo.due_at)) < Utils.dateToYMD(new Date()));
           });
           _.each(out, function(todo) {
-            todo.days_late =  $filter('daysLate')(todo.due_at);
+            todo.days_late = $filter('daysLate')(todo.due_at);
           })
           return out;
           break;
@@ -27,7 +27,7 @@ angular
             return (Utils.dateToYMD(new Date(todo.due_at)) > Utils.dateToYMD(new Date()));
           });
           _.each(out, function(todo) {
-            todo.remaining_days =  $filter('daysRemaining')(todo.due_at);
+            todo.remaining_days = $filter('daysRemaining')(todo.due_at);
           })
           return out;
           break;
@@ -62,7 +62,7 @@ angular
   .filter('daysRemaining', function() {
     var today = new Date();
     return function(input) {
-      if(input) return Math.round((new Date(input) - today)/(1000*60*60*24));
+      return Math.round((new Date(input) - today)/(1000*60*60*24));
     };
   })
 
@@ -72,7 +72,7 @@ angular
   .filter('daysLate', function() {
     var today = new Date();
     return function(input) {
-      if(input) return Math.round((today - new Date(input))/(1000*60*60*24));
+      return Math.round((today - new Date(input))/(1000*60*60*24));
     };
   })
 
@@ -93,7 +93,7 @@ angular
    */
   .filter('removeDomain', function() {
     return function(input) {
-      if(input) return input.split("@")[0];
+      return input.split("@")[0];
     };
   })
 
@@ -101,8 +101,8 @@ angular
    * Advanced search that look through todos
    */
   .filter('keywordSearch', function($filter) {
-    return function(input, search, people) {
-      console.log(people);
+    var people = angular.fromJson(localStorage['people']);
+    return function(input, search) {
        if(search && input) {
           var out = input;
           var fromUser = search.match(/\bfrom:(\w*)\b/g);
@@ -116,14 +116,13 @@ angular
               var user = {'id': localStorage['userId']};
             } else {
               var user = _.find(people, function(user) {
-                if ( $filter('removeDomain')(user['email_address']) == fromUser )
-                  return true;
+                return ( $filter('removeDomain')(user['email_address']) == fromUser )
               });
             }
             // If 'someone' has been found, look for his todos'
             if (user) {
               out = _.filter(out, function(item) {
-                if ( item['assignee'] && item['creator']['id'] == user.id ) return true;
+                return ( item['assignee'] && item['creator']['id'] == user.id );
               });
             } else return [];
           }
@@ -134,14 +133,13 @@ angular
               var user = {'id': localStorage['userId']};
             } else {
               var user = _.find(people, function(user) {
-              if ($filter('removeDomain')(user['email_address']) == toUser)
-                return true;
+                return ($filter('removeDomain')(user['email_address']) == toUser);
               });
             }
             // If 'someone has been found, look for his todos'
             if (user) {
               out = _.filter(out, function(item) {
-                if ( item['assignee'] && item['assignee']['id'] == user.id ) return true;
+                return ( item['assignee'] && item['assignee']['id'] == user.id );
               });
             } else return [];
           }
@@ -154,11 +152,11 @@ angular
             if (indexOfFrom > indexOfTo) var realSearch = fromUser ? search.substr(indexOfFrom + fromUser.length +1) : "";
             else var realSearch = toUser ? search.substr(indexOfTo + toUser.length + 1) : "";
 
-            if(realSearch.length > 0) {
+            if (realSearch.length > 0) {
               out = _.filter(out, function(item) {
-              if ( item['content'].match(new RegExp(realSearch, "gi"))
+              return ( item['content'].match(new RegExp(realSearch, "gi"))
                   || item['project'].match(new RegExp(realSearch, "gi"))
-                  || item['todolist'].match(new RegExp(realSearch, "gi")) ) return true;
+                  || item['todolist'].match(new RegExp(realSearch, "gi")) );
               });
             }
             return out;
@@ -166,16 +164,15 @@ angular
 
           // If no keyword has been typed, load the regular search filter
           out = _.filter(input, function(item) {
-            if ( item['assignee'] && item['assignee']['id'] == localStorage['userId'] ) return true;
+            return ( item['assignee'] && item['assignee']['id'] == localStorage['userId'] );
           });
           return $filter('filter')(out, search);
 
       // If search input is empty, show your own todos
       } else {
-        out = _.filter(input, function(item) {
-          if ( item['assignee'] && item['assignee']['id'] == localStorage['userId'] ) return true;
+        return _.filter(input, function(item) {
+          return ( item['assignee'] && item['assignee']['id'] == localStorage['userId'] );
         });
-        return out;
       };
     };
   })
@@ -194,17 +191,17 @@ angular
         if (search.lastIndexOf(":") > search.lastIndexOf(" ")) {
           realSearch = search.substring(search.lastIndexOf(":") + 1);
           out = _.filter(input, function(item) {
-            if ( item['id'] != -1
+            return ( item['id'] != -1
                 && (item['name'].match(new RegExp("^" + realSearch, "gi"))
-                  || item['email_address'].match(new RegExp("^" + realSearch, "gi"))) ) return true;
+                  || item['email_address'].match(new RegExp("^" + realSearch, "gi"))) );
           });
         }
 
         // Keyword suggestions
         else {
           out = _.filter(input, function(item) {
-            if (item['id'] == -1
-                && item['email_address'].match(new RegExp("^" + (search.substr(search.lastIndexOf(" ") + 1)), "gi"))) return true;
+            return (item['id'] == -1
+                && item['email_address'].match(new RegExp("^" + (search.substr(search.lastIndexOf(" ") + 1)), "gi")));
           });
         }
 

@@ -275,7 +275,7 @@ angular
   $scope.getNumberTodos = function(category) {
     var status = $filter('status');
     var keywordSearch = $filter('keywordSearch');
-    return _.size(status(keywordSearch($scope.assignedTodos, $scope.search), category));
+    return _.size(keywordSearch(status($scope.assignedTodos, category), $scope.search));
   };
 
   /**
