@@ -1,9 +1,5 @@
-@import "compass/css3";
-@import "compass/typography/links/unstyled-link";
 @import url(http://fonts.googleapis.com/css?family=Droid+Sans:400,700);
 
-$color-blue-asiance: #2A3742;
-$color-white-close: #f3f3f3;
 $color-dark: #232323;
 $color-red-asiance: #e02d45;
 $color-blue: #5e9bca;
@@ -12,38 +8,26 @@ $fonts_en: "Droid Sans", arial, helvetica, clean, sans-serif;
 
 body {
   background: $color-blue;
-  color: $color-blue-asiance;
   cursor: default;
   font-family: $fonts_en;
-  font-style: normal;
-  font-weight: 400;
-  height: auto !important;
-  margin: 0px 0px 0px 0px;
-  min-height: 100%;
-  a { @include unstyled-link; }
 }
 
-h1 {
+header {
+  margin: 30px 0;
   text-align: center;
 }
 
-#logo {
-  display: block;
-  margin: 30px auto;
-}
-
-#wrapper {
-  background: $color-white-close;
+section {
+  background: white;
   border-radius: 3px;
-  border: none;
   box-shadow: 0px 0px 5px rgba(0,0,0,0.4);
   margin: 0 auto;
+  max-width: 700px;
   padding: 60px;
-  width: 760px;
+  width: 60%;
 }
 
-.inner-fieldset {
-  border: 1px solid $color-blue-asiance;
+fieldset {
   margin: 30px auto;
 }
 
@@ -54,25 +38,21 @@ label {
   position: relative;
   text-align: right;
   top: 3px;
-  width: 350px;
-}
-input {
-  float: right;
-  width: 300px;
+  width: 50%;
 }
 button {
-  float:right;
+  cursor: pointer;
+  float: right;
 }
 
 dt {
-  clear: left;
   float: left;
   font-weight: bold;
-  padding: 0px 40px;
+  margin: 0px 10%;
   text-align: right;
-  width: 120px;
+  width: 20%;
 }
 
-dd {
-  margin-left: 130px;
+dl {
+  margin: 20px 10%;
 }

@@ -53,8 +53,6 @@ body {
   cursor: default;
   font-family: $fonts_en;
   font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
   line-height: 50px;
   width: 500px;
   &.ja {
@@ -83,8 +81,7 @@ header {
     margin-left: 80px;
     padding: 8px 10px;
     position: relative;
-    top: 2px;
-    vertical-align: middle;
+    top: 4px;
     width: 240px;
     &::-webkit-input-placeholder {
       font-style: italic;
@@ -94,24 +91,12 @@ header {
     }
   }
   .icon-clear {
-    &:hover { background: $color-blue; }
-    @include transition-duration(0.1s);
-    @include transition-property(background);
-    @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000));
-    background: $color-gray;
-    border-radius: 50%;
-    color: #FFF;
-    display: inline-block;
-    font-size: 11px;
-    font-weight: bold;
+    background: url(/img/icon-clear.jpg) center no-repeat;
+    cursor: pointer;
     height: 16px;
-    left: -32px;
-    line-height: 18px;
-    padding: 3px;
-    position: relative;
-    text-align: center;
-    top: 3px;
-    vertical-align: middle;
+    left: 358px;
+    position: absolute;
+    top: 20px;
     width: 16px;
   }
   .icon-settings {
@@ -144,13 +129,8 @@ header {
   display: inline-block;
   width: $first-column-width;
 }
-section {
-  width: 500px;
-}
-
 
 dt {
-  -webkit-user-select: none;
   @include transition-duration(0.1s);
   @include transition-property(background, border-bottom);
   @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000));
@@ -199,12 +179,6 @@ dt.active {
   .count-todos {
     background: $color-light-blue;
   }
-}
-.icon-check {
-  display: table-cell;
-  padding-right: 8px;
-  width: 80px;
-  height: 30px;
 }
 
 .count-todos {
@@ -317,7 +291,6 @@ dt.active {
   position: relative;
   width: 1040px;
   &:first-child { border-top: 1px solid $color-border; }
-  &:last-child { border-bottom: 0; }
   &:hover {
     background-color: $color-light-gray;
     .todo {

@@ -103,70 +103,79 @@ angular
   .filter('keywordSearch', function($filter) {
     var people = angular.fromJson(localStorage['people']);
     return function(input, search) {
-       if(search && input) {
-          var out = input;
-          var fromUser = search.match(/\bfrom:(\w*)\b/g);
-          if (fromUser) fromUser = fromUser[0].substr('from:'.length);
-          var toUser = search.match(/\bto:(\w*)\b/g);
-          if (toUser) toUser = toUser[0].substr('to:'.length);
+      if(search && input) {
+        var out = input;
 
-          // If the keyword 'from:' has been typed
-          if (fromUser != null) {
-            if (fromUser == 'me') {
-              var user = {'id': localStorage['userId']};
-            } else {
-              var user = _.find(people, function(user) {
-                return ( $filter('removeDomain')(user['email_address']) == fromUser )
-              });
-            }
-            // If 'someone' has been found, look for his todos'
-            if (user) {
-              out = _.filter(out, function(item) {
-                return ( item['assignee'] && item['creator']['id'] == user.id );
-              });
-            } else return [];
+        var fromUser = search.match(/\bfrom:([\s]*[\w]*)\b/g);                  // Look for the keyword
+        if (fromUser) fromUser = fromUser[0].split(":")[1].replace(/\s/g,"");   // Extract the parameter, remove space if any
+
+        var toUser = search.match(/\bto:([\s]*[\w]*)\b/g);
+        if (toUser) toUser = toUser[0].split(":")[1].replace(/\s/g,"");
+
+        // If the keyword 'from:' has been typed
+        if (fromUser != null) {
+          // Bind 'me' with the logged user identity
+          if (fromUser == 'me') {
+            var user = {'id': localStorage['userId']};
+          } else {
+            //Look for the user among employees of the company
+            var user = _.find(people, function(user) {
+              return ( $filter('removeDomain')(user['email_address']) == fromUser );
+            });
+          }
+          // If 'someone' has been found, look for his todos'
+          if (user) {
+            out = _.filter(out, function(item) {
+              return ( item['assignee'] && item['creator']['id'] == user.id );
+            });
+          } else return [];
+        }
+
+        // If 'to:' has been type
+        if (toUser != null) {
+          // Bind 'me' with the logged user identity
+          if (toUser == 'me') {
+            var user = {'id': localStorage['userId']};
+          } else {
+            //Look for the user among employees of the company
+            var user = _.find(people, function(user) {
+              return ($filter('removeDomain')(user['email_address']) == toUser);
+            });
+          }
+          // If 'someone has been found, look for his todos'
+          if (user) {
+            out = _.filter(out, function(item) {
+              return ( item['assignee'] && item['assignee']['id'] == user.id );
+            });
+          } else return [];
+        }
+
+        if ( new RegExp("from:", "gi").test(search) ||  new RegExp("to:", "gi").test(search) )  {
+          // If something follows 'from:someone or to:someone'
+          // Look in the todo description or in the project name or in the todolist title
+          var indexOfFrom = fromUser ? search.indexOf(fromUser) : -1;
+          var indexOfTo = toUser ? search.indexOf(toUser) : -1;
+          if (indexOfFrom > indexOfTo) {
+            var realSearch = fromUser ? search.substr(indexOfFrom + fromUser.length +1) : "";
+          } else {
+            var realSearch = toUser ? search.substr(indexOfTo + toUser.length + 1) : "";
           }
 
-          // If 'to:' has been type
-          if (toUser != null) {
-            if (toUser == 'me') {
-              var user = {'id': localStorage['userId']};
-            } else {
-              var user = _.find(people, function(user) {
-                return ($filter('removeDomain')(user['email_address']) == toUser);
-              });
-            }
-            // If 'someone has been found, look for his todos'
-            if (user) {
-              out = _.filter(out, function(item) {
-                return ( item['assignee'] && item['assignee']['id'] == user.id );
-              });
-            } else return [];
+          if (realSearch.length > 0) {
+            out = _.filter(out, function(item) {
+            return ( item['content'].match(new RegExp(realSearch, "gi"))
+                || item['project'].match(new RegExp(realSearch, "gi"))
+                || item['todolist'].match(new RegExp(realSearch, "gi")) );
+            });
           }
+          return out;
+        }
 
-          if ( new RegExp("from:", "gi").test(search) ||  new RegExp("to:", "gi").test(search) )  {
-            // If something follows 'from:someone or to:someone'
-            // Look in the todo description or in the project name or in the todolist title
-            var indexOfFrom = fromUser ? search.indexOf(fromUser) : -1;
-            var indexOfTo = toUser ? search.indexOf(toUser) : -1;
-            if (indexOfFrom > indexOfTo) var realSearch = fromUser ? search.substr(indexOfFrom + fromUser.length +1) : "";
-            else var realSearch = toUser ? search.substr(indexOfTo + toUser.length + 1) : "";
-
-            if (realSearch.length > 0) {
-              out = _.filter(out, function(item) {
-              return ( item['content'].match(new RegExp(realSearch, "gi"))
-                  || item['project'].match(new RegExp(realSearch, "gi"))
-                  || item['todolist'].match(new RegExp(realSearch, "gi")) );
-              });
-            }
-            return out;
-          }
-
-          // If no keyword has been typed, load the regular search filter
-          out = _.filter(input, function(item) {
-            return ( item['assignee'] && item['assignee']['id'] == localStorage['userId'] );
-          });
-          return $filter('filter')(out, search);
+        // If no keyword has been typed, load the regular search filter
+        out = _.filter(input, function(item) {
+          return ( item['assignee'] && item['assignee']['id'] == localStorage['userId'] );
+        });
+        return $filter('filter')(out, search);
 
       // If search input is empty, show your own todos
       } else {
@@ -177,34 +186,39 @@ angular
     };
   })
 
-
   /**
    * Advanced search that look through people of Basecamp account
    */
   .filter('suggestionSearch', function($filter) {
-    var realSearch = "";
     var out = []
     return function(input, search) {
       if(search && input) {
+        var realSearch = search.match(/[^ |^:]*$/)[0];
 
         // User suggestions
-        if (search.lastIndexOf(":") > search.lastIndexOf(" ")) {
-          realSearch = search.substring(search.lastIndexOf(":") + 1);
+        // Check if you are typing a name (after 'from:' or 'to:')
+        if (new RegExp(/\b:([\s]*[\w]*)$\b/g).test(search) || new RegExp(/:$/).test(search)) {
           out = _.filter(input, function(item) {
             return ( item['id'] != -1
                 && (item['name'].match(new RegExp("^" + realSearch, "gi"))
                   || item['email_address'].match(new RegExp("^" + realSearch, "gi"))) );
           });
+          if (_.isEmpty(out)) {
+            out = _.filter(input, function(item) {
+              return ( item['id'] != -1
+                  && (item['name'].match(new RegExp(realSearch, "gi"))
+                    || item['email_address'].match(new RegExp(realSearch, "gi"))) );
+            });
+          }
         }
 
         // Keyword suggestions
+        // If you are not typing a name, suggest keyword
         else {
           out = _.filter(input, function(item) {
-            return (item['id'] == -1
-                && item['email_address'].match(new RegExp("^" + (search.substr(search.lastIndexOf(" ") + 1)), "gi")));
+            return (item['id'] == -1 && item['email_address'].match(new RegExp("^" + realSearch), "gi"));
           });
         }
-
         return out;
       };
     }

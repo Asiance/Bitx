@@ -1,69 +1,70 @@
 <!doctype html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <title id="title">Bitx - Options</title>
-  <link rel="icon" href="/icon.png" type="image/png">
-  <link rel="shortcut icon" href="/icon.png" type="image/png">
-  <link href="/css/options.css" rel="stylesheet" media="screen">
-</head>
-<body>
-  <img id="logo" src="/img/logo-settings.png"</img>
-    <div id="wrapper">
-    <form>
-      <fieldset class="inner-fieldset">
-        <legend>Extension settings</legend>
-        <p>
-          <label for="refresh_period">Refresh period</label>
-          <select id="refresh_period">
-            <option value="1000" id="onesecond">1s</option>
-            <option value="5000" id="fiveseconds">5s</option>
-            <option value="10000" id="tenseconds">10s</option>
+  <head>
+    <meta charset="utf-8">
+    <title>Bitx - Settings</title>
+    <link rel="shortcut icon" href="/icon.png" type="image/png">
+    <link href="/css/options.css" rel="stylesheet" media="screen">
+  </head>
+  <body>
+    <header>
+      <img id="logo" src="/img/logo-settings.png" alt="Logo Bitx Settings" height="101" width="185">
+    </header>
+    <section>
+      <form>
+        <fieldset>
+          <legend>Extension settings</legend>
+          <p>
+            <label for="refresh_period">Refresh period</label>
+            <select id="refresh_period">
+              <option value="1000" id="onesecond">1s</option>
+              <option value="5000" id="fiveseconds">5s</option>
+              <option value="10000" id="tenseconds">10s</option>
+            </select>
+          </p>
+          <p>
+            <label for="counter_todos">To-dos counter in the icon</label>
+            <select id="counter_todos">
+              <option value="overdues" id="overdues">Overdues (default)</option>
+              <option value="today" id="today">Today</option>
+              <option value="upcoming" id="upcoming">Upcoming</option>
+              <option value="no_due_date" id="noduedate">No due date</option>
+            </select>
+          </p>
+          <p>
+          <label for="language">Language</label>
+          <select id="language">
+            <option value="en" id="eng">English</option>
+            <option value="fr" id="fra">Français</option>
+            <option value="ko" id="kor">한국어</option>
+            <option value="it" id="ita">Italiano</option>
+            <option value="ja" id="jap">日本語</option>
+            <option value="pt" id="por">Português</option>
           </select>
-        </p>
-        <p>
-          <label for="counter_todos">To-dos counter in the icon</label>
-          <select id="counter_todos">
-            <option value="overdues" id="overdues">Overdues (default)</option>
-            <option value="today" id="today">Today</option>
-            <option value="upcoming" id="upcoming">Upcoming</option>
-            <option value="no_due_date" id="noduedate">No due date</option>
-          </select>
-        </p>
-        <p>
-        <label for="language">Language</label>
-        <select id="language">
-          <option value="en" id="eng">English</option>
-          <option value="fr" id="fra">Français</option>
-          <option value="ko" id="kor">한국어</option>
-          <option value="it" id="ita">Italiano</option>
-          <option value="ja" id="jap">日本語</option>
-          <option value="pt" id="por">Português</option>
-        </select>
-        </p>
-        <button id="save">Save</button>
-        <button id="logout">Logout</button>
-      </fieldset>
-    </form>
+          </p>
+          <button id="save">Save</button>
+          <button id="logout">Logout</button>
+        </fieldset>
+      </form>
 
-    <fieldset class="inner-fieldset">
+      <fieldset>
         <legend>Filters</legend>
         <dl>
-        <dt>to:</dt>
-        <dd>Display current to-dos assigned to someone</dd>
-        <dt>from:</dt>
-        <dd>Display to-dos created by someone</dd>
-      </dl>
-    </fieldset>
-  </div>
+          <dt>to:</dt>
+          <dd>Display current to-dos assigned to someone</dd>
+          <dt>from:</dt>
+          <dd>Display to-dos created by someone</dd>
+        </dl>
+      </fieldset>
+    </section>
 
-  <script src="/js/lang/en.js"></script>
-  <script src="/js/lang/fr.js"></script>
-  <script src="/js/lang/ko.js"></script>
-  <script src="/js/lang/it.js"></script>
-  <script src="/js/lang/ja.js"></script>
-  <script src="/js/lang/pt.js"></script>
-  <script src="/js/options.js"></script>
+    <script src="/js/lang/en.js"></script>
+    <script src="/js/lang/fr.js"></script>
+    <script src="/js/lang/ko.js"></script>
+    <script src="/js/lang/it.js"></script>
+    <script src="/js/lang/ja.js"></script>
+    <script src="/js/lang/pt.js"></script>
+    <script src="/js/options.js"></script>
 
-</body>
+  </body>
 </html>

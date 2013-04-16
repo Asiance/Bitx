@@ -1,6 +1,5 @@
 @import "compass/reset";
 @import "compass/css3";
-@import "compass/typography/links/unstyled-link";
 @import url(http://fonts.googleapis.com/css?family=Droid+Sans:400,700);
 @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
 
@@ -35,7 +34,7 @@ body {
     color: inherit;
     text-decoration: inherit;
   }
-  
+
   #arrow {
     position: absolute;
     right:40px;

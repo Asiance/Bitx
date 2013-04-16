@@ -82,8 +82,8 @@ angular
         var allTodos = [];
         var promise = asyncRequests(todolists);
         promise.then(function(allTodolists) {
-          _.forEach(allTodolists, function (todolist) {
-            _.forEach(todolist.todos.remaining, function(todo) {
+          _.each(allTodolists, function (todolist) {
+            _.each(todolist.todos.remaining, function(todo) {
               todo.todolist = todolist.name;
               todo.project = todolist.project;
               todo.project_id = todolist.project_id;
@@ -101,6 +101,7 @@ angular
             if (!_.findWhere($scope.assignedTodos, {id: item.id})) diff = true;
           });
           if (diff || !$scope.projects) {
+          // if (true) {
             $scope.assignedTodos = allTodos;
             $scope.groupByProject();
           }
@@ -168,8 +169,6 @@ angular
       }
       project.assignedTodos.push(assignedTodo);
     }
-
-    chrome.storage.local.set({'assignedTodosByProject': angular.toJson(projects)});
     $scope.projects = projects;
   };
 
@@ -201,16 +200,11 @@ angular
         data: {completed:true},
         headers: {'Authorization':'Bearer ' + localStorage['basecampToken']}})
       .success(function(data, status, headers, config) {
-        $scope.assignedTodos = _.filter($scope.assignedTodos, function(item) {
-          return item.id !== todoId;
-        });
         chrome.storage.local.set({'assignedTodos': angular.toJson($scope.assignedTodos)});
-        $scope.groupByProject(false);
       })
       .error(function(data, status, headers, config) {
         console.log('ERROR: completeTodo request failed');
       });
-
       $("#" + todoId.toString()).addClass('achieved');
       $("#" + todoId.toString()).delay(500).slideUp();
       if ($("#" + todoId.toString()).parent().children().length
@@ -219,6 +213,9 @@ angular
       }
       var random = Math.floor((Math.random()*3)+1);
       $scope.congratulation = window[$scope.lang]['achievement' + random];
+      $scope.assignedTodos = _.filter($scope.assignedTodos, function(item) {
+        return item.id !== todoId;
+      });
     } catch(e) {
       console.log(e);
     }
@@ -310,61 +307,11 @@ angular
   }
 
   /**
-   * Display every category and highlight the found string amoung todos (using jQuery)
-   * Event triggered by AngularJS
+   * Return true if keyword 'from:' is used
+   * Allow to add tooltip 'Assigned to someone' in todos.html view
    */
-  $scope.$watch('search', function() {
-    localStorage['lastSearch'] = $scope.search;
-    $scope.suggestionsPosition = -1;
-    if ($scope.search) {
-      highlight($scope.search);
-    }
-    // On key pressed, display the first category which is not empty
-    else if (!$scope.search) {
-      $scope.displayCategory(false);
-      $('#suggestions').css({'z-index': '1'});
-      $("#ascrail2000").css({'z-index': '1'});
-      $("#ascrail2000-hr").css({'z-index': '1'});
-    }
-  });
-
   $scope.isFiltered = function() {
     return (new RegExp("from:", "gi").test($scope.search));
-  }
-
-  /**
-   * Hightlight found string when using search input
-   * @param  {string}  string  String to highlight.
-   */
-  function highlight(string) {
-
-    var fromUser = string.match(/\bfrom:(\w*)\b/g);
-    if (fromUser) fromUser = fromUser[0].substr('from:'.length);
-    var toUser = string.match(/\bto:(\w*)\b/g);
-    if (toUser) toUser = toUser[0].substr('to:'.length);
-    var indexOfFrom = fromUser ? string.indexOf(fromUser) : -1;
-    var indexOfTo = toUser ? string.indexOf(toUser) : -1;
-
-    if (indexOfFrom > indexOfTo) var realSearch = string.substr(indexOfFrom + fromUser.length + 1);
-    else if (indexOfFrom < indexOfTo) var realSearch = string.substr(indexOfTo + toUser.length + 1);
-    else realSearch = string;
-
-    $(".todo-text, h2").each(function(i, v) {
-      var block = $(v);
-      block.html(
-        block.text().replace(
-          new RegExp(realSearch, "gi"), function(match) {
-            return ["<span class='highlight'>", match, "</span>"].join("");
-        }));
-    });
-    $(".person .username, .person .fullname").each(function(i, v) {
-      var block = $(v);
-      block.html(
-        block.text().replace(
-          new RegExp(string.match(/[^ ||^:]*$/), "gi"), function(match) {
-            return ["<span class='strong'>", match, "</span>"].join("");
-        }));
-    });
   }
 
   /**
@@ -456,6 +403,65 @@ angular
   };
 
   /**
+   * Display every category and highlight the found string amoung todos (using jQuery)
+   * Event triggered by AngularJS
+   */
+  $scope.$watch('search', function() {
+    localStorage['lastSearch'] = $scope.search;
+    $scope.suggestionsPosition = -1;
+    if ($scope.search) {
+      highlight($scope.search);
+    }
+    // On key pressed, display the first category which is not empty
+    else if (!$scope.search || $scope.search.length == 0) {
+      $scope.displayCategory(false);
+      $('#suggestions').css({'z-index': '1'});
+      $("#ascrail2000").css({'z-index': '1'});
+      $("#ascrail2000-hr").css({'z-index': '1'});
+    }
+  });
+
+  /**
+   * Hightlight found string when using search input
+   * @param  {string}  string  String to highlight.
+   */
+  function highlight(string) {
+
+    var fromUser = string.match(/\bfrom:([\s]*[\w]*)\b/g);                  // Look for the keyword
+    if (fromUser) fromUser = fromUser[0].split(":")[1].replace(/\s/g,"");   // If found, extract the parameter
+
+    var toUser = string.match(/\bto:([\s]*[\w]*)\b/g);                      // Look for the keyword
+    if (toUser) toUser = toUser[0].split(":")[1].replace(/\s/g,"");         // If found, extract the parameter
+
+    var indexOfFrom = fromUser ? string.indexOf(fromUser) : -1;
+    var indexOfTo = toUser ? string.indexOf(toUser) : -1;
+
+    // Found the search string which not come with a keyword
+    if (indexOfFrom > indexOfTo) var realSearch = string.substr(indexOfFrom + fromUser.length + 1);
+    else if (indexOfFrom < indexOfTo) var realSearch = string.substr(indexOfTo + toUser.length + 1);
+    else realSearch = string;
+
+    // Highlight project name and todo text
+    $(".todo-text, h2").each(function(i, v) {
+      var block = $(v);
+      block.html(
+        block.text().replace(
+          new RegExp(realSearch, "gi"), function(match) {
+            return ["<span class='highlight'>", match, "</span>"].join("");
+        }));
+    });
+    // Highlight keywords and name in suggestions
+    $(".person .username, .person .fullname").each(function(i, v) {
+      var block = $(v);
+      block.html(
+        block.text().replace(
+          new RegExp(string.match(/[^ ||^:]*$/), "gi"), function(match) {
+            return ["<span class='strong'>", match, "</span>"].join("");
+        }));
+    });
+  }
+
+  /**
    * When press ENTER or click on a suggestion, set the new value to the search input
    * We use the email address to extract a username
    * @param  {string}  email_address  Email address of the person selected.
@@ -502,13 +508,7 @@ angular
   chrome.storage.local.get('assignedTodos', function(data) {
     if (!_.isEmpty(data)) {
       $scope.assignedTodos = angular.fromJson(data['assignedTodos']);
-      $scope.$apply();
-    }
-  });
-
-  chrome.storage.local.get('assignedTodosByProject', function(data) {
-    if (!_.isEmpty(data)) {
-      $scope.projects = angular.fromJson(data['assignedTodosByProject']);
+      $scope.groupByProject();
       $scope.$apply();
     }
   });
