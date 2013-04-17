@@ -49,23 +49,24 @@ Settings
 --------------------
 
   - Refresh period
-  - Category to display on open
+  - To-dos counter in the icon
   - Languages (English, French, Italian, Japanese, Korean, Portuguese)
-  - Scrollbar on/off
   - Logout
 
 Dependencies
 --------------------
 
-  - [jQuery](http://jquery.com/)
   - [AngularJS](http://angularjs.org/)
-  - [Underscore.js](http://underscorejs.org/g/)
+  - [jQuery](http://jquery.com/)
+  - [jQuery UI](http://jqueryui.com/)
+  - [Nicescroll ](https://github.com/inuyaksa/jquery.nicescroll)
   - [OAuth 2.0 library for Chrome Extensions](https://github.com/borismus/oauth2-extensions)
+  - [Underscore.js](http://underscorejs.org/g/)
 
-Authors
+Credits
 --------------------
 
-  - Antoine Blancher
-  - [Adrien Desbiaux](https://github.com/AdrienFromToulouse)
-  - [Laurent Le Graverend](https://github.com/laurent-le-graverend)
-  - [Gilles Piou](https://github.com/pioug)
+  - Product Owner: [Laurent Le Graverend](https://github.com/laurent-le-graverend)
+  - Scrum Master: [Adrien Desbiaux](https://github.com/AdrienFromToulouse)
+  - Developer: [Gilles Piou](https://github.com/pioug)
+  - UX/UI Designer: [Antoine Blancher](http://cargocollective.com/ablancher)
