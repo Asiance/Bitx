@@ -48,7 +48,7 @@ function updateBadge() {
     var color;
 
     counter = countTodos(jsonTodos, counter_todos);
-    if (counter_todos == 'overdues') color = {color: 'rgb(245, 78, 74)'};
+    if (counter_todos == 'overdues') color = {color: '#F54E4A'};
     else color = {color: '#5e9ac9'};
     chrome.browserAction.setBadgeBackgroundColor(color);
     chrome.browserAction.setBadgeText({text: counter.toString()});

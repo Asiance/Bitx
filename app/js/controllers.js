@@ -375,9 +375,9 @@ angular
     // if you type or delete a character, display the suggestions, and allows you to scroll
     if (printableChar) {
       $scope.displayCategory(true);
-      $('#suggestions').css({'z-index': '1'});
-      $("#ascrail2000").css({'z-index': '1'});
-      $("#ascrail2000-hr").css({'z-index': '1'});
+      $("#suggestions").css({'z-index': '10'});
+      $("#suggestions").getNiceScroll().resize();
+      $("#ascrail2000").css({'z-index': '10'});
     }
 
     if (key == 40 && $scope.suggestionsPosition < $filter('suggestionSearch')($scope.people, $scope.search).length -1) {
@@ -415,9 +415,6 @@ angular
     // On key pressed, display the first category which is not empty
     else if (!$scope.search || $scope.search.length == 0) {
       $scope.displayCategory(false);
-      $('#suggestions').css({'z-index': '1'});
-      $("#ascrail2000").css({'z-index': '1'});
-      $("#ascrail2000-hr").css({'z-index': '1'});
     }
   });
 
@@ -427,20 +424,7 @@ angular
    */
   function highlight(string) {
 
-    var fromUser = string.match(/\bfrom:([\s]*[\w]*)\b/g);                  // Look for the keyword
-    if (fromUser) fromUser = fromUser[0].split(":")[1].replace(/\s/g,"");   // If found, extract the parameter
-
-    var toUser = string.match(/\bto:([\s]*[\w]*)\b/g);                      // Look for the keyword
-    if (toUser) toUser = toUser[0].split(":")[1].replace(/\s/g,"");         // If found, extract the parameter
-
-    var indexOfFrom = fromUser ? string.indexOf(fromUser) : -1;
-    var indexOfTo = toUser ? string.indexOf(toUser) : -1;
-
-    // Found the search string which not come with a keyword
-    if (indexOfFrom > indexOfTo) var realSearch = string.substr(indexOfFrom + fromUser.length + 1);
-    else if (indexOfFrom < indexOfTo) var realSearch = string.substr(indexOfTo + toUser.length + 1);
-    else realSearch = string;
-
+    var realSearch = string.replace(/(from:|to:)\w+\s+/gi, "");
     // Highlight project name and todo text
     $(".todo-text, h2").each(function(i, v) {
       var block = $(v);
@@ -473,7 +457,6 @@ angular
       $scope.search += $filter('removeDomain')(person.email_address);
       $('#suggestions').css({'z-index': '-1'});
       $("#ascrail2000").css({'z-index': '-1'});
-      $("#ascrail2000-hr").css({'z-index': '-1'});
     }
   }
 
@@ -517,26 +500,6 @@ angular
     $scope.getAssignedTodos(); // Trigger a refresh on launch
     $scope.getPeople();
   }
-
-  /*
-   * Init scrollbars for suggestions div and content div
-   * More infos: https://github.com/inuyaksa/jquery.nicescroll
-   */
-  $("#suggestions").niceScroll({
-    cursorcolor: '#a7a7a7',
-    cursoropacitymax: 0.8,
-    mousescrollstep : 20,
-    cursorborder: '0px',
-    cursorwidth: '8px',
-  });
-  $("#overdues_content, #today_content, #upcoming_content, #no-due-date_content").niceScroll({
-    cursorcolor: '#a7a7a7',
-    cursoropacitymax: 0.8,
-    mousescrollstep : 50,
-    cursorborder: '0px',
-    cursorwidth: '8px',
-  })
-
 })
 
 /**

@@ -2,7 +2,7 @@
 <html lang="en" ng-app="basecampExtension" ng-csp>
 <head>
   <meta charset="utf-8">
-  <title>basecampExtension</title>
+  <title>Bitx</title>
   <link href="css/app.css" rel="stylesheet" media="screen">
 </head>
 
@@ -10,7 +10,7 @@
   <div>
     <ng-view ng-show="online"></ng-view>
     <div id="allow-access" ng-hide="online">
-      <p><img src="/img/logo-header.png"></p>
+      <p><img src="/img/logo-header.png" height="26" width="39"></p>
       <p><span id="needAuth1"></span> <span id="allow">"Yes, I'll allow access"</span> <span id="needAuth2"></span></p>
     </div>
   </div>
@@ -25,10 +25,11 @@
   <script src="js/oauth2-onload.js"></script>
   <script src="js/oauth2.js"></script>
 
-  <script src="js/app.js"></script>
   <script src="js/controllers.js"></script>
+  <script src="js/directives.js"></script>
   <script src="js/filters.js"></script>
   <script src="js/services.js"></script>
+  <script src="js/app.js"></script>
 
   <script src="js/lang/en.js"></script>
   <script src="js/lang/fr.js"></script>

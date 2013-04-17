@@ -150,17 +150,10 @@ angular
           } else return [];
         }
 
-        if ( new RegExp("from:", "gi").test(search) ||  new RegExp("to:", "gi").test(search) )  {
+        if ( new RegExp("from:|to:", "gi").test(search) )  {
           // If something follows 'from:someone or to:someone'
           // Look in the todo description or in the project name or in the todolist title
-          var indexOfFrom = fromUser ? search.indexOf(fromUser) : -1;
-          var indexOfTo = toUser ? search.indexOf(toUser) : -1;
-          if (indexOfFrom > indexOfTo) {
-            var realSearch = fromUser ? search.substr(indexOfFrom + fromUser.length +1) : "";
-          } else {
-            var realSearch = toUser ? search.substr(indexOfTo + toUser.length + 1) : "";
-          }
-
+          var realSearch = search.replace(/(from:|to:)\w+\s*/gi, "");
           if (realSearch.length > 0) {
             out = _.filter(out, function(item) {
             return ( item['content'].match(new RegExp(realSearch, "gi"))

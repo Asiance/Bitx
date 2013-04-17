@@ -46,7 +46,8 @@ body {
   }
   h2 {
     font-weight: 700;
-    margin-left: 38px;
+    text-indent: 38px;
+    border-top: 1px solid $color-border;
     color: $color-gray-project;
   }
   background: $color-white;
@@ -137,6 +138,12 @@ dt {
   background: $color-dark;
   border-bottom: 1px solid $color-dark-border;
   user-select: none;
+  .toggle:after {
+    content: '+';
+  }
+}
+dt.enabled {
+  cursor: pointer;
   &:hover {
     background: $color-blue;
     border-bottom: 1px solid $color-blue;
@@ -144,12 +151,6 @@ dt {
       background: $color-light-blue;
     }
   }
-  .toggle:after {
-    content: '+';
-  }
-}
-dt.enabled {
-  cursor: pointer;
 }
 dt.disabled {
   cursor: default;
@@ -291,6 +292,7 @@ dt.active {
   position: relative;
   width: 1040px;
   &:first-child { border-top: 1px solid $color-border; }
+  &:last-child { border-bottom: 0;}
   &:hover {
     background-color: $color-light-gray;
     .todo {

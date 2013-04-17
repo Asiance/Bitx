@@ -1,10 +1,14 @@
 @import url(http://fonts.googleapis.com/css?family=Droid+Sans:400,700);
 
 $color-dark: #232323;
-$color-red-asiance: #e02d45;
 $color-blue: #5e9bca;
 
 $fonts_en: "Droid Sans", arial, helvetica, clean, sans-serif;
+
+a {
+  text-decoration: none;
+  color: $color-blue;
+}
 
 body {
   background: $color-blue;
@@ -23,7 +27,7 @@ section {
   box-shadow: 0px 0px 5px rgba(0,0,0,0.4);
   margin: 0 auto;
   max-width: 700px;
-  padding: 60px;
+  padding: 60px 60px 20px 60px;
   width: 60%;
 }
 
@@ -55,4 +59,11 @@ dt {
 
 dl {
   margin: 20px 10%;
+}
+
+footer {
+  color: rgba(0,0,0,0.6);
+  font-size: 12px;
+  line-height: 20px;
+  text-align: center;
 }

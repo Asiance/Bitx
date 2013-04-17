@@ -1,8 +1,8 @@
 <header>
-  <img id="logo" src="/img/logo-header.png">
+  <img id="logo" src="/img/logo-header.png" height="26" width="39">
   <input id="search-input" type="text" class="dropdown-toggle" ng-model="search" autofocus>
   <div ng-show="search" class="icon-clear" ng-click="search = ''"></div>
-  <div id="suggestions">
+  <div id="suggestions" nicescroll="{scrollstep: 20}">
     <ul>
       <li id="{{$index}}" class='person' ng-class="{active: suggestionsPosition == $index}" ng-repeat="person in people | suggestionSearch: search" ng-click="setSearch(person)" ng-mouseenter="setActive($index)">
         <img class="username" ng-src="{{person.avatar_url}}">
@@ -27,7 +27,7 @@
     <h1 id="header_overdues">OVERDUES</h1>
     <span ng-show="getNumberTodos('overdues')" title="{{getNumberTodos('overdues')}} {{countOverdues}}" class="count-todos">{{getNumberTodos('overdues')}}</span>
   </a></dt>
-  <dd id="overdues_content">
+  <dd id="overdues_content" nicescroll="{scrollstep: 50}">
     <div class="content" ng-show="filteredOverdue.length" ng-repeat="project in projects">
       <h2>{{project.name | uppercase}}</h2>
       <ul>
@@ -58,7 +58,7 @@
     <span ng-show="getNumberTodos('today')" title="{{getNumberTodos('today')}} {{countToday}}" class="count-todos">{{getNumberTodos('today')}}</span>
     </span>
   </a></dt>
-  <dd id="today_content">
+  <dd id="today_content" nicescroll="{scrollstep: 50}">
     <div class="content" ng-show="filteredToday.length" ng-repeat="project in projects">
       <h2>{{project.name | uppercase}}</h2>
       <ul>
@@ -85,7 +85,7 @@
       <h1 id="header_upcoming">UPCOMING</h1>
       <span ng-show="getNumberTodos('upcoming')" title="{{getNumberTodos('upcoming')}} {{countToday}}" class="count-todos">{{getNumberTodos('upcoming')}}</span>
   </a></dt>
-  <dd id="upcoming_content">
+  <dd id="upcoming_content" nicescroll="{scrollstep: 50}">
     <div class="content" ng-show="filteredUpcoming.length" ng-repeat="project in projects">
       <h2>{{project.name | uppercase}}</h2>
       <ul>
@@ -115,7 +115,7 @@
     <h1 id="header_noduedate">NO DUE DATE</h1>
     <span ng-show="getNumberTodos('no-due-date')" title="{{getNumberTodos('no-due-date')}} {{countToday}}" class="count-todos">{{getNumberTodos('no-due-date')}}</span>
   </a></dt>
-  <dd id="no-due-date_content">
+  <dd id="no-due-date_content" nicescroll="{scrollstep: 50}">
     <div class="content" ng-show="filteredUndetermined.length" ng-repeat="project in projects">
       <h2>{{project.name | uppercase}}</h2>
       <ul>

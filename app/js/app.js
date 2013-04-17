@@ -2,7 +2,8 @@
 
 angular
   .module('basecampExtension',
-    ['basecampExtension.controllers',
+    ['basecampExtension.directives',
+    'basecampExtension.controllers',
     'basecampExtension.services',
     'basecampExtension.filters'])
 
