@@ -20,6 +20,9 @@ window.ko = {
   "hoursAgo":"시간 전",
   "daysAgo":"일 전",
 
+  "visitTodo": "Visit this todo",
+  "assignedTo": "{x}에 할당",
+
   "countOverdues": "개의 기한 지난 일정",
   "countToday": "개의 일정",
   "countUpcoming": "개의 다가오는 일정",
@@ -30,15 +33,6 @@ window.ko = {
 
   "thankYou": "감사합니다!",
   "syncMess": "당신의 계정이 Todo Basecamp Extension에 성공적으로 연결되었습니다. 이제 Extension을 사용할 수 있습니다.",
-
-  "settings": "설정",
-  "logout": "로그아웃",
-  "languages": "언어",
-  "refreshPeriod": "새로고침 주기",
-  "second": "초",
-  "seconds": "초",
-  "category": "노출 카테고리",
-  "default": "기본",
 
   "achievement1":"수고하셨습니다!",
   "achievement2":"참 잘했어요!",

@@ -13,7 +13,7 @@ Features
   - Notification on new todo
   - Instant search through todos
 
-Tips for searching todos
+Filters for searching todos
 --------------------
 <table>
   <tr>
@@ -21,12 +21,12 @@ Tips for searching todos
     <th>Filters</th>
   </tr>
   <tr>
-    <th>@someone</th>
+    <th>to:</th>
     <td>Display current todos assigned to someone else</td>
   </tr>
   <tr>
-    <th>@createdbyme</th>
-    <td>Display todos I created</td>
+    <th>from:</th>
+    <td>Display todos someone created</td>
   </tr>
 </table>
 

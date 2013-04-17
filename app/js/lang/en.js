@@ -20,6 +20,9 @@ window.en = {
   "hoursAgo":"hour(s) ago",
   "daysAgo":"day(s) ago",
 
+  "visitTodo": "Visit this todo",
+  "assignedTo": "Asssigned to {x}",
+
   "countOverdues": "overdue todo(s)",
   "countToday": "todo(s) for today",
   "countUpcoming": "upcoming todo(s)",
@@ -30,15 +33,6 @@ window.en = {
 
   "thankYou": "Thank you!",
   "syncMess": "Your Todo Basecamp Extension is now connected to your account! You can start using it.",
-
-  "settings": "Settings",
-  "logout": "Logout",
-  "languages": "Languages",
-  "refreshPeriod": "Refresh period",
-  "second": " second",
-  "seconds": " seconds",
-  "category": "Category to display",
-  "default": "Default",
 
   "achievement1":"Good work!",
   "achievement2":"Well done!",

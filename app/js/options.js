@@ -15,7 +15,13 @@ function save_options() {
 }
 
 function logout() {
-  localStorage.clear();
+  localStorage.removeItem('basecampId');
+  localStorage.removeItem('basecampToken');
+  localStorage.removeItem('myTodos');
+  localStorage.removeItem('people');
+  localStorage.removeItem('userId');
+  chrome.storage.local.set({'assignedTodos': null});
+  chrome.storage.local.set({'assignedTodosByProject': null});
 }
 
 // Restores select box state to saved value from localStorage.
@@ -33,7 +39,7 @@ function selectOption(variableString) {
   }
   var select = document.getElementById(variableString);
   for (var i = 0; i < select.children.length; i++) {
-    child = select.children[i];    
+    child = select.children[i];
     if (select.children[i].value == choice) {
       child.selected = "true";
       break;
@@ -45,16 +51,6 @@ document.addEventListener('DOMContentLoaded', restore_options);
 document.querySelector('#save').addEventListener('click', save_options);
 document.querySelector('#logout').addEventListener('click', logout);
 
-var userLang = navigator.language ? navigator.language : navigator.userLanguage; 
+var userLang = navigator.language ? navigator.language : navigator.userLanguage;
 var locale = userLang.substring(0,2);
 lang = localStorage['language'] ? localStorage['language'] : locale;
-
-document.getElementById("onesecond").innerHTML += window[lang]["second"];
-document.getElementById("fiveseconds").innerHTML += window[lang]["seconds"];
-document.getElementById("tenseconds").innerHTML += window[lang]["seconds"];
-
-document.getElementById("default").innerHTML = window[lang]["default"];
-document.getElementById("overdues").innerHTML = window[lang]["header_overdues"];
-document.getElementById("today").innerHTML = window[lang]["header_today"];
-document.getElementById("upcoming").innerHTML = window[lang]["header_upcoming"];
-document.getElementById("noduedate").innerHTML = window[lang]["header_noduedate"];

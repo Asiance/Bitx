@@ -1,19 +1,19 @@
 /*
  * oauth2-chrome-extensions
  * <https://github.com/jjNford/oauth2-chrome-extensions>
- * 
+ *
  * Copyright (C) 2012, JJ Ford (jj.n.ford@gmail.com)
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
  * the Software without restriction, including without limitation the rights to
  * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
  * of the Software, and to permit persons to whom the Software is furnished to do
  * so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,21 +21,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  * This is a streamlined version of Boris Smus solution (Aapache License v2.0).
  * <https://github.com/borismus/oauth2-extensions>
- * 
+ *
  * <http://oauth.net/2/>
- * 
+ *
  */
 
 /* NOTE
- * 
+ *
  * This was designed to work with the GitHub API v3. The source may need to be altered
  * to work with your providers API. However the method used to gain the OAuth2 token
  * should work if the code is correctly configured to the API being targeted.
  * Methods to update the token and save the expiration date may also need to be added.
- * 
+ *
  */
 (function() {
 
@@ -65,7 +65,7 @@
 
     /**
      * Parses Access Code
-     * 
+     *
      * @param url The url containing the access code.
      */
     parseAccessCode: function(url) {
@@ -82,7 +82,7 @@
 
     /**
      * Request Token
-     * 
+     *
      * @param code The access code returned by provider.
      */
     requestToken: function(code) {
@@ -108,7 +108,7 @@
 
     /**
      * Finish
-     * 
+     *
      * @param token The OAuth2 token given to the application from the provider.
      */
     finish: function(token) {
@@ -128,7 +128,7 @@
 
     /**
 		 * Get Token
-		 * 
+		 *
 		 * @return OAuth2 access token if it exists, null if not.
 		 */
     getToken: function() {
@@ -142,7 +142,7 @@
 
     /**
      * Delete Token
-     * 
+     *
      * @return True if token is removed from localStorage, false if not.
      */
     deleteToken: function() {
@@ -163,7 +163,7 @@
 function initOAuth2() {
   /**
    * Open signin page for Basecamp
-   */  
+   */
   if ((token = OAuth2.getToken()) === undefined ) {
     OAuth2.begin();
   }

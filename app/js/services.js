@@ -9,7 +9,7 @@ angular
 .factory('Authorization', function($resource) {
   return $resource('https://launchpad.37signals.com/authorization.json', {}, {
     query: {
-      method: 	'GET', 
+      method: 	'GET',
       isArray: 	false,
       headers: 	{'Authorization':'Bearer ' + localStorage['basecampToken']}}
   });
@@ -45,7 +45,7 @@ angular
 .factory('AssignedTodolists', function($resource) {
   return $resource('https://basecamp.com/:basecampId/api/v1/people/:userId/assigned_todos.json', {}, {
     query: {
-      method:   'GET', 
+      method:   'GET',
       isArray:  true,
       headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}}
   });
@@ -57,7 +57,7 @@ angular
 .factory('Todo', function($resource) {
   return $resource('https://basecamp.com/:basecampId/api/v1/projects/:projectId/todos/:todoId.json', {}, {
     query: {
-      method:   'GET', 
+      method:   'GET',
       isArray:  true,
       headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}
     }
@@ -70,7 +70,7 @@ angular
 .factory('completeTodo', function($http) {
   return {
     completeTodo: function(basecampId, projectId, todoId) {
-      $http.put('https://basecamp.com/'+basecampId+'/api/v1/projects/'+projectId+'/todos/'+todoId+'.json', 
+      $http.put('https://basecamp.com/'+basecampId+'/api/v1/projects/'+projectId+'/todos/'+todoId+'.json',
       {completed:true},
       {headers: {'Authorization':'Bearer ' + localStorage['basecampToken']}});
     }
@@ -99,4 +99,15 @@ angular
       isArray:  false,
       headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}}
   });
+})
+
+.factory('Utils', function () {
+  return {
+    dateToYMD: function (date) {
+      var d = date.getDate(),
+          m = date.getMonth() + 1,
+          y = date.getFullYear();
+      return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+    }
+  }
 });

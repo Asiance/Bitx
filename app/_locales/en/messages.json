@@ -5,6 +5,6 @@
   },
   "extDesc": {
     "message": "Connect to a Basecamp account and display all assigned todos.",
-    "description": "Extension description shown in Chrome > Extensions."    
+    "description": "Extension description shown in Chrome > Extensions."
   }
 }

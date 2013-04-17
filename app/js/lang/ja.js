@@ -8,7 +8,7 @@ window.ja = {
   "header_noduedate": "期限なし",
 
   "createdDate": "作成",
-  
+
   "dayLate": "日遅れ",
   "daysLate": "日遅れ",
 
@@ -20,6 +20,9 @@ window.ja = {
   "hoursAgo":"時間前",
   "daysAgo":"日前",
 
+  "visitTodo": "Visit this todo",
+  "assignedTo": "Asssigned to {x}",
+
   "countOverdues":"-期限超過タスク",
   "countToday":"-今日のタスク",
   "countUpcoming":"-後のタスク",
@@ -30,15 +33,6 @@ window.ja = {
 
   "thankYou":"ありがとうございます！",
   "syncMess":"あなたのTodo ベースキャンプのエクステンションは只今接続されました！今から拡張機能を使用して楽しんでください。",
-
-  "settings": "設定",
-  "logout": "ログアウト",
-  "languages": "言語",
-  "refreshPeriod": "更新間隔",
-  "second": "秒",
-  "seconds": "秒",
-  "category": "すべてのリスト",
-  "default": "標準",
 
   "achievement1":"よくできました!", //
   "achievement2":"よくやった!", //

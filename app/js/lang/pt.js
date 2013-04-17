@@ -8,7 +8,7 @@ window.pt = {
   "header_noduedate": "Sem prazo",
 
   "createdDate": "Criado:",
-  
+
   "dayLate": "dia de atraso",
   "daysLate": "dias de atraso",
 
@@ -20,6 +20,9 @@ window.pt = {
   "hoursAgo":"hora(s) atrás",
   "daysAgo":"dia(s) atrás",
 
+  "visitTodo": "Visite este todo",
+  "assignedTo": "Atribuído a {x}",
+
   "countOverdues":"ToDo(s) atrasado(s)",
   "countToday":"ToDo(s) para hoje",
   "countUpcoming":"ToDo(s) à vir",
@@ -30,15 +33,6 @@ window.pt = {
 
   "thankYou":"Obrigado!",
   "syncMess":"A sua exteção ToDo-Basecamp já está conectada à sua conta! Vocè está pronto para começar a usar a sua extenção.",
-
-  "settings": "Configurações",
-  "logout": "Desconectar",
-  "languages": "Línguas",
-  "refreshPeriod": "Última atualização feita á",
-  "second": " segundo",
-  "seconds": " segundos",
-  "category": "Mostrar categoria",
-  "default": "Omitir",
 
   "achievement1":"Bom trabalho!",
   "achievement2":"Bem feitoe!",

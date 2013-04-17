@@ -1,11 +1,12 @@
 'use strict';
 
 angular
-  .module('basecampExtension', 
-    ['basecampExtension.controllers',
-    'basecampExtension.services', 
+  .module('basecampExtension',
+    ['basecampExtension.directives',
+    'basecampExtension.controllers',
+    'basecampExtension.services',
     'basecampExtension.filters'])
-  
+
   .config([
     '$routeProvider', '$locationProvider', '$httpProvider', '$resourceProvider', function($routeProvider) {
       $routeProvider

@@ -5,37 +5,37 @@ angular
 
   /**
    * Filtering Todos by category
-   * '1' - Overdue
-   * '2' - Today
-   * '3' - Upcoming
-   * '4' - Undetermined
    */
-  .filter('status', function($filter) {
+  .filter('status', function($filter, Utils) {
     return function(input, status) {
-      if(input) {
-        var todayDate = new Date();
-        todayDate.setHours(0,0,0,0);
-        var inputDate = null;
-        var out = [];
-        for (var i = 0; i < input.length; i++) {
-          if (input[i].due_at != null && status != '4') {
-            inputDate = new Date(input[i].due_at);
-            inputDate.setHours(0,0,0,0);
-            if ((status == '1') && (inputDate.getTime() < todayDate.getTime())) {
-              input[i].days_late =  $filter('daysLate')(input[i].due_at);
-              out.push(input[i]);
-            }
-            else if ((status == '2') && (inputDate.getTime() == todayDate.getTime())) out.push(input[i]);
-            else if ((status == '3') && (inputDate.getTime() > todayDate.getTime())) {
-              input[i].remaining_days =  $filter('daysRemaining')(input[i].due_at);
-              out.push(input[i]);
-            }
-          }
-          else if (input[i].due_at == null && status == '4') out.push(input[i]);
-        }
-        return out;
-      } else return [];
-    };
+      switch (status) {
+        case 'overdues':
+          var out = _.filter(input, function(todo) {
+            if (todo.due_at != null)
+              return (Utils.dateToYMD(new Date(todo.due_at)) < Utils.dateToYMD(new Date()));
+          });
+          _.each(out, function(todo) {
+            todo.days_late = $filter('daysLate')(todo.due_at);
+          })
+          return out;
+          break;
+        case 'today':
+          return _.where(input, {due_at: Utils.dateToYMD(new Date())});
+          break;
+        case 'upcoming':
+          var out =  _.filter(input, function(todo) {
+            return (Utils.dateToYMD(new Date(todo.due_at)) > Utils.dateToYMD(new Date()));
+          });
+          _.each(out, function(todo) {
+            todo.remaining_days = $filter('daysRemaining')(todo.due_at);
+          })
+          return out;
+          break;
+        case 'no-due-date':
+          return _.where(input, {due_at: null});
+          break;
+      }
+    }
   })
 
   /**
@@ -57,12 +57,12 @@ angular
   })
 
   /**
-   * Determine number of days remaining 
+   * Determine number of days remaining
    */
   .filter('daysRemaining', function() {
     var today = new Date();
     return function(input) {
-      if(input) return Math.round((new Date(input) - today)/(1000*60*60*24));
+      return Math.round((new Date(input) - today)/(1000*60*60*24));
     };
   })
 
@@ -72,7 +72,18 @@ angular
   .filter('daysLate', function() {
     var today = new Date();
     return function(input) {
-      if(input) return Math.round((today - new Date(input))/(1000*60*60*24));
+      return Math.round((today - new Date(input))/(1000*60*60*24));
+    };
+  })
+
+  /**
+   * Print tooltip if filter 'createdby:' is on
+   */
+  .filter('filterOn', function() {
+    var lang = localStorage['language'];
+    return function(input, isFilter) {
+      if (isFilter) return window[lang]['assignedTo'].replace(/\{x\}/g, input);
+      else return null;
     };
   })
 
@@ -82,7 +93,7 @@ angular
    */
   .filter('removeDomain', function() {
     return function(input) {
-      if(input) return input.split("@")[0];
+      return input.split("@")[0];
     };
   })
 
@@ -90,89 +101,118 @@ angular
    * Advanced search that look through todos
    */
   .filter('keywordSearch', function($filter) {
-    var out = [];
-    var realSearch = "";
+    var people = angular.fromJson(localStorage['people']);
     return function(input, search) {
-       if(search && input) {
-        switch(true) {
-          // If the keyword '@createdbyme' has been typed
-          case (new RegExp("^@createdbyme", "gi")).test(search):
-            console.log('@createdbyme');
-            out = _.filter(input, function(item) {
-              if ( item['creator']['id'] == localStorage['userId'] ) return true;
+      if(search && input) {
+        var out = input;
+
+        var fromUser = search.match(/\bfrom:([\s]*[\w]*)\b/g);                  // Look for the keyword
+        if (fromUser) fromUser = fromUser[0].split(":")[1].replace(/\s/g,"");   // Extract the parameter, remove space if any
+
+        var toUser = search.match(/\bto:([\s]*[\w]*)\b/g);
+        if (toUser) toUser = toUser[0].split(":")[1].replace(/\s/g,"");
+
+        // If the keyword 'from:' has been typed
+        if (fromUser != null) {
+          // Bind 'me' with the logged user identity
+          if (fromUser == 'me') {
+            var user = {'id': localStorage['userId']};
+          } else {
+            //Look for the user among employees of the company
+            var user = _.find(people, function(user) {
+              return ( $filter('removeDomain')(user['email_address']) == fromUser );
             });
-            // If something follows '@createdbyme'
-            // Look in the todo description or in the project name or in the todolist title
-            if(search.indexOf(" ") != -1) {
-              realSearch = search.substring(search.indexOf(" ") + 1);
-              out = _.filter(out, function(item) { 
-                if ( item['content'].match(new RegExp(realSearch, "gi"))
-                    || item['project'].match(new RegExp(realSearch, "gi"))
-                    || item['todolist'].match(new RegExp(realSearch, "gi")) ) return true;
-              });
-            }
-            return out;
-            break;          
-          // If '@someone' has been type
-          case (new RegExp("^@.+", "gi")).test(search):
-            var user = _.find(angular.fromJson(localStorage['people']), function(user) {
-              if ( user['email_address'].match(new RegExp(search.substring(1).split(" ")[0], "gi"))
-                  || user['name'].match(new RegExp(search.substring(1), "gi")) )
-                return true;
+          }
+          // If 'someone' has been found, look for his todos'
+          if (user) {
+            out = _.filter(out, function(item) {
+              return ( item['assignee'] && item['creator']['id'] == user.id );
             });
-            // If '@someone has been found, look for his todos'
-            if (user) {
-              out = _.filter(input, function(item) { 
-                if ( item['assignee'] && item['assignee']['id'] == user.id ) return true;
-              });
-            } else return [];
-            // If nothing follows '@someone'
-            if(search.indexOf(" ") == -1) return out;
-            // If something follows '@someone'
-            // Look in the todo description or in the project name or in the todolist title
-            else {
-              realSearch = search.substring(search.indexOf(" ") + 1);
-              out = _.filter(out, function(item) { 
-                if ( item['content'].match(new RegExp(realSearch, "gi"))
-                    || item['project'].match(new RegExp(realSearch, "gi"))
-                    || item['todolist'].match(new RegExp(realSearch, "gi")) ) return true;
-              });
-              return out;
-            }
-            break;
-          // If any word has been typed, load the regular search filter
-          default:
-            out = _.filter(input, function(item) {
-              if ( item['assignee'] && item['assignee']['id'] == localStorage['userId'] ) return true;
-            });
-            return $filter('filter')(out, search);
+          } else return [];
         }
-      // If nothing has been type
-      } else {
+
+        // If 'to:' has been type
+        if (toUser != null) {
+          // Bind 'me' with the logged user identity
+          if (toUser == 'me') {
+            var user = {'id': localStorage['userId']};
+          } else {
+            //Look for the user among employees of the company
+            var user = _.find(people, function(user) {
+              return ($filter('removeDomain')(user['email_address']) == toUser);
+            });
+          }
+          // If 'someone has been found, look for his todos'
+          if (user) {
+            out = _.filter(out, function(item) {
+              return ( item['assignee'] && item['assignee']['id'] == user.id );
+            });
+          } else return [];
+        }
+
+        if ( new RegExp("from:|to:", "gi").test(search) )  {
+          // If something follows 'from:someone or to:someone'
+          // Look in the todo description or in the project name or in the todolist title
+          var realSearch = search.replace(/(from:|to:)\w+\s*/gi, "");
+          if (realSearch.length > 0) {
+            out = _.filter(out, function(item) {
+            return ( item['content'].match(new RegExp(realSearch, "gi"))
+                || item['project'].match(new RegExp(realSearch, "gi"))
+                || item['todolist'].match(new RegExp(realSearch, "gi")) );
+            });
+          }
+          return out;
+        }
+
+        // If no keyword has been typed, load the regular search filter
         out = _.filter(input, function(item) {
-          if ( item['assignee'] && item['assignee']['id'] == localStorage['userId'] ) return true;
+          return ( item['assignee'] && item['assignee']['id'] == localStorage['userId'] );
         });
-        return out;
+        return $filter('filter')(out, search);
+
+      // If search input is empty, show your own todos
+      } else {
+        return _.filter(input, function(item) {
+          return ( item['assignee'] && item['assignee']['id'] == localStorage['userId'] );
+        });
       };
     };
   })
-
 
   /**
    * Advanced search that look through people of Basecamp account
    */
   .filter('suggestionSearch', function($filter) {
-    var realSearch = "";
     var out = []
     return function(input, search) {
-      if (new RegExp("^@", "gi").test(search)) {
-        realSearch = search.substring(1);
-        // Use a custom filter function to give more relevant suggestion
-        out = _.filter(input, function(item) {
-          if ( item['name'].match(new RegExp("^" + realSearch, "gi"))
-              || item['email_address'].match(new RegExp("^" + realSearch, "gi")) ) return true;
-        });      
+      if(search && input) {
+        var realSearch = search.match(/[^ |^:]*$/)[0];
+
+        // User suggestions
+        // Check if you are typing a name (after 'from:' or 'to:')
+        if (new RegExp(/\b:([\s]*[\w]*)$\b/g).test(search) || new RegExp(/:$/).test(search)) {
+          out = _.filter(input, function(item) {
+            return ( item['id'] != -1
+                && (item['name'].match(new RegExp("^" + realSearch, "gi"))
+                  || item['email_address'].match(new RegExp("^" + realSearch, "gi"))) );
+          });
+          if (_.isEmpty(out)) {
+            out = _.filter(input, function(item) {
+              return ( item['id'] != -1
+                  && (item['name'].match(new RegExp(realSearch, "gi"))
+                    || item['email_address'].match(new RegExp(realSearch, "gi"))) );
+            });
+          }
+        }
+
+        // Keyword suggestions
+        // If you are not typing a name, suggest keyword
+        else {
+          out = _.filter(input, function(item) {
+            return (item['id'] == -1 && item['email_address'].match(new RegExp("^" + realSearch), "gi"));
+          });
+        }
         return out;
-      }
+      };
     }
   });

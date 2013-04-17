@@ -8,7 +8,7 @@ window.fr = {
   "header_noduedate": "Sans date",
 
   "createdDate": "Créée il y a",
-  
+
   "dayLate": "jour de retard",
   "daysLate": "jours de retard",
 
@@ -20,6 +20,9 @@ window.fr = {
   "hoursAgo":"heure(s)",
   "daysAgo":"jour(s)",
 
+  "visitTodo": "Visiter la todo",
+  "assignedTo": "Asssignée à {x}",
+
   "countOverdues":"todo(s) en retard",
   "countToday":"todo(s) aujourd'hui",
   "countUpcoming":"todo(s) à venir",
@@ -29,16 +32,7 @@ window.fr = {
   "needAuth2":"pour synchroniser votre compte Basecamp avec l'extension.",
 
   "thankYou":"Merci !",
-  "syncMess":"Votre Todo extension pour Basecamp est maintenant connectée à votre compte ! Vous pouvez commencer à utiliser l'extension.",
-
-  "settings": "Paramètres",
-  "logout": "Déconnexion",
-  "languages": "Langues",
-  "refreshPeriod": "Refresh period",
-  "second": " seconde",
-  "seconds": " secondes",
-  "category": "Catégorie à afficher",
-  "default": "Défaut",
+  "syncMess":"Votre Todo extension pour Basecamp est maintenant connectée à votre compte ! Vous pouvez commencer à l'utiliser.",
 
   "achievement1":"Bon travail!",
   "achievement2":"Bravo!",

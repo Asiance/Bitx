@@ -1,66 +1,84 @@
 <!doctype html>
 <html>
-<head>
-  <meta charset='utf-8'>
-  <title id="title">Bitx - Options</title>
-  <link href="/css/options.css" rel="stylesheet" media="screen">
-</head>
-<body>
+  <head>
+    <meta charset="utf-8">
+    <title>Bitx - Dashboard</title>
+    <link rel="shortcut icon" href="/icon.png" type="image/png">
+    <link href="/css/options.css" rel="stylesheet" media="screen">
+  </head>
+  <body>
+    <header>
+      <img id="logo" src="/img/logo-settings.png" alt="Logo Bitx Settings" height="101" width="185">
+    </header>
+    <section>
+      <form>
+        <fieldset>
+          <legend>Extension settings</legend>
+          <p>
+            <label for="refresh_period">Refresh period</label>
+            <select id="refresh_period">
+              <option value="1000" id="onesecond">1s</option>
+              <option value="5000" id="fiveseconds">5s</option>
+              <option value="10000" id="tenseconds">10s</option>
+            </select>
+          </p>
+          <p>
+            <label for="counter_todos">To-dos counter in the icon</label>
+            <select id="counter_todos">
+              <option value="overdues" id="overdues">Overdues (default)</option>
+              <option value="today" id="today">Today</option>
+              <option value="upcoming" id="upcoming">Upcoming</option>
+              <option value="no_due_date" id="noduedate">No due date</option>
+            </select>
+          </p>
+          <p>
+          <label for="language">Language</label>
+          <select id="language">
+            <option value="en" id="eng">English</option>
+            <option value="fr" id="fra">Français</option>
+            <option value="ko" id="kor">한국어</option>
+            <option value="it" id="ita">Italiano</option>
+            <option value="ja" id="jap">日本語</option>
+            <option value="pt" id="por">Português</option>
+          </select>
+          </p>
+          <button id="save">Save</button>
+          <button id="logout">Logout</button>
+        </fieldset>
+      </form>
 
-  <form>
-    <fieldset>
-      <legend>Settings</legend>
-      <p>
-        <label for="refresh_period">refresh_period</label>
-        <select id="refresh_period">
-          <option value="1000" id="onesecond">1</option>
-          <option value="5000" id="fiveseconds">5</option>
-          <option value="10000" id="tenseconds">10</option>
-        </select>
-      </p>
-      <p>
-        <label for="counter_todos">counter_todos</label>
-        <select id="counter_todos">
-          <option value="default" id="default"></option>
-          <option value="overdues" id="overdues"></option>
-          <option value="today" id="today"></option>
-          <option value="upcoming" id="upcoming"></option>
-          <option value="no_due_date" id="noduedate"></option>
-        </select>
-      </p>
-      <p>
-      <label for="language">language</label>
-      <select id="language">
-        <option value="en" id="eng">English</option>
-        <option value="fr" id="fra">Français</option>
-        <option value="ko" id="kor">한국어</option>
-        <option value="it" id="ita">Italiano</option>
-        <option value="ja" id="jap">日本語</option>
-        <option value="pt" id="por">Português</option>
-      </select>
-      </p>
-      <button id="save">Save</button>
-      <button id="logout">Logout</button>
-    </fieldset>
-  </form>
+      <fieldset>
+        <legend>Filters</legend>
+        <dl>
+          <dt>to:</dt>
+          <dd>Display current to-dos assigned to someone</dd>
+          <dt>from:</dt>
+          <dd>Display to-dos created by someone</dd>
+        </dl>
+      </fieldset>
 
-  <fieldset>
-      <legend>Filters</legend>
-      <dl>
-      <dt>@username</dt>
-      <dd>Display current todos assigned to someone else</dd>
-      <dt>@createdbyme</dt>
-      <dd>Display todos I created</dd>
-    </dl>
-  </fieldset>
+      <footer>
+        <P>
+          Product Owner: <a href="https://github.com/laurent-le-graverend" target="_blank">Laurent Le Graverend</a>
+          Scrum Master: <a href="https://github.com/AdrienFromToulouse" target="_blank">Adrien Desbiaux</a><br>
+          Developer: <a href="https://github.com/pioug" target="_blank">Gilles Piou</a>
+          UX/UI Design: <a href="http://cargocollective.com/ablancher" target="_blank">Antoine Blancher</a>
+        </p>
+        <p>
+          Bitx &copy; 2013 MIT Licence Version 2.00
+        </p>
 
-  <script src="/js/lang/en.js"></script>
-  <script src="/js/lang/fr.js"></script>
-  <script src="/js/lang/ko.js"></script>
-  <script src="/js/lang/it.js"></script>
-  <script src="/js/lang/ja.js"></script>
-  <script src="/js/lang/pt.js"></script>
-  <script src="/js/options.js"></script>
 
-</body>
+      </footer>
+    </section>
+
+    <script src="/js/lang/en.js"></script>
+    <script src="/js/lang/fr.js"></script>
+    <script src="/js/lang/ko.js"></script>
+    <script src="/js/lang/it.js"></script>
+    <script src="/js/lang/ja.js"></script>
+    <script src="/js/lang/pt.js"></script>
+    <script src="/js/options.js"></script>
+
+  </body>
 </html>
