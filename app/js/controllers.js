@@ -511,7 +511,7 @@ angular
    * Open options page in a new tab
    */
   $scope.openOptions = function() {
-    chrome.tabs.create({url: "views/options.html"});
+    chrome.tabs.create({url: "options.html"});
     console.log('LOG: openOptions');
   }
 
