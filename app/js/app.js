@@ -18,7 +18,7 @@ angular
     }
   ]);
 
-// How do you use it? We want to lear how to improve it.
+// How do you use it? We want to learn how to improve it.
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-17785768-10']);
 _gaq.push(['_trackPageview', '/open']);

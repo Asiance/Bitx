@@ -4,6 +4,6 @@ echo "Creating BITX package..."
 
 version=$(sed -ne '/"version":/s/.*"\([^"]*\)".*/\1/p' app/manifest.json)
 
-zip -r bitx-v$version.zip ./app/* -x@bin/exclude.lst
+zip -r store/packages/bitx-v$version.zip ./app/* -x@bin/exclude.lst
 
 echo "Done!":
