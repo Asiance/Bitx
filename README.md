@@ -80,8 +80,8 @@ Credits
 
 Licence (MIT)
 --------------------
-Copyright 2013 Asiance Korea ltd.
-http://www.asiance.com.com/
+Copyright 2013 Asiance Korea ltd.  
+http://www.asiance.com/
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
