@@ -1,4 +1,4 @@
-Asiance-Basecamp-Crx
+Bitx - Basecamp to-dos extension
 ====================
 
 Chrome extension based on the [last Basecamp API](https://github.com/37signals/bcx-api).
@@ -13,7 +13,7 @@ Features
   - Notification on new todo
   - Instant search through todos
 
-Filters for searching todos
+Advanced filters for searching todos
 --------------------
 <table>
   <tr>
@@ -33,10 +33,17 @@ Filters for searching todos
 Installation
 --------------------
 
-1. Visit `chrome://extension` or in Chrome menu, **Settings > Extensions**
-2. Check **Developer Mode** in the top right-hand corner
-3. Click **Load unpacked extension…**
-4. Select the directory in which you unzip the extension files
+### Basic: From the Chrome store ###
+1. Visit the [Bitx page on the Chrome store](https://chrome.google.com/webstore/detail/bitx-basecamp-instant-to/jnijbmnaaacbkinjnakgemejkicfjfik)
+2. Add to chrome
+3. Rate the extension if you like it!
+
+### Advanced: From GitHub ###
+1. Download the package as a zip file
+2. Visit `chrome://extension` or in Chrome menu, **Settings > Extensions**
+3. Check **Developer Mode** in the top right-hand corner
+4. Click **Load unpacked extension…**
+5. Select the directory in which you unzip the extension files
 
 Default configuration
 --------------------
