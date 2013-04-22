@@ -1,4 +1,8 @@
 {
+  "extName": {
+    "message": "Bitx - Basecamp instant to-dos extension",
+    "description": "Extension name (original: Bitx)."
+  },
   "extDesc": {
     "message": "ベースキャンプアカウントに接続し、すべてのTo doリストをご覧ください。",
     "description": "Extension description shown in Chrome > Extensions."
