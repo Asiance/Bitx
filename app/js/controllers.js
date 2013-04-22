@@ -461,6 +461,14 @@ angular
   }
 
   /**
+   * Clear search input when click on 'x'
+   */
+  $scope.clearSearch = function(person) {
+    $scope.search = "";
+    $("#ascrail2000").css({'z-index': '-1'});
+  }
+
+  /**
    * Function called on ng-mouseover of suggestion box to highlight hovered selection
    * @param  {number}  index  Index of the selected suggestion in the array.
    */

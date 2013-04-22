@@ -99,9 +99,10 @@ function getMyTodos() {
           }
 
           // Create notification
-          if (localStorage['myTodos'] && !_.isEqual(myTodos, JSON.parse(localStorage['myTodos']))) {
+          var localMyTodos = JSON.parse(localStorage['myTodos']);
+          if (localStorage['myTodos'] && !_.isEqual(myTodos, localMyTodos)) {
             _.each(myTodos, function(item) {
-              if (!_.findWhere(JSON.parse(localStorage['myTodos']), {id: item.id})) { // Check each todo whether it is new or not
+              if (!_.findWhere(localMyTodos, {id: item.id})) { // Check each todo whether it is new or not
                 var projectName = _.findWhere(data, {id: item.todolist_id}).bucket.name;
                 var notification = webkitNotifications.createNotification(
                   item.creator.avatar_url, // Icon
