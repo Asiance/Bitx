@@ -98,10 +98,9 @@ angular
 
           var diff = false;
           _.each(allTodos, function(item) { // Check each todo whether it is new or not
-            if (!_.findWhere($scope.assignedTodos, {id: item.id})) diff = true;
+            if (!_.findWhere($scope.assignedTodos, {id: item.id, due_at: item.due_at})) diff = true;
           });
           if (diff || !$scope.projects) {
-          // if (true) {
             $scope.assignedTodos = allTodos;
             $scope.groupByProject();
           }
