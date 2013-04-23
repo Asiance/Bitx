@@ -1,4 +1,8 @@
 {
+  "extName": {
+    "message": "Bitx - Basecamp instant to-dos extension",
+    "description": "Extension name (original: Bitx)."
+  },
   "extDesc": {
     "message": "Collegate al tuo account per avere tutti i vostri ToDos assegnati.",
     "description": "Extension description shown in Chrome > Extensions."

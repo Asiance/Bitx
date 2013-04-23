@@ -99,23 +99,26 @@ function getMyTodos() {
           }
 
           // Create notification
-          if (localStorage['myTodos'] && !_.isEqual(myTodos, JSON.parse(localStorage['myTodos']))) {
-            _.each(myTodos, function(item) {
-              if (!_.findWhere(JSON.parse(localStorage['myTodos']), {id: item.id})) { // Check each todo whether it is new or not
-                var projectName = _.findWhere(data, {id: item.todolist_id}).bucket.name;
-                var notification = webkitNotifications.createNotification(
-                  item.creator.avatar_url, // Icon
-                  projectName, // Title
-                  item.content // Body
-                );
-                notification.onclick = function () {
-                  window.open("https://basecamp.com/" + localStorage['basecampId'] + "/projects/" + item.project_id + "/todos/" + item.id);
-                  notification.close();
+          if (localStorage['myTodos']) {
+            var localMyTodos = JSON.parse(localStorage['myTodos']);
+            if(!_.isEqual(myTodos, localMyTodos)) {
+              _.each(myTodos, function(item) {
+                if (!_.findWhere(localMyTodos, {id: item.id})) { // Check each todo whether it is new or not
+                  var projectName = _.findWhere(data, {id: item.todolist_id}).bucket.name;
+                  var notification = webkitNotifications.createNotification(
+                    item.creator.avatar_url, // Icon
+                    projectName, // Title
+                    item.content // Body
+                  );
+                  notification.onclick = function () {
+                    window.open("https://basecamp.com/" + localStorage['basecampId'] + "/projects/" + item.project_id + "/todos/" + item.id);
+                    notification.close();
+                  }
+                  notification.show();
+                  setTimeout(function() { notification.cancel(); }, 15000); // Hide notificiation after 15 seconds
                 }
-                notification.show();
-                setTimeout(function() { notification.cancel(); }, 15000); // Hide notificiation after 15 seconds
-              }
-            });
+              });
+            }
           }
 
           // Update localStorage

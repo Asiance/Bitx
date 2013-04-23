@@ -1,7 +1,7 @@
 <header>
   <img id="logo" src="/img/logo-header.png" height="26" width="39">
-  <input id="search-input" type="text" class="dropdown-toggle" ng-model="search" autofocus>
-  <div ng-show="search" class="icon-clear" ng-click="search = ''"></div>
+  <input id="search-input" type="text" ng-model="search" autofocus>
+  <div ng-show="search" class="icon-clear" ng-click="clearSearch()"></div>
   <div id="suggestions" nicescroll="{scrollstep: 20}">
     <ul>
       <li id="{{$index}}" class='person' ng-class="{active: suggestionsPosition == $index}" ng-repeat="person in people | suggestionSearch: search" ng-click="setSearch(person)" ng-mouseenter="setActive($index)">
