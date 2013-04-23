@@ -83,7 +83,7 @@ function getMyTodos() {
       xhr.open('GET', "https://basecamp.com/" + localStorage['basecampId'] + "/api/v1/people/" + localStorage['userId'] + "/assigned_todos.json", true);
       xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage['basecampToken']);
       xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 304)) {
+        if (xhr.readyState == 4 && (!localStorage['myTodos'] || xhr.getResponseHeader('Status') == '200 OK'))  {
           var data = JSON.parse(xhr.responseText);
 
           // Flatten Todolists to keep only Todos
@@ -101,35 +101,33 @@ function getMyTodos() {
           // Create notification
           if (localStorage['myTodos']) {
             var localMyTodos = JSON.parse(localStorage['myTodos']);
-            if(!_.isEqual(myTodos, localMyTodos)) {
-              _.each(myTodos, function(item) {
-                if (!_.findWhere(localMyTodos, {id: item.id})) { // Check each todo whether it is new or not
-                  var projectName = _.findWhere(data, {id: item.todolist_id}).bucket.name;
-                  var notification = webkitNotifications.createNotification(
-                    item.creator.avatar_url, // Icon
-                    projectName, // Title
-                    item.content // Body
-                  );
-                  notification.onclick = function () {
-                    window.open("https://basecamp.com/" + localStorage['basecampId'] + "/projects/" + item.project_id + "/todos/" + item.id);
-                    notification.close();
-                  }
-                  notification.show();
-                  setTimeout(function() { notification.cancel(); }, 15000); // Hide notificiation after 15 seconds
+            _.each(myTodos, function(item) {
+              if (!_.findWhere(localMyTodos, {id: item.id})) { // Check each todo whether it is new or not
+                var projectName = _.findWhere(data, {id: item.todolist_id}).bucket.name;
+                var notification = webkitNotifications.createNotification(
+                  item.creator.avatar_url, // Icon
+                  projectName, // Title
+                  item.content // Body
+                );
+                notification.onclick = function () {
+                  window.open("https://basecamp.com/" + localStorage['basecampId'] + "/projects/" + item.project_id + "/todos/" + item.id);
+                  notification.close();
                 }
-              });
-            }
+                notification.show();
+                setTimeout(function() { notification.cancel(); }, 15000); // Hide notificiation after 15 seconds
+              }
+            });
           }
 
           // Update localStorage
           localStorage['myTodos'] = JSON.stringify(myTodos);
-          updateBadge();
           console.log('LOG: getMyTodos XHR');
-        } else if (xhr.readyState === 4) {
+        } else if (xhr.readyState == 4 && xhr.getResponseHeader('Status') != '304 Not Modified') {
           localStorage['basecampId'] == null;
           localStorage['userId'] == null;
           console.log('ERROR: getMyTodos XHR');
         }
+        updateBadge();
       };
       xhr.send();
     } else if (!localStorage['basecampId'] || !localStorage['userId']) getAuthorization();
@@ -160,35 +158,38 @@ function getTodos() {
       allTodos = _.chain(allTodos).sortBy(function(todo) { return todo.id; })
                   .sortBy(function(todo) { return todo.project_id; })
                   .value();
+      console.log('LOG: getTodos updates cache')
       chrome.storage.local.set({'assignedTodos': JSON.stringify(allTodos)});
-
     });
-
 
   });
 }
 
 function asyncEvent(todolists) {
 
-  function checkIfDone() {
-    if (--done == 0) {
+  function checkIfModified(status) {
+    if (status == '200 OK') {
+      modified = true;
+    }
+    if (--done == 0 && modified) {
       return deferred.resolve(allTodolists);
     }
   }
 
   var deferred = new jQuery.Deferred();
   var done = todolists.length;
+  var modified = false;
   var allTodolists = []
 
   _.each(todolists, function(todolist) {
     $.ajax({
       url: todolist.url,
       headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}
-    }).done(function(data) {
+    }).done(function(data, textStatus, jqXHR) {
       data.project_id = todolist.bucket.id;
       data.project = todolist.bucket.name;
       allTodolists.push(data);
-      checkIfDone();
+      checkIfModified(jqXHR.getResponseHeader('Status'));
     });
   });
 
