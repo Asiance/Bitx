@@ -9,9 +9,7 @@ function save_options() {
   select = document.getElementById("language");
   localStorage["language"] = select.children[select.selectedIndex].value;
 
-  // Update status to let user know options were saved.
-  var status = document.getElementById("status");
-  status.innerHTML = "Options Saved.";
+  updateBadge(null);
 }
 
 function logout() {

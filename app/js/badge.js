@@ -15,7 +15,6 @@ function dateToYMD(date) {
  * @param {string} input JSON string containing all myTodos
  */
 function countTodos(input, status) {
-
   switch (status) {
     case "no_due_date":
       return _.where(input, {due_at: null}).length;
@@ -41,13 +40,14 @@ function countTodos(input, status) {
  * Draw the extension badge in Chrome based on the Todos counter
  * localStorage['myTodos'] must be set
  */
-function updateBadge() {
+function updateBadge(myTodos) {
   try {
     var counter_todos = localStorage['counter_todos'];
-    var jsonTodos = JSON.parse(localStorage['myTodos']);
+    if (!myTodos) var myTodos = JSON.parse(localStorage['myTodos']);
     var color;
 
-    counter = countTodos(jsonTodos, counter_todos);
+    counter = countTodos(myTodos, counter_todos);
+    if (!counter) counter = '';
     if (counter_todos == 'overdues') color = {color: '#F54E4A'};
     else color = {color: '#5e9ac9'};
     chrome.browserAction.setBadgeBackgroundColor(color);

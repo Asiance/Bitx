@@ -122,13 +122,13 @@ function getMyTodos() {
 
           // Update localStorage
           localStorage['myTodos'] = JSON.stringify(myTodos);
-          console.log('LOG: getMyTodos XHR');
+          updateBadge(myTodos);
+          console.log('LOG: getMyTodos updates cache');
         } else if (xhr.readyState == 4 && xhr.getResponseHeader('Status') != '304 Not Modified') {
           localStorage['basecampId'] == null;
           localStorage['userId'] == null;
           console.log('ERROR: getMyTodos XHR');
         }
-        updateBadge();
       };
       xhr.send();
     } else if (!localStorage['basecampId'] || !localStorage['userId']) getAuthorization();
