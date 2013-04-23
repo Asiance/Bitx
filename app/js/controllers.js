@@ -90,20 +90,13 @@ angular
               allTodos.push(todo);
             })
           })
+
           allTodos = _.chain(allTodos).sortBy(function(todo) { return todo.id; })
                       .sortBy(function(todo) { return todo.project_id; })
                       .value();
-
           chrome.storage.local.set({'assignedTodos': angular.toJson(allTodos)}); // Always update local cache
-
-          var diff = false;
-          _.each(allTodos, function(item) { // Check each todo whether it is new or not
-            if (!_.findWhere($scope.assignedTodos, {id: item.id, due_at: item.due_at})) diff = true;
-          });
-          if (diff || !$scope.projects) {
-            $scope.assignedTodos = allTodos;
-            $scope.groupByProject();
-          }
+          $scope.assignedTodos = allTodos;
+          $scope.groupByProject();
         });
       }, function(response) {
         console.log('ERROR: Failed to connect!');
@@ -119,13 +112,19 @@ angular
    */
   function asyncRequests(todolists) {
 
-    function checkIfDone() {
-        if (--done == 0) deferred.resolve(allTodolists);
+    function checkIfDone(status) {
+      if (status == '304 Not Modified') {
+        modified = true;
+      }
+      if (--done == 0 && modified) {
+        deferred.resolve(allTodolists);
+      }
     }
 
     try {
       var deferred = $q.defer();
       var done = todolists.length;
+      var modified = false;
       var allTodolists = [];
 
       _.forEach(todolists, function (todolist) {
@@ -134,15 +133,14 @@ angular
           url: 'https://basecamp.com/'+ $scope.basecampId + '/api/v1/projects/' + todolist.bucket.id + '/todolists/' + todolist.id + '.json',
           headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}
         })
-        .success(function(data) {
+        .success(function(data, status, headers) {
           data.project_id = todolist.bucket.id;
           data.project = todolist.bucket.name;
           allTodolists.push(data);
-          checkIfDone();
+          checkIfDone(headers('Status'));
         })
         .error(function() {
           console.log('ERROR: syncRequests - Unable to get one todolist');
-          checkIfDone();
         })
       })
       return deferred.promise;
