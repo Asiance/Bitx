@@ -51,14 +51,9 @@ angular
   $scope.getPeople = function() {
     console.log('LOG: getPeople');
     try {
-      People.query({basecampId: $scope.basecampId}, function(data) {
-        var diff = false;
-        _.each(data, function(item) { // Check each todo whether it is new or not
-          if (!_.findWhere($scope.people, {id: item.id})) diff = true;
-        });
-
-        localStorage['people'] = angular.toJson(_.sortBy(data, function(user) { return user.name; }));
-        if (diff) {
+      People.query({basecampId: $scope.basecampId}, function(data, headers) {
+        if (headers('Status') != '304 Not Modified' ||  !localStorage['people']) {
+          localStorage['people'] = angular.toJson(_.sortBy(data, function(user) { return user.name; }));
           $scope.people = _.sortBy(data, function(user) { return user.name; });
           $scope.people.push({"name":"Search by creator", "email_address":"from:", "avatar_url":"/img/icon-search.png", "id":-1});
           $scope.people.push({"name":"Search by assignee", "email_address":"to:", "avatar_url":"/img/icon-search.png", "id":-1});
@@ -94,7 +89,8 @@ angular
           allTodos = _.chain(allTodos).sortBy(function(todo) { return todo.id; })
                       .sortBy(function(todo) { return todo.project_id; })
                       .value();
-          chrome.storage.local.set({'assignedTodos': angular.toJson(allTodos)}); // Always update local cache
+          console.log('LOG: getAssignedTodos updates cache');
+          chrome.storage.local.set({'assignedTodos': angular.toJson(allTodos)});
           $scope.assignedTodos = allTodos;
           $scope.groupByProject();
         });
@@ -113,7 +109,7 @@ angular
   function asyncRequests(todolists) {
 
     function checkIfDone(status) {
-      if (status == '304 Not Modified') {
+      if (status == '200 OK') {
         modified = true;
       }
       if (--done == 0 && modified) {
@@ -147,7 +143,7 @@ angular
     } catch(e) {
       console.log(e);
     }
-  }
+  };
 
   /**
    * Group assigned Todos by Project
@@ -252,7 +248,7 @@ angular
     } catch(e) {
       console.log(e);
     }
-  }
+  };
 
   /**
    * Custom sort function to compare date in string format as integer
@@ -301,7 +297,7 @@ angular
     } catch(e) {
       console.log("ERROR: i18n" + e)
     }
-  }
+  };
 
   /**
    * Return true if keyword 'from:' is used
@@ -309,7 +305,7 @@ angular
    */
   $scope.isFiltered = function() {
     return (new RegExp("from:", "gi").test($scope.search));
-  }
+  };
 
   /**
    * Hightlight found string when using search input
@@ -339,7 +335,7 @@ angular
         });
       }
     }
-  }
+  };
 
   /**
    * Listen to keyboard event using jQuery
@@ -379,14 +375,14 @@ angular
 
     if (key == 40 && $scope.suggestionsPosition < $filter('suggestionSearch')($scope.people, $scope.search).length -1) {
       $scope.suggestionsPosition += 1;
-      var framePosition = ($scope.suggestionsPosition+1) - (frameOffset+50)/ 50;
+      var framePosition = ($scope.suggestionsPosition+1) - (frameOffset+50)/50;
       var objDiv = document.getElementById($scope.suggestionsPosition);
       if (Math.round(framePosition) == 4) {
         objDiv.scrollIntoView(false);
       }
     } else if (key == 38 && $scope.suggestionsPosition > -1) {
       $scope.suggestionsPosition -= 1;
-      var framePosition = ($scope.suggestionsPosition+1) - (frameOffset-50)/ 50;
+      var framePosition = ($scope.suggestionsPosition+1) - (frameOffset-50)/50;
       var objDiv = document.getElementById($scope.suggestionsPosition);
       if (Math.round(framePosition) == 1) {
         objDiv.scrollIntoView(true);
@@ -440,7 +436,7 @@ angular
             return ["<span class='strong'>", match, "</span>"].join("");
         }));
     });
-  }
+  };
 
   /**
    * When press ENTER or click on a suggestion, set the new value to the search input
@@ -455,7 +451,7 @@ angular
       $('#suggestions').css({'z-index': '-1'});
       $("#ascrail2000").css({'z-index': '-1'});
     }
-  }
+  };
 
   /**
    * Clear search input when click on 'x'
@@ -463,7 +459,7 @@ angular
   $scope.clearSearch = function(person) {
     $scope.search = "";
     $("#ascrail2000").css({'z-index': '-1'});
-  }
+  };
 
   /**
    * Function called on ng-mouseover of suggestion box to highlight hovered selection
@@ -471,7 +467,7 @@ angular
    */
   $scope.setActive = function(index) {
     $scope.suggestionsPosition = index;
-  }
+  };
 
 
   /**
@@ -494,7 +490,7 @@ angular
 
   // Load data from cache
   chrome.storage.local.get('assignedTodos', function(data) {
-    if (!_.isEmpty(data)) {
+    if (!_.isEmpty(data.assignedTodos)) {
       $scope.assignedTodos = angular.fromJson(data['assignedTodos']);
       $scope.groupByProject();
       $scope.$apply();
@@ -518,7 +514,7 @@ angular
   $scope.openOptions = function() {
     chrome.tabs.create({url: "options.html"});
     console.log('LOG: openOptions');
-  }
+  };
 
   /**
    * Initialization of i18n
@@ -533,7 +529,7 @@ angular
     } catch(e) {
       console.log("ERROR: i18n" + e)
     }
-  }
+  };
 
   /**
    * Initialization
