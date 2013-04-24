@@ -11,7 +11,7 @@
     <ng-view ng-show="online"></ng-view>
     <div id="allow-access" ng-hide="online">
       <p><img src="/img/logo-header.png" height="26" width="39"></p>
-      <p><span id="needAuth1"></span> <span id="allow">"Yes, I'll allow access"</span> <span id="needAuth2"></span></p>
+      <p>{{'needAuth1' | i18n}} <span id="allow">"Yes, I'll allow access"</span> {{'needAuth2' | i18n}}</p>
     </div>
   </div>
 

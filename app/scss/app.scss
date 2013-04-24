@@ -153,11 +153,13 @@ dt.enabled {
   }
 }
 dt.disabled {
+  background: $color-dark !important;
+  border-bottom: 1px solid $color-dark-border !important;
   cursor: default;
 }
 #overdues {
   .count-todos {
-    background: $color-red-counter;
+    background: $color-red-counter !important;
   }
   .date {
     color: $color-red;

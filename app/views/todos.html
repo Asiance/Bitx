@@ -1,31 +1,29 @@
 <header>
   <img id="logo" src="/img/logo-header.png" height="26" width="39">
-  <input id="search-input" type="text" ng-model="search" autofocus>
+  <input id="search-input" type="text" placeholder= "{{'searchTodo' | i18n}}" ng-model="search" autofocus>
   <div ng-show="search" class="icon-clear" ng-click="clearSearch()"></div>
-  <div id="suggestions" nicescroll="{scrollstep: 20}">
-    <ul>
-      <li id="{{$index}}" class='person' ng-class="{active: suggestionsPosition == $index}" ng-repeat="person in people | suggestionSearch: search" ng-click="setSearch(person)" ng-mouseenter="setActive($index)">
-        <img class="username" ng-src="{{person.avatar_url}}">
-        <span ng-switch="person.id" class="username">
-          <span ng-switch-when="-1">{{person.email_address}}</span>
-          <span ng-switch-default>{{person.email_address | removeDomain | lowercase}}</span>
-        </span><br>
-        <span class="fullname">{{person.name}}</span>
-      </li>
-    </ul>
-  </div>
+  <ul id="suggestions" nicescroll="{scrollstep: 20}">
+    <li id="{{$index}}" class="person" ng-class="{active: suggestionsPosition == $index}" ng-repeat="person in people | suggestionSearch: search" ng-click="setSearch(person)" ng-mouseenter="setActive($index)">
+      <img class="username" ng-src="{{person.avatar_url}}">
+      <span ng-switch="person.id" class="username">
+        <span ng-switch-when="-1">{{person.email_address}}</span>
+        <span ng-switch-default>{{person.email_address | removeDomain | lowercase}}</span>
+      </span><br>
+      <span class="fullname">{{person.name}}</span>
+    </li>
+  </ul>
   <a ng-click="openOptions()"><span class="icon-settings"></span></a>
 </header>
 
 <section>
 <dl id="todos">
-  <dt ng-class="{true:'disabled', false:'enabled'}[getNumberTodos('overdues') == 0]" id="overdues"><a ng-click="toggleContent('overdues')">
+  <dt ng-class="{true:'disabled', false:'enabled'}[getNumberTodos('overdues') == 0]" id="overdues" unselectable><a ng-click="toggleContent('overdues')">
     <span ng-switch="getNumberTodos('overdues')" class="toggle-content">
       <span ng-switch-when="0"></span>
       <span ng-switch-default class="toggle"></span>
     </span>
-    <h1 id="header_overdues">OVERDUES</h1>
-    <span ng-show="getNumberTodos('overdues')" title="{{getNumberTodos('overdues')}} {{countOverdues}}" class="count-todos">{{getNumberTodos('overdues')}}</span>
+    <h1 id="header_overdues">{{'header_overdues' | i18n | uppercase}}</h1>
+    <span ng-show="getNumberTodos('overdues')" title="{{getNumberTodos('overdues')}} {{'countOverdues' | i18n}}" class="count-todos">{{getNumberTodos('overdues')}}</span>
   </a></dt>
   <dd id="overdues_content" nicescroll="{scrollstep: 50}">
     <div class="content" ng-show="filteredOverdue.length" ng-repeat="project in projects">
@@ -33,29 +31,32 @@
       <ul>
         <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredOverdue = (project.assignedTodos | keywordSearch:search | orderBy: sortByDate | status: 'overdues')">
           <span class="achievement"><p><img src="/img/icon-check.png">{{congratulation}}</p></span>
-          <span class="date overdues" title='{{createdDate}} {{assignedTodo.created_at | elapsedTime}}'><span class ="day-number">{{assignedTodo.due_at | daysLate}}</span><br>
-            <p><ng-pluralize count="assignedTodo.days_late" when='{"1": "{{dayLate}}", "other": "{{daysLate}}"}'></ng-pluralize></p>
+          <span class="date overdues" title="{{'createdDate' | i18n}} {{assignedTodo.created_at | elapsedTime}}"><span class ="day-number">{{assignedTodo.due_at | daysLate}}</span><br>
+            <p ng-switch="assignedTodo.days_late" class="username">
+              <span ng-switch-when="1">{{'dayLate' | i18n}}</span>
+              <span ng-switch-default>{{'daysLate' | i18n}}</span>
+            </p>
           </span>
           <div class="todo">
             <div><span ng-click="completeTodo(project.id, assignedTodo.id)" class="checkbox"></span><span class="todo-text" title="{{assignedTodo.assignee.name | filterOn: isFiltered()}}">{{assignedTodo.content}}</span></div>
           </div>
-          <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="comments" ng-show="assignedTodo.comments_count" title="{{lastUpdate}} {{assignedTodo.updated_at | elapsedTime}}">
+          <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="comments" ng-show="assignedTodo.comments_count" title="{{'lastUpdate' | i18n}} {{assignedTodo.updated_at | elapsedTime}}">
             <p>{{assignedTodo.comments_count}}</p>
           </span>
           <span class="void" ng-hide="assignedTodo.comments_count"></span>
-          <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link" title="{{visitTodo}}"></span>
+          <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link" title="{{'visitTodo' | i18n}}"></span>
         </li>
       </ul>
     </div>
   </dd>
 
-  <dt ng-class="{true:'disabled', false:'enabled'}[getNumberTodos('today') == 0]" id="today"><a ng-click="toggleContent('today')">
+  <dt ng-class="{true:'disabled', false:'enabled'}[getNumberTodos('today') == 0]" id="today" unselectable><a ng-click="toggleContent('today')">
     <span ng-switch="getNumberTodos('today')" class="toggle-content">
       <span ng-switch-when="0"></span>
       <span ng-switch-default class="toggle"></span>
     </span>
-    <h1 id="header_today">TODAY</h1>
-    <span ng-show="getNumberTodos('today')" title="{{getNumberTodos('today')}} {{countToday}}" class="count-todos">{{getNumberTodos('today')}}</span>
+    <h1 id="header_today">{{'header_today' | i18n | uppercase}}</h1>
+    <span ng-show="getNumberTodos('today')" title="{{getNumberTodos('today')}} {{'countToday' | i18n}}" class="count-todos">{{getNumberTodos('today')}}</span>
     </span>
   </a></dt>
   <dd id="today_content" nicescroll="{scrollstep: 50}">
@@ -64,26 +65,26 @@
       <ul>
         <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredToday = (project.assignedTodos | keywordSearch:search | orderBy: sortByDate | status: 'today')">
           <span class="achievement"><p><img src="/img/icon-check.png">{{congratulation}}</p></span>
-          <span class="date icon-today" title='{{createdDate}} {{assignedTodo.created_at | elapsedTime}}'></span>
+          <span class="date icon-today" title="{{'createdDate' | i18n}} {{assignedTodo.created_at | elapsedTime}}"></span>
           <div class="todo">
             <div><span ng-click="completeTodo(project.id, assignedTodo.id)" class="checkbox"></span><span class="todo-text" title="{{assignedTodo.assignee.name | filterOn: isFiltered()}}">{{assignedTodo.content}}</span></div>
           </div>
-          <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="comments" ng-show="assignedTodo.comments_count" title="{{lastUpdate}} {{assignedTodo.updated_at | elapsedTime}}">
+          <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="comments" ng-show="assignedTodo.comments_count" title="{{'lastUpdate' | i18n}} {{assignedTodo.updated_at | elapsedTime}}">
             <p>{{assignedTodo.comments_count}}</p>
           </span>
           <span class="void" ng-hide="assignedTodo.comments_count"></span>
-          <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link" title="{{visitTodo}}"></span>
+          <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link" title="{{'visitTodo' | i18n}}"></span>
       </ul>
     </div>
   </dd>
 
-  <dt ng-class="{true:'disabled', false:'enabled'}[getNumberTodos('upcoming') == 0]" id="upcoming"><a ng-click="toggleContent('upcoming')">
+  <dt ng-class="{true:'disabled', false:'enabled'}[getNumberTodos('upcoming') == 0]" id="upcoming" unselectable><a ng-click="toggleContent('upcoming')">
       <span ng-switch="getNumberTodos('upcoming')" class="toggle-content">
       <span ng-switch-when="0"></span>
       <span ng-switch-default class="toggle"></span>
       </span>
-      <h1 id="header_upcoming">UPCOMING</h1>
-      <span ng-show="getNumberTodos('upcoming')" title="{{getNumberTodos('upcoming')}} {{countToday}}" class="count-todos">{{getNumberTodos('upcoming')}}</span>
+      <h1 id="header_upcoming">{{'header_upcoming' | i18n | uppercase}}</h1>
+      <span ng-show="getNumberTodos('upcoming')" title="{{getNumberTodos('upcoming')}} {{'countToday' | i18n}}" class="count-todos">{{getNumberTodos('upcoming')}}</span>
   </a></dt>
   <dd id="upcoming_content" nicescroll="{scrollstep: 50}">
     <div class="content" ng-show="filteredUpcoming.length" ng-repeat="project in projects">
@@ -91,29 +92,32 @@
       <ul>
         <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredUpcoming = (project.assignedTodos | keywordSearch:search | orderBy: sortByDate | status: 'upcoming')">
           <span class="achievement"><p><img src="/img/icon-check.png">{{congratulation}}</p></span>
-          <span class="date" title='{{createdDate}} {{assignedTodo.created_at | elapsedTime}}'><span class ="day-number">{{assignedTodo.due_at | daysRemaining}}</span><br>
-            <p><ng-pluralize count="assignedTodo.remaining_days" when="{'1': '{{dayLeft}}', 'other': '{{daysLeft}}'}"></ng-pluralize></p>
+          <span class="date" title="{{'createdDate' | i18n}} {{assignedTodo.created_at | elapsedTime}}"><span class ="day-number">{{assignedTodo.due_at | daysRemaining}}</span><br>
+            <p ng-switch="assignedTodo.remaining_days" class="username">
+              <span ng-switch-when="1">{{'dayLeft' | i18n}}</span>
+              <span ng-switch-default>{{'daysLeft' | i18n}}</span>
+            </p>
           </span>
           <div class="todo">
             <div><span ng-click="completeTodo(project.id, assignedTodo.id)" class="checkbox"></span><span class="todo-text" title="{{assignedTodo.assignee.name | filterOn: isFiltered()}}">{{assignedTodo.content}}</span></div>
           </div>
-          <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="comments" ng-show="assignedTodo.comments_count" title="{{lastUpdate}} {{assignedTodo.updated_at | elapsedTime}}">
+          <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="comments" ng-show="assignedTodo.comments_count" title="{{'lastUpdate' | i18n}} {{assignedTodo.updated_at | elapsedTime}}">
             <p>{{assignedTodo.comments_count}}</p>
           </span>
           <span class="void" ng-hide="assignedTodo.comments_count"></span>
-          <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link" title="{{visitTodo}}"></span>
+          <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link" title="{{'visitTodo' | i18n}}"></span>
         </li>
       </ul>
     </div>
   </dd>
 
-  <dt ng-class="{true:'disabled', false:'enabled'}[getNumberTodos('no-due-date') == 0]" id="no-due-date"><a ng-click="toggleContent('no-due-date')">
+  <dt ng-class="{true:'disabled', false:'enabled'}[getNumberTodos('no-due-date') == 0]" id="no-due-date" unselectable><a ng-click="toggleContent('no-due-date')">
     <span ng-switch="getNumberTodos('no-due-date')" class="toggle-content">
       <span ng-switch-when="0"></span>
       <span ng-switch-default class="toggle"></span>
     </span>
-    <h1 id="header_noduedate">NO DUE DATE</h1>
-    <span ng-show="getNumberTodos('no-due-date')" title="{{getNumberTodos('no-due-date')}} {{countToday}}" class="count-todos">{{getNumberTodos('no-due-date')}}</span>
+    <h1 id="header_noduedate">{{'header_noduedate' | i18n | uppercase}}</h1>
+    <span ng-show="getNumberTodos('no-due-date')" title="{{getNumberTodos('no-due-date')}} {{'countToday' | i18n}}" class="count-todos">{{getNumberTodos('no-due-date')}}</span>
   </a></dt>
   <dd id="no-due-date_content" nicescroll="{scrollstep: 50}">
     <div class="content" ng-show="filteredUndetermined.length" ng-repeat="project in projects">
@@ -121,15 +125,15 @@
       <ul>
         <li id="{{assignedTodo.id}}" ng-repeat="assignedTodo in filteredUndetermined = (project.assignedTodos | keywordSearch:search | orderBy: sortByDate | status: 'no-due-date')">
           <span class="achievement"><p><img src="/img/icon-check.png">{{congratulation}}</p></span>
-          <span class="date icon-coffee" title='{{createdDate}} {{assignedTodo.created_at | elapsedTime}}'></span>
+          <span class="date icon-coffee" title="{{'createdDate' | i18n}} {{assignedTodo.created_at | elapsedTime}}"></span>
           <div class="todo">
             <div><span ng-click="completeTodo(project.id, assignedTodo.id)" class="checkbox"></span><span class="todo-text" title="{{assignedTodo.assignee.name | filterOn: isFiltered()}}">{{assignedTodo.content}}</span></div>
           </div>
-          <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="comments" ng-show="assignedTodo.comments_count" title="{{lastUpdate}} {{assignedTodo.updated_at | elapsedTime}}">
+          <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="comments" ng-show="assignedTodo.comments_count" title="{{'lastUpdate' | i18n}} {{assignedTodo.updated_at | elapsedTime}}">
             <p>{{assignedTodo.comments_count}}</p>
           </span>
           <span class="void" ng-hide="assignedTodo.comments_count"></span>
-          <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link" title="{{visitTodo}}"></span>
+          <span ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" class="icon-link" title="{{'visitTodo' | i18n}}"></span>
         </li>
       </ul>
     </div>

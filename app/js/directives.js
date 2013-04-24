@@ -1,9 +1,8 @@
 'use strict';
 
 
-angular.module('basecampExtension.directives', []).
-  directive('nicescroll', function($document, $location, $parse) {
-
+angular.module('basecampExtension.directives', [])
+  .directive('nicescroll', function($document, $location, $parse) {
     return {
       restrict: "A",
       link: function(scope, element, attrs) {
@@ -17,4 +16,13 @@ angular.module('basecampExtension.directives', []).
         });
       }
     };
+  })
+
+  .directive('unselectable', function($document, $location, $parse) {
+    return {
+      restrict: "A",
+      link: function(scope, element, attrs) {
+        $(element).on('selectstart', false);
+      }
+    }
   });

@@ -39,6 +39,17 @@ angular
   })
 
   /**
+   * Look for the translated string
+   */
+  .filter('i18n', function() {
+    var lang = localStorage['language'];
+    return function(input) {
+      if(window[lang][input]) return window[lang][input];
+      else return window['en'][input];
+    };
+  })
+
+  /**
    * Determine elapsed time
    */
   .filter('elapsedTime', function() {

@@ -269,37 +269,6 @@ angular
   };
 
   /**
-   * Initialization of i18n
-   */
-  $scope.i18n = function() {
-    try {
-      var lang = $scope.lang;
-      document.getElementById("search-input").placeholder = window[lang]["searchTodo"];
-      document.getElementById("header_overdues").innerHTML = $filter('uppercase')(window[lang]["header_overdues"]);
-      document.getElementById("header_today").innerHTML = $filter('uppercase')(window[lang]["header_today"]);
-      document.getElementById("header_upcoming").innerHTML = $filter('uppercase')(window[lang]["header_upcoming"]);
-      document.getElementById("header_noduedate").innerHTML = $filter('uppercase')(window[lang]["header_noduedate"]);
-      $scope.dayLate = window[lang]["dayLate"];
-      $scope.daysLate = window[lang]["daysLate"];
-      $scope.dayLeft = window[lang]["dayLeft"];
-      $scope.daysLeft = window[lang]["daysLeft"];
-
-      $scope.visitTodo = window[lang]["visitTodo"];
-      $scope.assignedTo = window[lang]["assignedTo"];
-
-      $scope.countOverdues = window[lang]["countOverdues"];
-      $scope.countToday = window[lang]["countToday"];
-      $scope.countUpcoming = window[lang]["countUpcoming"];
-      $scope.countNoDueDate = window[lang]["countNoDueDate"];
-
-      $scope.lastUpdate = window[lang]["lastUpdate"];
-      $scope.createdDate = window[lang]["createdDate"];
-    } catch(e) {
-      console.log("ERROR: i18n" + e)
-    }
-  };
-
-  /**
    * Return true if keyword 'from:' is used
    * Allow to add tooltip 'Assigned to someone' in todos.html view
    */
@@ -444,13 +413,10 @@ angular
    * @param  {string}  email_address  Email address of the person selected.
    */
   $scope.setSearch = function(person) {
-    if (person) {
-      if (person.id != -1) $scope.search = $scope.search.substr(0, $scope.search.lastIndexOf(":") + 1);
-      else $scope.search = $scope.search.substr(0, $scope.search.lastIndexOf(" ") + 1);
-      $scope.search += $filter('removeDomain')(person.email_address);
-      $('#suggestions').css({'z-index': '-1'});
-      $("#ascrail2000").css({'z-index': '-1'});
-    }
+    $scope.search = $scope.search.replace(/(\w+)$/gi, "")
+    $scope.search += $filter("removeDomain")(person.email_address);
+    $("#suggestions").css({"z-index": "-1"});
+    $("#ascrail2000").css({"z-index": "-1"});
   };
 
   /**
@@ -473,10 +439,7 @@ angular
   /**
    * Initialization of variables
    */
-  $scope.i18n();
   $scope.search = localStorage['lastSearch'] ? localStorage['lastSearch'] : "";
-  $('#todos').find('dt').attr('unselectable', 'on').on('selectstart', false);
-  var fullInit = false;
   if (localStorage['basecampId'] && localStorage['userId'] && localStorage['people']) {
     $scope.basecampId = localStorage['basecampId'];
     $scope.userId = localStorage['userId'];
@@ -485,7 +448,6 @@ angular
     $scope.people.push({"name":"Search by assignee", "email_address":"to:", "avatar_url":"/img/icon-search.png", "id":-1});
   } else {
     $scope.getBasecampAccount();
-    fullInit = true;
   }
 
   // Load data from cache
@@ -495,18 +457,16 @@ angular
       $scope.groupByProject();
       $scope.$apply();
     }
-  });
-
-  if (!fullInit) {
     $scope.getAssignedTodos(); // Trigger a refresh on launch
     $scope.getPeople();
-  }
+  });
+
 })
 
 /**
  * Controller linked to all views
  */
-.controller('MainController', function($scope) {
+.controller('MainController', function($scope, $filter) {
 
   /**
    * Open options page in a new tab
@@ -517,24 +477,17 @@ angular
   };
 
   /**
-   * Initialization of i18n
-   */
-  $scope.i18n = function() {
-    try {
-      var userLang = (navigator.language) ? navigator.language : navigator.userLanguage;
-      var lang = userLang.substring(0,2);
-      $scope.lang = localStorage["language"] ? localStorage["language"] : lang;
-      document.getElementById("needAuth1").innerHTML = window[lang]["needAuth1"];
-      document.getElementById("needAuth2").innerHTML = window[lang]["needAuth2"];
-    } catch(e) {
-      console.log("ERROR: i18n" + e)
-    }
-  };
-
-  /**
    * Initialization
    */
-  if (localStorage['basecampToken']) $scope.online = true;
-  $scope.i18n();
+  if (localStorage["language"]) {
+    $scope.lang = localStorage["language"];
+  } else {
+    var userLang = (navigator.language) ? navigator.language : navigator.userLanguage;
+    var lang = userLang.substring(0,2);
+    $scope.lang = lang;
+  }
+  if (localStorage["basecampToken"]) {
+    $scope.online = true;
+  }
 
 });
