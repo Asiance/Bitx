@@ -112,7 +112,7 @@ angular
       if (status == '200 OK') {
         modified = true;
       }
-      if (--done == 0 && modified) {
+      if (--done == 0 && (modified || !$scope.assignedTodos)) {
         deferred.resolve(allTodolists);
       }
     }
