@@ -15,6 +15,7 @@ function save_options() {
 function logout() {
   localStorage.removeItem('basecampId');
   localStorage.removeItem('basecampToken');
+  localStorage.removeItem('lastSearch');
   localStorage.removeItem('myTodos');
   localStorage.removeItem('people');
   localStorage.removeItem('userId');

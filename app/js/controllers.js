@@ -446,6 +446,8 @@ angular
     $scope.people = angular.fromJson(localStorage['people']);
     $scope.people.push({"name":"Search by creator", "email_address":"from:", "avatar_url":"/img/icon-search.png", "id":-1});
     $scope.people.push({"name":"Search by assignee", "email_address":"to:", "avatar_url":"/img/icon-search.png", "id":-1});
+    $scope.getAssignedTodos(); // Trigger a refresh on launch
+    $scope.getPeople();
   } else {
     $scope.getBasecampAccount();
   }
@@ -457,8 +459,6 @@ angular
       $scope.groupByProject();
       $scope.$apply();
     }
-    $scope.getAssignedTodos(); // Trigger a refresh on launch
-    $scope.getPeople();
   });
 
 })
@@ -485,6 +485,7 @@ angular
     var userLang = (navigator.language) ? navigator.language : navigator.userLanguage;
     var lang = userLang.substring(0,2);
     $scope.lang = lang;
+    localStorage["language"] = lang;
   }
   if (localStorage["basecampToken"]) {
     $scope.online = true;

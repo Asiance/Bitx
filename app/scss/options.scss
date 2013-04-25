@@ -35,25 +35,27 @@ fieldset {
   margin: 30px auto;
 }
 
+dt,
 label {
   float: left;
   font-weight: bold;
+  text-align: right;
+}
+
+label {
   padding: 0px 10px;
   position: relative;
-  text-align: right;
   top: 3px;
   width: 50%;
 }
+
 button {
   cursor: pointer;
   float: right;
 }
 
 dt {
-  float: left;
-  font-weight: bold;
   margin: 0px 10%;
-  text-align: right;
   width: 20%;
 }
 

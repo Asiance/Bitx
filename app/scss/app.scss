@@ -36,12 +36,10 @@ $fonts_ko: "Droid Sans", "Nanum Gothic", "나눔고딕", "NanumGothic", "Malgun 
 
 body {
   h1 {
-    color: $color-white;
     display: inline-block;
     font-size: 14px;
     font-weight: 700;
     line-height: 55px;
-    vertical-align: middle;
     width: 360px;
   }
   h2 {
@@ -102,9 +100,6 @@ header {
   }
   .icon-settings {
     &:hover { background: url(/img/icon-settings-hover.png) center no-repeat; }
-    @include transition-duration(0.1s);
-    @include transition-property(background);
-    @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000));
     background: url(/img/icon-settings.png) center no-repeat;
     cursor: pointer;
     height: 21px;
@@ -117,12 +112,10 @@ header {
 }
 
 .toggle-content {
-  color: $color-white;
   display: inline-block;
   font-size: 24px;
   line-height: 10px;
   text-align: center;
-  vertical-align: middle;
   width: $first-column-width;
 }
 .void {
@@ -131,11 +124,10 @@ header {
 }
 
 dt {
-  @include transition-duration(0.1s);
-  @include transition-property(background, border-bottom);
-  @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000));
   background: $color-dark;
   border-bottom: 1px solid $color-dark-border;
+  color: $color-white;
+  vertical-align: middle;
   .toggle:after {
     content: '+';
   }
@@ -185,18 +177,24 @@ dt.active {
 .count-todos {
   background: $color-dark-gray;
   border-radius: 50%;
-  color: $color-white;
   display: inline-block;
   height: 15px;
   line-height: 16px;
   padding: 8px;
   text-align: center;
-  vertical-align: middle;
   width: 15px;
-  @include transition-property(background);
-  @include transition-duration(0.1s);
-  @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000));
+
 }
+
+/* Change background color on hover */
+dt,
+.count-todos,
+.icon-settings {
+  -webkit-transition-duration: 0.1s;
+  -webkit-transition-property: background border-bottom;
+  -webkit-transition-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000);
+}
+
 .day-number {
   font-family: Arial;
 }
@@ -215,10 +213,10 @@ dt.active {
   }
 }
 .icon-today {
-  background: url(/img/icon-today.png) center 8px no-repeat;
+  background: url(/img/icon-today.png) center 13px no-repeat;
 }
 .icon-coffee {
-  background: url(/img/icon-coffee.png) center 8px no-repeat;
+  background: url(/img/icon-coffee.png) center 13px no-repeat;
 }
 
 .comments,
@@ -259,9 +257,6 @@ dt.active {
     display: table;
     margin-left: -30px;
     width: 325px;
-    @include transition-property(margin-left);
-    @include transition-duration(0.5s);
-    @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000));
     .checkbox {
       background: url(/img/icon-checkbox.png) center no-repeat;
       &:hover { background: url(/img/icon-checkbox-hover.png) center no-repeat; }
@@ -290,15 +285,12 @@ dt.active {
   &:hover {
     background-color: $color-light-gray;
     .todo {
-      color: black;
       div {
         margin-left: 0px;
-        @include transition-property(margin-left);
-        @include transition-duration(0.5s);
-        @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000));
       }
     }
   }
+
   .achievement {
     background: $color-green;
     color: $color-white;
@@ -314,6 +306,14 @@ dt.active {
   .visible {
     width: 520px;
   }
+}
+
+/* Slide to right to display check box on hover */
+#todos li:hover,
+.todo div {
+  -webkit-transition-property: margin-left;
+  -webkit-transition-duration: 0.5s;
+  -webkit-transition-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000);
 }
 
 #allow-access {
