@@ -95,9 +95,9 @@ header {
     background: url(/img/icon-clear.jpg) center no-repeat;
     cursor: pointer;
     height: 16px;
-    left: 358px;
+    margin-left: 358px;
     position: absolute;
-    top: 20px;
+    margin-top: -30px;
     width: 16px;
   }
   .icon-settings {
@@ -107,12 +107,11 @@ header {
     @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000));
     background: url(/img/icon-settings.png) center no-repeat;
     cursor: pointer;
-    float: right;
     height: 21px;
-    margin-right: 14px;
     padding: 14px;
     position:relative;
     top: 3px;
+    left: 61px;
     width: 20px;
   }
 }
@@ -137,7 +136,6 @@ dt {
   @include transition-timing-function(cubic-bezier(0.165, 0.840, 0.440, 1.000));
   background: $color-dark;
   border-bottom: 1px solid $color-dark-border;
-  user-select: none;
   .toggle:after {
     content: '+';
   }
@@ -201,18 +199,15 @@ dt.active {
 }
 .day-number {
   font-family: Arial;
-  line-height: 17px;
 }
 .date {
   color: $color-gray-date;
   display: table-cell;
   font-size: 18px;
-  height: 50px;
   line-height: 16px;
   position: relative;
   text-align: center;
-  top: 2px;
-  vertical-align: middle;
+  top: -5px;
   width: $first-column-width;
   p { font-size: 9px; }
   &.overdues {
@@ -226,6 +221,12 @@ dt.active {
   background: url(/img/icon-coffee.png) center 8px no-repeat;
 }
 
+.comments,
+.void {
+  display: table-cell;
+  padding-right: 8px;
+  width: 30px;
+}
 .comments {
   background: url(/img/icon-comment.png) left no-repeat;
   &:hover {
@@ -234,16 +235,7 @@ dt.active {
   }
   color: $color-gray;
   cursor: pointer;
-  display: table-cell;
-  padding-right: 8px;
   text-align: right;
-  width: 30px;
-}
-.void {
-  display: table-cell;
-  padding-right: 8px;
-  width: 30px;
-  height: 30px;
 }
 .icon-link {
   background: url(/img/icon-link.png) center no-repeat;
@@ -373,10 +365,8 @@ dt.active {
   box-shadow: 2px 2px 2px $color-gray;
   line-height: 16px;
   margin-left: 122px;
-  overflow: hidden;
   margin-top: -5px;
   max-height: 200px;
-  overflow: auto;
   position: absolute;
   width: 262px;
   z-index: -1;
