@@ -53,6 +53,7 @@ function updateBadge(myTodos) {
     chrome.browserAction.setBadgeBackgroundColor(color);
     chrome.browserAction.setBadgeText({text: counter.toString()});
     console.log('LOG: updateBadge');
+    localStorage['updateBadge'] = false;
   } catch(e) {
     console.log('ERROR: updateBadge ' + e);
     chrome.browserAction.setBadgeText({text: ''});

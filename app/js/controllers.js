@@ -73,27 +73,29 @@ angular
   $scope.getAssignedTodos = function() {
     console.log('LOG: getAssignedTodos');
     try {
-      AllTodolists.query({basecampId: $scope.basecampId}, function(todolists) {
-        var allTodos = [];
-        var promise = asyncRequests(todolists);
-        promise.then(function(allTodolists) {
-          _.each(allTodolists, function (todolist) {
-            _.each(todolist.todos.remaining, function(todo) {
-              todo.todolist = todolist.name;
-              todo.project = todolist.project;
-              todo.project_id = todolist.project_id;
-              allTodos.push(todo);
+      AllTodolists.query({basecampId: $scope.basecampId}, function(todolists, getResponseHeaders) {
+        if(getResponseHeaders('Status') == "200 OK" || !$scope.assignedTodos) {
+          localStorage['updateBadge'] = true;
+          var allTodos = [];
+          var promise = asyncRequests(todolists);
+          promise.then(function(allTodolists) {
+            _.each(allTodolists, function (todolist) {
+              _.each(todolist.todos.remaining, function(todo) {
+                todo.todolist = todolist.name;
+                todo.project = todolist.project;
+                todo.project_id = todolist.project_id;
+                allTodos.push(todo);
+              })
             })
-          })
 
-          allTodos = _.chain(allTodos).sortBy(function(todo) { return todo.id; })
-                      .sortBy(function(todo) { return todo.project_id; })
-                      .value();
-          console.log('LOG: getAssignedTodos updates cache');
-          chrome.storage.local.set({'assignedTodos': angular.toJson(allTodos)});
-          $scope.assignedTodos = allTodos;
-          $scope.groupByProject();
-        });
+            allTodos = _.chain(allTodos).sortBy(function(todo) { return todo.id; })
+                        .sortBy(function(todo) { return todo.project_id; })
+                        .value();
+
+            $scope.assignedTodos = allTodos;
+            $scope.groupByProject();
+          });
+        }
       }, function(response) {
         console.log('ERROR: Failed to connect!');
       });
@@ -108,11 +110,8 @@ angular
    */
   function asyncRequests(todolists) {
 
-    function checkIfDone(status) {
-      if (status == '200 OK') {
-        modified = true;
-      }
-      if (--done == 0 && (modified || !$scope.assignedTodos)) {
+    function checkIfDone() {
+      if (--done == 0) {
         deferred.resolve(allTodolists);
       }
     }
@@ -133,7 +132,7 @@ angular
           data.project_id = todolist.bucket.id;
           data.project = todolist.bucket.name;
           allTodolists.push(data);
-          checkIfDone(headers('Status'));
+          checkIfDone();
         })
         .error(function() {
           console.log('ERROR: syncRequests - Unable to get one todolist');

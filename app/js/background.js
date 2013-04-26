@@ -55,7 +55,7 @@ function getAuthorization() {
 function getUser() {
   try {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', "https://basecamp.com/"+ localStorage['basecampId'] +"/api/v1/people/me.json", true);
+    xhr.open('GET', 'https://basecamp.com/' + localStorage['basecampId'] + '/api/v1/people/me.json', true);
     xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage['basecampToken']);
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 304)) {
@@ -83,7 +83,7 @@ function getTodos() {
   var noCache;
 
   $.ajax({
-    url: "https://basecamp.com/" + localStorage['basecampId'] + "/api/v1/todolists.json",
+    url: 'https://basecamp.com/' + localStorage['basecampId'] + '/api/v1/todolists.json',
     headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}
   })
   .fail(function(jqXHR, textStatus, errorThrown) {
@@ -96,7 +96,7 @@ function getTodos() {
         noCache = true;
       }
     });
-    if (jqXHR.getResponseHeader('Status') == '200 OK' || noCache || !localStorage['myTodos']) {
+    if (jqXHR.getResponseHeader('Status') == '200 OK' || noCache || !localStorage['myTodos'] || localStorage['updateBadge'] == 'true') {
       $.when(asyncEvent(data)).done(function(allTodolists) {
         _.forEach(allTodolists, function (todolist) {
           _.forEach(todolist.todos.remaining, function(todo) {
@@ -127,7 +127,7 @@ function getTodos() {
                 item.content // Body
               );
               notification.onclick = function () {
-                window.open("https://basecamp.com/" + localStorage['basecampId'] + "/projects/" + item.project_id + "/todos/" + item.id);
+                window.open('https://basecamp.com/' + localStorage['basecampId'] + '/projects/' + item.project_id + '/todos/' + item.id);
                 notification.close();
               }
               notification.show();

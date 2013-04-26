@@ -13,14 +13,14 @@ function save_options() {
 }
 
 function logout() {
-  localStorage.removeItem('basecampId');
-  localStorage.removeItem('basecampToken');
-  localStorage.removeItem('lastSearch');
-  localStorage.removeItem('myTodos');
-  localStorage.removeItem('people');
-  localStorage.removeItem('userId');
-  chrome.storage.local.set({'assignedTodos': null});
-  chrome.storage.local.set({'assignedTodosByProject': null});
+  localStorage.removeItem("basecampId");
+  localStorage.removeItem("basecampToken");
+  localStorage.removeItem("lastSearch");
+  localStorage.removeItem("myTodos");
+  localStorage.removeItem("people");
+  localStorage.removeItem("userId");
+  chrome.storage.local.set({"assignedTodos": null});
+  chrome.storage.local.set({"assignedTodosByProject": null});
 }
 
 // Restores select box state to saved value from localStorage.
@@ -46,10 +46,6 @@ function selectOption(variableString) {
   }
 }
 
-document.addEventListener('DOMContentLoaded', restore_options);
-document.querySelector('#save').addEventListener('click', save_options);
-document.querySelector('#logout').addEventListener('click', logout);
-
-var userLang = navigator.language ? navigator.language : navigator.userLanguage;
-var locale = userLang.substring(0,2);
-lang = localStorage['language'] ? localStorage['language'] : locale;
+document.addEventListener("DOMContentLoaded", restore_options);
+document.querySelector("#save").addEventListener("click", save_options);
+document.querySelector("#logout").addEventListener("click", logout);
