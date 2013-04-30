@@ -104,7 +104,7 @@ function getTodos() {
             todo.project = todolist.project;
             todo.project_id = todolist.project_id;
             allTodos.push(todo);
-            if (todo.assignee.id == localStorage['userId'])
+            if (todo.assignee && todo.assignee.id == localStorage['userId'])
               myTodos.push(todo)
           })
         })
@@ -166,6 +166,9 @@ function asyncEvent(todolists) {
       data.project = todolist.bucket.name;
       allTodolists.push(data);
       checkIfModified();
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+      console.log('ERROR: GET request failed');
+      chrome.storage.local.remove('assignedTodos');
     });
   });
 
