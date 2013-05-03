@@ -2,10 +2,10 @@ window.ko = {
 
   "searchTodo":"일정을  검색하세요.",
 
-  "header_overdues": "기한 지난 일정",
-  "header_today": "오늘의 일정",
-  "header_upcoming": "다가오는 일정",
-  "header_noduedate": "기한 없는 일정",
+  "header-overdues": "기한 지난 일정",
+  "header-today": "오늘의 일정",
+  "header-upcoming": "다가오는 일정",
+  "header-noduedate": "기한 없는 일정",
 
   "createdDate": "추가 됨:", // Not match perfectly
 
@@ -23,10 +23,10 @@ window.ko = {
   "visitTodo": "Visit this todo",
   "assignedTo": "{x}에 할당",
 
-  "countOverdues": "개의 기한 지난 일정",
-  "countToday": "개의 일정",
-  "countUpcoming": "개의 다가오는 일정",
-  "countNoDueDate": "개의 기한 없는 일정",
+  "count-overdues": "개의 기한 지난 일정",
+  "count-today": "개의 일정",
+  "count-upcoming": "개의 다가오는 일정",
+  "count-noduedate": "개의 기한 없는 일정",
 
   "needAuth1": "Basecamp계정과 extension을 동기화하려면,",
   "needAuth2": "를 클릭하세요.",

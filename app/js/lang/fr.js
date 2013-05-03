@@ -2,10 +2,10 @@ window.fr = {
 
   "searchTodo":"Chercher une todo...",
 
-  "header_overdues": "En retard",
-  "header_today": "Aujourd'hui",
-  "header_upcoming": "A venir",
-  "header_noduedate": "Sans date",
+  "header-overdues": "En retard",
+  "header-today": "Aujourd'hui",
+  "header-upcoming": "A venir",
+  "header-noduedate": "Sans date",
 
   "createdDate": "Créée il y a",
 
@@ -23,10 +23,10 @@ window.fr = {
   "visitTodo": "Visiter la todo",
   "assignedTo": "Asssignée à {x}",
 
-  "countOverdues":"todo(s) en retard",
-  "countToday":"todo(s) aujourd'hui",
-  "countUpcoming":"todo(s) à venir",
-  "countNoDueDate":"todo(s) sans date définie",
+  "count-overdues":"todo(s) en retard",
+  "count-today":"todo(s) aujourd'hui",
+  "count-upcoming":"todo(s) à venir",
+  "count-noduedate":"todo(s) sans date définie",
 
   "needAuth1":"Cliquer sur",
   "needAuth2":"pour synchroniser votre compte Basecamp avec l'extension.",

@@ -40,7 +40,7 @@ body {
     font-size: 14px;
     font-weight: 700;
     line-height: 55px;
-    width: 360px;
+    width: 366px;
   }
   h2 {
     font-weight: 700;
@@ -156,7 +156,7 @@ dt.disabled {
   }
 }
 
-#overdues_content, #today_content, #upcoming_content, #no-due-date_content {
+#overdues_content, #today_content, #upcoming_content, #noduedate_content {
   max-height: 306px;
   display: none;
 }

@@ -165,55 +165,6 @@ angular
   };
 
   /**
-   * Open tab to view todo on basecamp.com
-   * @param  {number}  projectId
-   * @param  {number}  todoId
-   */
-  $scope.openTodo = function(projectId, todoId) {
-    console.log('LOG: openTodo ' + projectId + " " + todoId);
-    try {
-      chrome.tabs.create({url: "https://basecamp.com/" + $scope.basecampId + "/projects/" + projectId + "/todos/" + todoId});
-    } catch(e) {
-      console.log(e);
-    }
-  };
-
-  /**
-   * Check a todo
-   * @param  {number}  projectId
-   * @param  {number}  todoId
-   */
-  $scope.completeTodo = function(projectId, todoId) {
-    console.log('LOG: completeTodo ' + projectId + ' ' + todoId);
-    try {
-      $http({
-        method: 'PUT',
-        url: 'https://basecamp.com/'+$scope.basecampId+'/api/v1/projects/'+projectId+'/todos/'+todoId+'.json',
-        data: {completed:true},
-        headers: {'Authorization':'Bearer ' + localStorage['basecampToken']}})
-      .success(function(data, status, headers, config) {
-        chrome.storage.local.set({'assignedTodos': angular.toJson($scope.assignedTodos)});
-      })
-      .error(function(data, status, headers, config) {
-        console.log('ERROR: completeTodo request failed');
-      });
-      $("#" + todoId.toString()).addClass('achieved');
-      $("#" + todoId.toString()).delay(500).slideUp();
-      if ($("#" + todoId.toString()).parent().children().length
-          == $("#" + todoId.toString()).parent().children('.achieved').length) {
-        $("#" + todoId.toString()).parent().prev().delay(1000).slideUp();
-      }
-      var random = Math.floor((Math.random()*3)+1);
-      $scope.congratulation = window[$scope.lang]['achievement' + random];
-      $scope.assignedTodos = _.filter($scope.assignedTodos, function(item) {
-        return item.id !== todoId;
-      });
-    } catch(e) {
-      console.log(e);
-    }
-  };
-
-  /**
    * Set the right class (with ng-class) et display (using jQuery) only one category on launch
    */
   $scope.displayCategory = function(display) {
@@ -238,10 +189,10 @@ angular
           $('#upcoming_content').css('display', 'block');
           $('#upcoming').addClass('active');
         }
-        else if (_.size(status(keywordSearch($scope.assignedTodos, $scope.search), 'no-due-date')) > 0) {
+        else if (_.size(status(keywordSearch($scope.assignedTodos, $scope.search), 'noduedate')) > 0) {
           $scope.no_due_date = "active";
-          $('#no-due-date_content').css('display', 'block');
-          $('#no-due-date').addClass('active');
+          $('#noduedate_content').css('display', 'block');
+          $('#noduedate').addClass('active');
        }
       }
     } catch(e) {
@@ -265,44 +216,6 @@ angular
     var status = $filter('status');
     var keywordSearch = $filter('keywordSearch');
     return _.size(keywordSearch(status($scope.assignedTodos, category), $scope.search));
-  };
-
-  /**
-   * Return true if keyword 'from:' is used
-   * Allow to add tooltip 'Assigned to someone' in todos.html view
-   */
-  $scope.isFiltered = function() {
-    return (new RegExp("from:", "gi").test($scope.search));
-  };
-
-  /**
-   * Hightlight found string when using search input
-   * @param  {string}  category  Name of the category to toggle ie. <dt id='{category}'>.
-   */
-  $scope.toggleContent = function(category) {
-    var statusVal;
-    var status = $filter('status');
-    var keywordSearch = $filter('keywordSearch');
-    if (_.size(status(keywordSearch($scope.assignedTodos, $scope.search), category)) > 0) {
-      $("#overdues_content, #today_content, #upcoming_content, #no-due-date_content").getNiceScroll().hide();
-      if ($('#' + category).hasClass('active')) {
-        $('#' + category).next().slideUp(300, 'easeOutQuad');
-        $('#' + category).removeClass('active');
-      }
-      else {
-        $('#todos').find('dt').removeClass('active');
-        $('#' + category).addClass('active');
-        $('#todos').find('dd').slideUp(300, 'easeOutQuad');
-        $('#' + category).next().slideDown({
-          duration: 300,
-          easing: 'easeOutQuad',
-          complete: function() {
-            $('#' + category + '_content').getNiceScroll().show();
-            $('#' + category + '_content').getNiceScroll().resize();
-          }
-        });
-      }
-    }
   };
 
   /**
@@ -458,6 +371,12 @@ angular
       $scope.groupByProject();
       $scope.$apply();
     }
+  });
+
+  $scope.$on('updateParentScopeEvent', function(event, todoId) {
+    $scope.assignedTodos = _.filter($scope.assignedTodos, function(item) {
+      return item.id !== todoId;
+    });
   });
 
 })

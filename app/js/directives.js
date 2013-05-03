@@ -25,4 +25,166 @@ angular.module('basecampExtension.directives', [])
         $(element).on('selectstart', false);
       }
     }
+  })
+
+  .directive('toggleContent', function($document, $location, $parse, $filter) {
+    return {
+      restrict: "E",
+      replace: true,
+      scope: {
+        category: "@",
+        todosCounter: "@"
+      },
+      template: '<dt id="{{category}}" ng-class="{true:\'disabled\', false:\'enabled\'} [todosCounter == 0]" unselectable>' +
+                  '<span ng-switch=todosCounter class="toggle-content">' +
+                    '<span ng-switch-when="0"></span>' +
+                    '<span ng-switch-default class="toggle"></span>' +
+                  '</span>' +
+                  '<h1>{{header}}</h1>' +
+                  '<span class="count-todos" title="{{todosCounter}} {{tooltip}}" ng-show=todosCounter>{{todosCounter}}</span>' +
+                '</dt>',
+      link: function(scope, element, attrs) {
+        var uppercase = $filter('uppercase');
+        var i18n = $filter('i18n');
+        scope.header = uppercase(i18n("header-" + attrs.category));
+        scope.tooltip = i18n("count-" + attrs.category);
+
+        element.bind('click', function() {
+          var status = $filter('status');
+          var keywordSearch = $filter('keywordSearch');
+          if (attrs.todosCounter != "0") {
+            $("#overdues_content, #today_content, #upcoming_content, #noduedate_content").getNiceScroll().hide();
+            if ($(element).hasClass('active')) {
+              $(element).next().slideUp(300, 'easeOutQuad');
+              $(element).removeClass('active');
+            }
+            else {
+              $('#todos').find('dt').removeClass('active');
+              $(element).addClass('active');
+              $('#todos').find('dd').slideUp(300, 'easeOutQuad');
+              $(element).next().slideDown({
+                duration: 300,
+                easing: 'easeOutQuad',
+                complete: function() {
+                  $('#' + attrs.category + '_content').getNiceScroll().show();
+                  $('#' + attrs.category + '_content').getNiceScroll().resize();
+                }
+              });
+            }
+          }
+        });
+      }
+    }
+  })
+
+  .directive('todos', function($document, $location, $parse, $filter) {
+    return {
+      restrict: "E",
+      replace: true,
+      scope: {
+        category: '@',
+        projects: '=',
+        search: '='
+      },
+      template: '<dd id="{{category}}_content" nicescroll="{scrollstep: 50}">' +
+                  '<div class="content" ng-repeat="project in projects">' +
+                    '<h2 ng-show="(project.assignedTodos | keywordSearch:search | status: category).length != 0">{{project.name | uppercase}}</h2>' +
+                    '<ul><todo category={{category}} ng-repeat="assignedTodo in (project.assignedTodos | keywordSearch:search | status: category)"></todo></ul>' +
+                  '</div>' +
+                '</dd>'
+    }
+  })
+
+  .directive('todo', function($document, $location, $parse, $filter, $http) {
+    return {
+      restrict: "E",
+      replace: true,
+      template: '<li>' +
+                  '<span class="achievement"><p><img src="/img/icon-check.png">{{congratulation}}</p></span>' +
+                  '<span class="date" ng-class="{\'overdues\':category == \'overdues\', \'icon-today\':category == \'today\', \'icon-coffee\':category == \'noduedate\'}" title="{{\'createdDate\' | i18n}} {{assignedTodo.created_at | elapsedTime}}">' +
+                    '<span ng-show="category ==\'overdues\'">' +
+                      '<span class="day-number">{{assignedTodo.due_at | daysLate}}</span><br>' +
+                      '<p ng-switch="assignedTodo.days_late" class="username">' +
+                        '<span ng-switch-when="1">{{\'dayLate\' | i18n}}</span>' +
+                        '<span ng-switch-default>{{\'daysLate\' | i18n}}</span>' +
+                      '</p>' +
+                    '</span>' +
+                    '<span ng-show="category ==\'upcoming\'">' +
+                      '<span class="day-number">{{assignedTodo.due_at | daysRemaining}}</span><br>' +
+                      '<p ng-switch="assignedTodo.remaining_days" class="username">' +
+                        '<span ng-switch-when="1">{{\'dayLeft\' | i18n}}</span>' +
+                        '<span ng-switch-default>{{\'daysLeft\' | i18n}}</span>' +
+                      '</p>' +
+                    '</span>' +
+                  '</span>' +
+                  '<div class="todo">' +
+                    '<div>'+
+                      '<span class="checkbox" ng-click="completeTodo(assignedTodo.project_id, assignedTodo.id)"></span><span class="todo-text" title="{{assignedTodo.assignee.name | filterOn: isFiltered()}}">{{assignedTodo.content}}</span>' +
+                    '</div>'+
+                    '</div>' +
+                    '<span class="comments" ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" ng-show="assignedTodo.comments_count" title="{{\'lastUpdate\' | i18n}} {{assignedTodo.updated_at | elapsedTime}}">' +
+                      '<p>{{assignedTodo.comments_count}}</p>' +
+                    '</span>' +
+                    '<span class="void" ng-hide="assignedTodo.comments_count"></span>' +
+                    '<span class="icon-link" ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" title="{{\'visitTodo\' | i18n}}"></span>' +
+                '</li>',
+      controller: function($scope, $element) {
+
+        /**
+         * Open tab to view todo on basecamp.com
+         * @param  {number}  projectId
+         * @param  {number}  todoId
+         */
+        $scope.openTodo = function(projectId, todoId) {
+          console.log('LOG: openTodo ' + projectId + " " + todoId);
+          try {
+            chrome.tabs.create({url: "https://basecamp.com/" + localStorage['basecampId'] + "/projects/" + projectId + "/todos/" + todoId});
+          } catch(e) {
+            console.log(e);
+          }
+        };
+
+        /**
+         * Check a todo
+         * @param  {number}  projectId
+         * @param  {number}  todoId
+         */
+        $scope.completeTodo = function(projectId, todoId) {
+          console.log('LOG: completeTodo ' + projectId + ' ' + todoId);
+          try {
+            $http({
+              method: 'PUT',
+              url: 'https://basecamp.com/'+ localStorage['basecampId'] +'/api/v1/projects/'+projectId+'/todos/'+todoId+'.json',
+              data: {completed:true},
+              headers: {'Authorization':'Bearer ' + localStorage['basecampToken']}})
+            .success(function(data, status, headers, config) {
+              chrome.storage.local.set({'assignedTodos': angular.toJson($scope.assignedTodos)});
+            })
+            .error(function(data, status, headers, config) {
+              console.log('ERROR: completeTodo request failed');
+            });
+            $($element).addClass('achieved');
+            $($element).delay(500).slideUp();
+            if ($($element).parent().children().length
+                == $($element).parent().children('.achieved').length) {
+              $($element).parent().prev().delay(1000).slideUp();
+            }
+            var random = Math.floor((Math.random()*3)+1);
+            $scope.congratulation = $filter("i18n")('achievement' + random);
+
+            $scope.$emit('updateParentScopeEvent', todoId);
+          } catch(e) {
+            console.log(e);
+          }
+        };
+
+        /**
+         * Return true if keyword 'from:' is used
+         * Allow to add tooltip 'Assigned to someone' in todos.html view
+         */
+        $scope.isFiltered = function() {
+          return (new RegExp("from:", "gi").test($scope.search));
+        };
+      }
+    }
   });

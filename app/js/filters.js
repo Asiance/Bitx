@@ -31,7 +31,7 @@ angular
           })
           return out;
           break;
-        case 'no-due-date':
+        case 'noduedate':
           return _.where(input, {due_at: null});
           break;
       }
