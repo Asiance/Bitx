@@ -17,7 +17,10 @@ window.onload = function() {
     var refresh_period = 5000;
     localStorage['refresh_period'] = refresh_period;
   }
-  updateBadge();
+  if (localStorage['myTodos']) {
+    var myTodos = JSON.parse(localStorage['myTodos']);
+    updateBadge(myTodos);
+  }
   setInterval(getTodos, refresh_period);
 }
 
