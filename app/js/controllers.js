@@ -280,7 +280,6 @@ angular
    * @param  {string}  category  Name of the category to toggle ie. <dt id='{category}'>.
    */
   $scope.toggleContent = function(category) {
-    var statusVal;
     var status = $filter('status');
     var keywordSearch = $filter('keywordSearch');
     if (_.size(status(keywordSearch($scope.assignedTodos, $scope.search), category)) > 0) {
