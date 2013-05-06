@@ -56,6 +56,7 @@ function updateBadge(myTodos) {
       localStorage['updateBadge'] = false;
     } else {
       chrome.browserAction.setIcon({path: "./img/icon-inactive.png"});
+      chrome.browserAction.setBadgeText({text: ""});
     }
   } catch(e) {
     console.log('ERROR: updateBadge ' + e);
