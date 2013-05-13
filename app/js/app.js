@@ -5,6 +5,7 @@ angular
     ['basecampExtension.directives',
     'basecampExtension.filters',
     'basecampExtension.services',
+    'basecampExtension.servicesCache',
     'ui.highlight',
     'ui.keypress',
     'basecampExtension.controllers'])
