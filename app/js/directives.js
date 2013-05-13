@@ -1,6 +1,5 @@
 'use strict';
 
-
 angular.module('basecampExtension.directives', [])
   .directive('nicescroll', function($document, $location, $parse) {
     return {
@@ -23,6 +22,100 @@ angular.module('basecampExtension.directives', [])
       restrict: "A",
       link: function(scope, element, attrs) {
         $(element).on('selectstart', false);
+      }
+    }
+  })
+
+  .directive('searchSuggestions', function($document, $location, $parse, $filter) {
+    return {
+      restrict: "E",
+      replace: true,
+      scope: {
+        data: "=",
+        search: "="
+      },
+      template: '<span>' +
+                  '<input id="search-input" type="text" placeholder="{{\'searchTodo\' | i18n}}" ng-model="search" ui-keypress="{\'enter\': \'completeSearch($event)\'}" ui-keydown="{\'up\': \'navigateUp($event)\', \'down\': \'navigateDown($event)\'}" autofocus>' +
+                  '<div ng-show="search" class="icon-clear" ng-click="clearSearch()"></div>' +
+                  '<ul id="suggestions" nicescroll="{scrollstep: 20}">' +
+                    '<li class="person" ng-class="{active: navPosition == $index}" id="{{$index}}" ng-repeat="person in filteredData = (data | suggestionSearch:search)" ng-click="setSearch(person)" ng-mouseenter="setNavPosition($index)">' +
+                      '<img class="username" ng-src="{{person.avatar_url}}">' +
+                      '<span ng-switch="person.id" class="username">' +
+                        '<span ng-switch-when="-1" ng-bind-html-unsafe="person.email_address | highlight:realSearch"></span>' +
+                        '<span ng-switch-default ng-bind-html-unsafe="person.email_address | removeDomain | lowercase | highlight:realSearch"></span>' +
+                      '</span><br>' +
+                      '<span class="fullname">{{person.name}}</span>' +
+                    '</li>' +
+                  '</ul>' +
+                '</span>',
+      controller: function($scope, $element) {
+        $scope.navPosition = -1;
+
+        $scope.$watch('search', function() {
+          localStorage.lastSearch = $scope.search;
+          $scope.realSearch = $scope.search.match(/[^ ||^:]*$/);
+          $("#suggestions").getNiceScroll().resize();
+          $("#suggestions").getNiceScroll().show();
+          $scope.navPosition = -1;
+        });
+
+        $scope.completeSearch = function($event) {
+          if ($scope.navPosition == -1) $scope.setSearch($scope.filteredData[0]);
+          else $scope.setSearch($scope.filteredData[$scope.navPosition]);
+          $event.preventDefault();
+        };
+
+        $scope.navigateUp = function($event) {
+          var frameOffset = document.getElementById('suggestions').scrollTop;
+          if ($scope.navPosition > -1) {
+            $scope.navPosition--;
+            var framePosition = ($scope.navPosition + 1) - (frameOffset-50)/50;
+            var objDiv = document.getElementById($scope.navPosition);
+            if (Math.round(framePosition) == 1) {
+              objDiv.scrollIntoView(true);
+            }
+          }
+          $event.preventDefault();
+        };
+
+        $scope.navigateDown = function($event) {
+          var frameOffset = document.getElementById('suggestions').scrollTop;
+          if ($scope.navPosition < $scope.filteredData.length - 1) {
+            $scope.navPosition += 1;
+            var framePosition = ($scope.navPosition+1) - (frameOffset+50)/50;
+            var objDiv = document.getElementById($scope.navPosition);
+            if (Math.round(framePosition) == 4) {
+              objDiv.scrollIntoView(false);
+            }
+          }
+          $event.preventDefault();
+        };
+
+        $scope.setNavPosition = function($index) {
+          $scope.navPosition = $index;
+        };
+
+        /**
+         * When press ENTER or click on a suggestion, set the new value to the search input
+         * We use the email address to extract a username
+         * @param  {object}  person  Person selected among the suggestions.
+         */
+        $scope.setSearch = function(person) {
+          if(person) {
+            $scope.search = $scope.search.replace(/(\w+)$/gi, "")
+            $scope.search += $filter("removeDomain")(person.email_address);
+            $("#suggestions").getNiceScroll().hide();
+          }
+        };
+
+        /**
+         * Clear search input when click on 'x'
+         */
+        $scope.clearSearch = function(person) {
+          $scope.search = "";
+          $("#suggestions").getNiceScroll().hide();
+        };
+
       }
     }
   })
@@ -89,7 +182,7 @@ angular.module('basecampExtension.directives', [])
       template: '<dd id="{{category}}_content" nicescroll="{scrollstep: 50}">' +
                   '<div class="content" ng-repeat="project in projects">' +
                     '<h2 ng-show="(project.assignedTodos | keywordSearch:search | status: category).length != 0">{{project.name | uppercase}}</h2>' +
-                    '<ul><todo category={{category}} ng-repeat="assignedTodo in (project.assignedTodos | keywordSearch:search | status: category)"></todo></ul>' +
+                    '<ul><todo search="search" category={{category}} ng-repeat="assignedTodo in (project.assignedTodos | keywordSearch:search | status: category)"></todo></ul>' +
                   '</div>' +
                 '</dd>'
     }
@@ -119,7 +212,8 @@ angular.module('basecampExtension.directives', [])
                   '</span>' +
                   '<div class="todo">' +
                     '<div>'+
-                      '<span class="checkbox" ng-click="completeTodo(assignedTodo.project_id, assignedTodo.id)"></span><span class="todo-text" title="{{assignedTodo.assignee.name | filterOn: isFiltered()}}">{{assignedTodo.content}}</span>' +
+                      '<span class="checkbox" ng-click="completeTodo(assignedTodo.project_id, assignedTodo.id)"></span>' +
+                      '<span class="todo-text" title="{{assignedTodo.assignee.name | filterOn: isFiltered()}}" ng-bind-html-unsafe="assignedTodo.content | highlight:realSearch"></span>' +
                     '</div>'+
                     '</div>' +
                     '<span class="comments" ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" ng-show="assignedTodo.comments_count" title="{{\'lastUpdate\' | i18n}} {{assignedTodo.updated_at | elapsedTime}}">' +
@@ -129,6 +223,11 @@ angular.module('basecampExtension.directives', [])
                     '<span class="icon-link" ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" title="{{\'visitTodo\' | i18n}}"></span>' +
                 '</li>',
       controller: function($scope, $element) {
+
+        $scope.$watch('search', function() {
+          localStorage.lastSearch = $scope.search;
+          $scope.realSearch = $scope.search.replace(/(from:|to:)\w+\s+/gi, "");
+        });
 
         /**
          * Open tab to view todo on basecamp.com

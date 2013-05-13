@@ -42,18 +42,22 @@ function countTodos(input, status) {
  */
 function updateBadge(myTodos) {
   try {
-    var counter_todos = localStorage['counter_todos'];
-    if (!myTodos) var myTodos = JSON.parse(localStorage['myTodos']);
-    var color;
-
-    counter = countTodos(myTodos, counter_todos);
-    if (!counter) counter = '';
-    if (counter_todos == 'overdues') color = {color: '#F54E4A'};
-    else color = {color: '#5e9ac9'};
-    chrome.browserAction.setBadgeBackgroundColor(color);
-    chrome.browserAction.setBadgeText({text: counter.toString()});
-    console.log('LOG: updateBadge');
-    localStorage['updateBadge'] = false;
+    if (myTodos) {
+      var counter_todos = localStorage['counter_todos'];
+      var color;
+      counter = countTodos(myTodos, counter_todos);
+      if (!counter) counter = '';
+      if (counter_todos == 'overdues') color = {color: '#F54E4A'};
+      else color = {color: '#5e9ac9'};
+      chrome.browserAction.setBadgeBackgroundColor(color);
+      chrome.browserAction.setBadgeText({text: counter.toString()});
+      chrome.browserAction.setIcon({path: "./icon.png"});
+      console.log('LOG: updateBadge');
+      localStorage['updateBadge'] = false;
+    } else {
+      chrome.browserAction.setIcon({path: "./img/icon-inactive.png"});
+      chrome.browserAction.setBadgeText({text: ""});
+    }
   } catch(e) {
     console.log('ERROR: updateBadge ' + e);
     chrome.browserAction.setBadgeText({text: ''});

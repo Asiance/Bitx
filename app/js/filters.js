@@ -214,6 +214,9 @@ angular
                     || item['email_address'].match(new RegExp(realSearch, "gi"))) );
             });
           }
+          if (realSearch === $filter('removeDomain')(out[0]['email_address'])) {
+            return [];
+          }
         }
 
         // Keyword suggestions

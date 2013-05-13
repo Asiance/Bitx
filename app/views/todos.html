@@ -1,17 +1,6 @@
 <header>
   <img id="logo" src="/img/logo-header.png" height="26" width="39">
-  <input id="search-input" type="text" placeholder="{{'searchTodo' | i18n}}" ng-model="search" autofocus>
-  <div ng-show="search" class="icon-clear" ng-click="clearSearch()"></div>
-  <ul id="suggestions" nicescroll="{scrollstep: 20}">
-    <li id="{{$index}}" class="person" ng-class="{active: suggestionsPosition == $index}" ng-repeat="person in people | suggestionSearch: search" ng-click="setSearch(person)" ng-mouseenter="setActive($index)">
-      <img class="username" ng-src="{{person.avatar_url}}">
-      <span ng-switch="person.id" class="username">
-        <span ng-switch-when="-1">{{person.email_address}}</span>
-        <span ng-switch-default>{{person.email_address | removeDomain | lowercase}}</span>
-      </span><br>
-      <span class="fullname">{{person.name}}</span>
-    </li>
-  </ul>
+  <search-suggestions data="people" search="search"></search-suggestions>
   <a ng-click="openOptions()"><span class="icon-settings"></span></a>
 </header>
 

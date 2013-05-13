@@ -357,8 +357,8 @@ dt,
 }
 
 /* Style applied to the found string */
-.highlight { background: yellow; }
-.strong { font-weight: 700; }
+.todo .ui-match { background: yellow; }
+.person .ui-match { font-weight: 700; }
 
 #suggestions {
   background: $color-close-white;
@@ -369,7 +369,6 @@ dt,
   max-height: 200px;
   position: absolute;
   width: 262px;
-  z-index: -1;
   li {
     &.active {
       background: #e4e4e4;
