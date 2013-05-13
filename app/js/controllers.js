@@ -6,7 +6,7 @@ angular
 /**
  * Controller linked to todos.html
  */
-.controller('TodosController', function($scope, $filter, $q, $http, Authorization, People, User, completeTodo, AllTodolists, Todolist) {
+.controller('TodosController', function($scope, $filter, $q, $http, Authorization, People, User, completeTodo, AllTodolists, Todolist, Cache) {
 
   /**
    * After OAuth2 signin, retrieve a Basecamp Account
@@ -55,6 +55,7 @@ angular
         if (headers('Status') != '304 Not Modified' ||  !localStorage['people']) {
           localStorage['people'] = angular.toJson(_.sortBy(data, function(user) { return user.name; }));
           $scope.people = _.sortBy(data, function(user) { return user.name; });
+          $scope.people.push({"name":"Alias", "email_address":"me", "avatar_url":"/img/icon-search.png", "id":localStorage.userId});
           $scope.people.push({"name":"Search by creator", "email_address":"from:", "avatar_url":"/img/icon-search.png", "id":-1});
           $scope.people.push({"name":"Search by assignee", "email_address":"to:", "avatar_url":"/img/icon-search.png", "id":-1});
         }
@@ -185,27 +186,8 @@ angular
   /**
    * Initialization of variables
    */
-  $scope.search = localStorage['lastSearch'] ? localStorage['lastSearch'] : "";
-  if (localStorage['basecampId'] && localStorage['userId'] && localStorage['people']) {
-    $scope.basecampId = localStorage['basecampId'];
-    $scope.userId = localStorage['userId'];
-    $scope.people = angular.fromJson(localStorage['people']);
-    $scope.people.push({"name":"Search by creator", "email_address":"from:", "avatar_url":"/img/icon-search.png", "id":-1});
-    $scope.people.push({"name":"Search by assignee", "email_address":"to:", "avatar_url":"/img/icon-search.png", "id":-1});
-    $scope.getAssignedTodos(); // Trigger a refresh on launch
-    $scope.getPeople();
-  } else {
-    $scope.getBasecampAccount();
-  }
-
-  // Load data from cache
-  chrome.storage.local.get('assignedTodos', function(data) {
-    if (!_.isEmpty(data.assignedTodos)) {
-      $scope.assignedTodos = angular.fromJson(data['assignedTodos']);
-      $scope.groupByProject();
-      $scope.$apply();
-    }
-  });
+  Cache.loadTodos($scope);
+  Cache.loadParams($scope);
 
   $scope.$on('updateParentScopeEvent', function(event, todoId) {
     $scope.assignedTodos = _.filter($scope.assignedTodos, function(item) {
@@ -242,5 +224,4 @@ angular
   if (localStorage["basecampToken"]) {
     $scope.online = true;
   }
-
 });

@@ -1,4 +1,4 @@
-'use strict';
+"'use strict";
 
 angular.module('basecampExtension.directives', [])
   .directive('nicescroll', function($document, $location, $parse) {
@@ -17,16 +17,16 @@ angular.module('basecampExtension.directives', [])
     };
   })
 
-  .directive('unselectable', function($document, $location, $parse) {
+  .directive('unselectable', function($document, $parse) {
     return {
       restrict: "A",
       link: function(scope, element, attrs) {
         $(element).on('selectstart', false);
       }
-    }
+    };
   })
 
-  .directive('searchSuggestions', function($document, $location, $parse, $filter) {
+  .directive('searchSuggestions', function($document, $parse) {
     return {
       restrict: "E",
       replace: true,
@@ -48,76 +48,81 @@ angular.module('basecampExtension.directives', [])
                     '</li>' +
                   '</ul>' +
                 '</span>',
-      controller: function($scope, $element) {
-        $scope.navPosition = -1;
+      controller: 'searchSuggestionsCtrl'
+    };
+  })
 
-        $scope.$watch('search', function() {
-          localStorage.lastSearch = $scope.search;
-          $scope.realSearch = $scope.search.match(/[^ ||^:]*$/);
-          $("#suggestions").getNiceScroll().resize();
-          $("#suggestions").getNiceScroll().show();
-          $scope.navPosition = -1;
-        });
+  .controller('searchSuggestionsCtrl', function($scope, $element, $filter) {
+    $scope.navPosition = -1;
 
-        $scope.completeSearch = function($event) {
-          if ($scope.navPosition == -1) $scope.setSearch($scope.filteredData[0]);
-          else $scope.setSearch($scope.filteredData[$scope.navPosition]);
-          $event.preventDefault();
-        };
+    $scope.$watch('search', function() {
+      localStorage.lastSearch = $scope.search;
+      $scope.realSearch = $scope.search.match(/[^ ||^:]*$/);
+      $("#suggestions").getNiceScroll().resize();
+      $("#suggestions").getNiceScroll().show();
+      $scope.navPosition = -1;
+    });
 
-        $scope.navigateUp = function($event) {
-          var frameOffset = document.getElementById('suggestions').scrollTop;
-          if ($scope.navPosition > -1) {
-            $scope.navPosition--;
-            var framePosition = ($scope.navPosition + 1) - (frameOffset-50)/50;
-            var objDiv = document.getElementById($scope.navPosition);
-            if (Math.round(framePosition) == 1) {
-              objDiv.scrollIntoView(true);
-            }
-          }
-          $event.preventDefault();
-        };
-
-        $scope.navigateDown = function($event) {
-          var frameOffset = document.getElementById('suggestions').scrollTop;
-          if ($scope.navPosition < $scope.filteredData.length - 1) {
-            $scope.navPosition += 1;
-            var framePosition = ($scope.navPosition+1) - (frameOffset+50)/50;
-            var objDiv = document.getElementById($scope.navPosition);
-            if (Math.round(framePosition) == 4) {
-              objDiv.scrollIntoView(false);
-            }
-          }
-          $event.preventDefault();
-        };
-
-        $scope.setNavPosition = function($index) {
-          $scope.navPosition = $index;
-        };
-
-        /**
-         * When press ENTER or click on a suggestion, set the new value to the search input
-         * We use the email address to extract a username
-         * @param  {object}  person  Person selected among the suggestions.
-         */
-        $scope.setSearch = function(person) {
-          if(person) {
-            $scope.search = $scope.search.replace(/(\w+)$/gi, "")
-            $scope.search += $filter("removeDomain")(person.email_address);
-            $("#suggestions").getNiceScroll().hide();
-          }
-        };
-
-        /**
-         * Clear search input when click on 'x'
-         */
-        $scope.clearSearch = function(person) {
-          $scope.search = "";
-          $("#suggestions").getNiceScroll().hide();
-        };
-
+    $scope.completeSearch = function($event) {
+      if ($scope.navPosition === -1) {
+        $scope.setSearch($scope.filteredData[0]);
       }
-    }
+      else {
+        $scope.setSearch($scope.filteredData[$scope.navPosition]);
+      }
+      $event.preventDefault();
+    };
+
+    $scope.navigateUp = function($event) {
+      var frameOffset = document.getElementById('suggestions').scrollTop;
+      if ($scope.navPosition > -1) {
+        $scope.navPosition--;
+        var framePosition = ($scope.navPosition + 1) - (frameOffset-50)/50;
+        var objDiv = document.getElementById($scope.navPosition);
+        if (Math.round(framePosition) === 1) {
+          objDiv.scrollIntoView(true);
+        }
+      }
+      $event.preventDefault();
+    };
+
+    $scope.navigateDown = function($event) {
+      var frameOffset = document.getElementById('suggestions').scrollTop;
+      if ($scope.navPosition < $scope.filteredData.length - 1) {
+        $scope.navPosition += 1;
+        var framePosition = ($scope.navPosition+1) - (frameOffset+50)/50;
+        var objDiv = document.getElementById($scope.navPosition);
+        if (Math.round(framePosition) === 4) {
+          objDiv.scrollIntoView(false);
+        }
+      }
+      $event.preventDefault();
+    };
+
+    $scope.setNavPosition = function($index) {
+      $scope.navPosition = $index;
+    };
+
+    /**
+     * When press ENTER or click on a suggestion, set the new value to the search input
+     * We use the email address to extract a username
+     * @param  {object}  person  Person selected among the suggestions.
+     */
+    $scope.setSearch = function(person) {
+      if(person) {
+        $scope.search = $scope.search.replace(/(\w+)$/gi, "");
+        $scope.search += $filter("removeDomain")(person.email_address);
+        $("#suggestions").getNiceScroll().hide();
+      }
+    };
+
+    /**
+     * Clear search input when click on 'x'
+     */
+    $scope.clearSearch = function(person) {
+      $scope.search = "";
+      $("#suggestions").getNiceScroll().hide();
+    };
   })
 
   .directive('toggleContent', function($document, $location, $parse, $filter) {
@@ -145,7 +150,7 @@ angular.module('basecampExtension.directives', [])
         element.bind('click', function() {
           var status = $filter('status');
           var keywordSearch = $filter('keywordSearch');
-          if (attrs.todosCounter != "0") {
+          if (attrs.todosCounter !== "0") {
             $("#overdues_content, #today_content, #upcoming_content, #noduedate_content").getNiceScroll().hide();
             if ($(element).hasClass('active')) {
               $(element).next().slideUp(300, 'easeOutQuad');
@@ -167,7 +172,7 @@ angular.module('basecampExtension.directives', [])
           }
         });
       }
-    }
+    };
   })
 
   .directive('todos', function($document, $location, $parse, $filter) {
@@ -185,7 +190,7 @@ angular.module('basecampExtension.directives', [])
                     '<ul><todo search="search" category={{category}} ng-repeat="assignedTodo in (project.assignedTodos | keywordSearch:search | status: category)"></todo></ul>' +
                   '</div>' +
                 '</dd>'
-    }
+    };
   })
 
   .directive('todo', function($document, $location, $parse, $filter, $http) {
@@ -222,68 +227,68 @@ angular.module('basecampExtension.directives', [])
                     '<span class="void" ng-hide="assignedTodo.comments_count"></span>' +
                     '<span class="icon-link" ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" title="{{\'visitTodo\' | i18n}}"></span>' +
                 '</li>',
-      controller: function($scope, $element) {
-
-        $scope.$watch('search', function() {
-          localStorage.lastSearch = $scope.search;
-          $scope.realSearch = $scope.search.replace(/(from:|to:)\w+\s+/gi, "");
-        });
-
-        /**
-         * Open tab to view todo on basecamp.com
-         * @param  {number}  projectId
-         * @param  {number}  todoId
-         */
-        $scope.openTodo = function(projectId, todoId) {
-          console.log('LOG: openTodo ' + projectId + " " + todoId);
-          try {
-            chrome.tabs.create({url: "https://basecamp.com/" + localStorage['basecampId'] + "/projects/" + projectId + "/todos/" + todoId});
-          } catch(e) {
-            console.log(e);
-          }
-        };
-
-        /**
-         * Check a todo
-         * @param  {number}  projectId
-         * @param  {number}  todoId
-         */
-        $scope.completeTodo = function(projectId, todoId) {
-          console.log('LOG: completeTodo ' + projectId + ' ' + todoId);
-          try {
-            $http({
-              method: 'PUT',
-              url: 'https://basecamp.com/'+ localStorage['basecampId'] +'/api/v1/projects/'+projectId+'/todos/'+todoId+'.json',
-              data: {completed:true},
-              headers: {'Authorization':'Bearer ' + localStorage['basecampToken']}})
-            .success(function(data, status, headers, config) {
-              chrome.storage.local.set({'assignedTodos': angular.toJson($scope.assignedTodos)});
-            })
-            .error(function(data, status, headers, config) {
-              console.log('ERROR: completeTodo request failed');
-            });
-            $($element).addClass('achieved');
-            $($element).delay(500).slideUp();
-            if ($($element).parent().children().length
-                == $($element).parent().children('.achieved').length) {
-              $($element).parent().prev().delay(1000).slideUp();
-            }
-            var random = Math.floor((Math.random()*3)+1);
-            $scope.congratulation = $filter("i18n")('achievement' + random);
-
-            $scope.$emit('updateParentScopeEvent', todoId);
-          } catch(e) {
-            console.log(e);
-          }
-        };
-
-        /**
-         * Return true if keyword 'from:' is used
-         * Allow to add tooltip 'Assigned to someone' in todos.html view
-         */
-        $scope.isFiltered = function() {
-          return (new RegExp("from:", "gi").test($scope.search));
-        };
-      }
+      controller: 'todoCtrl'
     }
+  })
+
+  .controller('todoCtrl', function($scope, $element, $filter) {
+    $scope.$watch('search', function() {
+      localStorage.lastSearch = $scope.search;
+      $scope.realSearch = $scope.search.replace(/(from:|to:)\w+\s+/gi, "");
+    });
+
+    /**
+     * Open tab to view todo on basecamp.com
+     * @param  {number}  projectId
+     * @param  {number}  todoId
+     */
+    $scope.openTodo = function(projectId, todoId) {
+      console.log('LOG: openTodo ' + projectId + " " + todoId);
+      try {
+        chrome.tabs.create({url: "https://basecamp.com/" + localStorage.basecampId + "/projects/" + projectId + "/todos/" + todoId});
+      } catch(e) {
+        console.log(e);
+      }
+    };
+
+    /**
+     * Check a todo
+     * @param  {number}  projectId
+     * @param  {number}  todoId
+     */
+    $scope.completeTodo = function(projectId, todoId) {
+      console.log('LOG: completeTodo ' + projectId + ' ' + todoId);
+      try {
+        $http({
+          method: 'PUT',
+          url: 'https://basecamp.com/'+ localStorage.basecampId +'/api/v1/projects/'+projectId+'/todos/'+todoId+'.json',
+          data: {completed:true},
+          headers: {'Authorization':'Bearer ' + localStorage.basecampToken}})
+        .success(function(data, status, headers, config) {
+          chrome.storage.local.set({'assignedTodos': angular.toJson($scope.assignedTodos)});
+        })
+        .error(function(data, status, headers, config) {
+          console.log('ERROR: completeTodo request failed');
+        });
+        $($element).addClass('achieved');
+        $($element).delay(500).slideUp();
+        if ($($element).parent().children().length === $($element).parent().children('.achieved').length) {
+          $($element).parent().prev().delay(1000).slideUp();
+        }
+        var random = Math.floor((Math.random()*3)+1);
+        $scope.congratulation = $filter("i18n")('achievement' + random);
+
+        $scope.$emit('updateParentScopeEvent', todoId);
+      } catch(e) {
+        console.log(e);
+      }
+    };
+
+    /**
+     * Return true if keyword 'from:' is used
+     * Allow to add tooltip 'Assigned to someone' in todos.html view
+     */
+    $scope.isFiltered = function() {
+      return (new RegExp("from:", "gi").test($scope.search));
+    };
   });
