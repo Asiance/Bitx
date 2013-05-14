@@ -23,6 +23,7 @@ angular
         if (!_.isEmpty(data.assignedTodos)) {
           scope.assignedTodos = angular.fromJson(data['assignedTodos']);
           scope.groupByProject();
+          scope.$apply();
         }
       })
     }

@@ -2,7 +2,6 @@
 
 /* jasmine specs for directives go here */
 
-// @TODO Add tests for ENTER keypress
 describe('searchSuggestions', function() {
   var element, scope, ctrl;
   beforeEach(module('basecampExtension.services'));
