@@ -44,7 +44,7 @@ angular
   .filter('i18n', function() {
     var lang = localStorage['language'];
     return function(input) {
-      if(window[lang][input]) return window[lang][input];
+      if(window[lang] && window[lang][input]) return window[lang][input];
       else return window['en'][input];
     };
   })
@@ -55,6 +55,9 @@ angular
   .filter('elapsedTime', function() {
     var today = new Date();
     var lang = localStorage['language'];
+    if (!window[lang]) {
+      lang = "en";
+    }
     return function(input) {
       if(input) {
         var diff = today - new Date(input);

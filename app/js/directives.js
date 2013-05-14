@@ -1,4 +1,4 @@
-"'use strict";
+"use strict";
 
 angular.module('basecampExtension.directives', [])
   .directive('nicescroll', function($document, $location, $parse) {
@@ -147,12 +147,12 @@ angular.module('basecampExtension.directives', [])
                       '<span class="checkbox" ng-click="completeTodo(assignedTodo.project_id, assignedTodo.id)"></span>' +
                       '<span class="todo-text" title="{{assignedTodo.assignee.name | filterOn: isFiltered()}}" ng-bind-html-unsafe="assignedTodo.content | highlight:realSearch"></span>' +
                     '</div>'+
-                    '</div>' +
-                    '<span class="comments" ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" ng-show="assignedTodo.comments_count" title="{{\'lastUpdate\' | i18n}} {{assignedTodo.updated_at | elapsedTime}}">' +
-                      '<p>{{assignedTodo.comments_count}}</p>' +
-                    '</span>' +
-                    '<span class="void" ng-hide="assignedTodo.comments_count"></span>' +
-                    '<span class="icon-link" ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" title="{{\'visitTodo\' | i18n}}"></span>' +
+                  '</div>' +
+                  '<span class="comments" ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" ng-show="assignedTodo.comments_count" title="{{\'lastUpdate\' | i18n}} {{assignedTodo.updated_at | elapsedTime}}">' +
+                    '<p>{{assignedTodo.comments_count}}</p>' +
+                  '</span>' +
+                  '<span class="void" ng-hide="assignedTodo.comments_count"></span>' +
+                  '<span class="icon-link" ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" title="{{\'visitTodo\' | i18n}}"></span>' +
                 '</li>',
       controller: 'todoCtrl'
     }

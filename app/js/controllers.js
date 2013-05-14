@@ -229,12 +229,14 @@ angular
 /**
  * Controller linked to search input directive
  */
-.controller('searchSuggestionsCtrl', function($scope, $element, $filter) {
+.controller('searchSuggestionsCtrl', function($scope, $filter) {
   $scope.navPosition = -1;
 
   $scope.$watch('search', function() {
     localStorage.lastSearch = $scope.search;
-    $scope.realSearch = $scope.search.match(/[^ ||^:]*$/);
+    if ($scope.search) {
+      $scope.realSearch = $scope.search.match(/[^ ||^:]*$/);
+    }
     $("#suggestions").getNiceScroll().resize();
     $("#suggestions").getNiceScroll().show();
     $scope.navPosition = -1;
@@ -305,10 +307,12 @@ angular
 /**
  * Controller linked to todo directive
  */
-.controller('todoCtrl', function($scope, $element, $filter) {
+.controller('todoCtrl', function($scope, $element, $filter, $http) {
   $scope.$watch('search', function() {
     localStorage.lastSearch = $scope.search;
-    $scope.realSearch = $scope.search.replace(/(from:|to:)\w+\s+/gi, "");
+    if ($scope.search) {
+      $scope.realSearch = $scope.search.replace(/(from:|to:)\w+\s+/gi, "");
+    }
   });
 
   /**
