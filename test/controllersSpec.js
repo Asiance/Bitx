@@ -180,6 +180,15 @@ describe('searchSuggestions', function() {
     element.find("li").eq(0).click();
     expect(scope.search).toBe("to:me from:laurent");
   });
+
+  it("should complete input on click", function() {
+    scope.search = "abcde";
+    scope.$digest();
+    expect(element.find("#search-input").val()).toBe("abcde");
+    element.find(".icon-clear").eq(0).click();
+    scope.$digest();
+    expect(element.find("#search-input").val()).toBe("");
+  });
 });
 
 describe('toggleContent', function() {
