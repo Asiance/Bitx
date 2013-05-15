@@ -357,7 +357,7 @@ describe('todos', function() {
 });
 
 describe('todo', function() {
-  var element, scope, ctrl, timeout;
+  var element, scope, ctrl, timeout, httpBackend;
   beforeEach(module('basecampExtension.services'));
   beforeEach(module('basecampExtension.servicesCache'));
   beforeEach(module('basecampExtension.controllers'));
@@ -391,18 +391,20 @@ describe('todo', function() {
           "type": "Person",
           "name": "Gilles Piou"
         },
-        "url": "https://basecamp.com/2004093aa/api/v1/projects/2155413-basecamp-chrome/todos/41111117-validate-design-with.json",
+        "url": "https://basecamp.com/2004093/api/v1/projects/2155413-basecamp-chrome/todos/41111117-validate-design-with.json",
         "todolist": "Website",
         "project": "Basecamp Chrome Extension - Bitx",
         "project_id": 2155413
       };
     ctrl = $controller('todoCtrl', {
       $scope: scope,
-      $element: element
+      $element: element,
     });
     $compile(element)(scope);
     scope.$digest();
   }));
+
+
 
   it("should compile template", function() {
     expect(element.find(".todo").length).toBe(1);
@@ -413,5 +415,135 @@ describe('todo', function() {
   it("should display todo content", function() {
     expect(element.find(".todo-text").text()).toBe("Validate design with Antoine");
     expect(element.find(".comments").text()).toBe("1");
+  });
+});
+
+describe('TodosController', function() {
+  var scope, ctrl, httpBackend;
+  beforeEach(module('basecampExtension.services'));
+  beforeEach(module('basecampExtension.servicesCache'));
+  beforeEach(module('basecampExtension.controllers'));
+  beforeEach(module('basecampExtension.filters'));
+  beforeEach(module('basecampExtension.directives'));
+  beforeEach(module('ui.highlight'));
+  beforeEach(module('ui.keypress'));
+  beforeEach(inject(function($rootScope, $controller, $httpBackend) {
+    scope = $rootScope;
+    httpBackend = $httpBackend;
+    ctrl = $controller('TodosController', {
+      $scope: scope
+    });
+  }));
+
+  afterEach(function() {
+    httpBackend.verifyNoOutstandingExpectation();
+    httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it("should GET Basecamp account ID of the organization", function() {
+    var getRequest = 'https://launchpad.37signals.com/authorization.json';
+    var fakeGetResponse = {
+      "expires_at": "2013-05-29T08:24:33Z",
+      "accounts": [
+        {
+          "name": "Asiance",
+          "href": "https://basecamp.com/2004093/api/v1",
+          "id": 2004093,
+          "product": "bcx"
+        }
+      ],
+      "identity": {
+        "id": 6398280,
+        "last_name": "Piou",
+        "email_address": "gilles@asiance.com",
+        "first_name": "Gilles"
+      }
+    };
+    httpBackend.when('GET', getRequest).respond(fakeGetResponse);
+    scope.getBasecampAccount();
+    httpBackend.flush();
+    expect(scope.basecampId).toBe(2004093);
+  });
+
+  it("should GET User account ID", function() {
+    var getRequest = 'https://basecamp.com/2004093/api/v1/people/me.json';
+    var fakeGetResponse = {
+      "id": 3768284,
+      "name": "Gilles Piou",
+      "email_address": "gilles@asiance.com",
+      "admin": false,
+      "created_at": "2013-02-18T12:13:19.000+09:00",
+      "updated_at": "2013-05-14T14:29:38.000+09:00",
+      "identity_id": 6398280,
+      "avatar_url": "http://dge9rmgqjs8m1.cloudfront.net/global/e32a5c25c36ecdfd8c9a51340e400351e8679d8e081218891aba5e654443eb68427966876abf2ce68c928c7faa51286abea6deaf627f786162294cb4a5801da6379356d7078157fbfac76f160bde6694/avatar.gif?r=3",
+      "events": {
+        "count": 635,
+        "updated_at": "2013-05-14T14:29:38.000+09:00",
+        "url": "https://basecamp.com/2004093/api/v1/people/3768284-gilles-piou/events.json"
+      },
+      "assigned_todos": {
+        "count": 88,
+        "updated_at": "2013-05-14T14:29:38.000+09:00",
+        "url": "https://basecamp.com/2004093/api/v1/people/3768284-gilles-piou/assigned_todos.json"
+      }
+    };
+    httpBackend.when('GET', getRequest).respond(fakeGetResponse);
+    scope.basecampId = 2004093;
+    scope.getUser();
+    httpBackend.flush();
+    expect(scope.userId).toBe(3768284);
+  });
+
+  it("should GET People of the organization", function() {
+    var getRequest = 'https://basecamp.com/2004093/api/v1/people.json';
+    var fakeGetResponse = [{
+      "id": 2527441,
+      "name": "Adrien Desbiaux",
+      "email_address": "adrien@asiance.com",
+      "admin": true,
+      "created_at": "2012-06-04T10:49:47.000+09:00",
+      "updated_at": "2013-04-29T08:08:15.000+09:00",
+      "identity_id": 5004767,
+      "avatar_url": "http://dge9rmgqjs8m1.cloudfront.net/global/a0a3c428a38a81161a575b3d9e581c7cbca74e07a280166676e352471b046624b21f0060513a2d520c967361a92eb605117d1b1699258129fd6f1c3e0124c5947341d90041e5f48bf3a17af384d376b7/avatar.gif?r=3",
+      "url": "https://basecamp.com/2004093/api/v1/people/2527441-adrien-desbiaux.json"
+    },
+    {
+      "id": 2527422,
+      "name": "Antoine Blancher",
+      "email_address": "antoine@asiance.com",
+      "admin": true,
+      "created_at": "2011-05-02T10:35:11.000+09:00",
+      "updated_at": "2013-04-29T09:42:02.000+09:00",
+      "identity_id": 2952920,
+      "avatar_url": "http://dge9rmgqjs8m1.cloudfront.net/global/d8852ea40151b7672308e64d48513831deba577a04f16f12d8cb57689faf7402ef4eff4bcd0431e09f9e92f6de97c3ae228188f255ba2bea3408befe7f3ec31f283909fe99915c1277393873c6927a31/avatar.gif?r=3",
+      "url": "https://basecamp.com/2004093/api/v1/people/2527422-antoine-blancher.json"
+    },
+    {
+      "id": 3768284,
+      "name": "Gilles Piou",
+      "email_address": "gilles@asiance.com",
+      "admin": false,
+      "created_at": "2013-02-18T12:13:19.000+09:00",
+      "updated_at": "2013-04-26T17:03:04.000+09:00",
+      "identity_id": 6398280,
+      "avatar_url": "http://dge9rmgqjs8m1.cloudfront.net/global/e32a5c25c36ecdfd8c9a51340e400351e8679d8e081218891aba5e654443eb68427966876abf2ce68c928c7faa51286abea6deaf627f786162294cb4a5801da6379356d7078157fbfac76f160bde6694/avatar.gif?r=3",
+      "url": "https://basecamp.com/2004093/api/v1/people/3768284-gilles-piou.json"
+    },
+    {
+      "id": 2527420,
+      "name": "Laurent Le Graverend",
+      "email_address": "laurent@asiance.com",
+      "admin": true,
+      "created_at": "2010-04-06T14:03:43.000+09:00",
+      "updated_at": "2013-04-27T11:37:37.000+09:00",
+      "identity_id": 1009363,
+      "avatar_url": "http://dge9rmgqjs8m1.cloudfront.net/global/620f1b8420834019047d7fff49eeb79510a52cf3/avatar.gif?r=3",
+      "url": "https://basecamp.com/2004093/api/v1/people/2527420-laurent-le-graverend.json"
+    }];
+    httpBackend.when('GET', getRequest).respond(fakeGetResponse);
+    scope.basecampId = 2004093;
+    scope.getPeople();
+    httpBackend.flush();
+    expect(scope.people.length).toBe(7);
   });
 });
