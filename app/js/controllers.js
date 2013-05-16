@@ -16,7 +16,7 @@ angular
     try {
       Authorization.query(function(data) {
         $scope.basecampId = _.findWhere(data.accounts, {product: "bcx"}).id;
-        localStorage['basecampId'] = $scope.basecampId;
+        localStorage.basecampId = $scope.basecampId;
         $scope.getUser();
         $scope.getPeople();
       }, function(response) {
@@ -35,7 +35,7 @@ angular
     try {
       User.query({basecampId: $scope.basecampId}, function(data) {
         $scope.userId = data.id;
-        localStorage['userId'] = data.id;
+        localStorage.userId = data.id;
         $scope.getAssignedTodos();
       }, function(response) {
         console.log('ERROR: Failed to connect!');
@@ -52,8 +52,8 @@ angular
     console.log('LOG: getPeople');
     try {
       People.query({basecampId: $scope.basecampId}, function(data, headers) {
-        if (headers('Status') != '304 Not Modified' ||  !localStorage['people']) {
-          localStorage['people'] = angular.toJson(_.sortBy(data, function(user) { return user.name; }));
+        if (headers('Status') != '304 Not Modified' ||  !localStorage.people) {
+          localStorage.people = angular.toJson(_.sortBy(data, function(user) { return user.name; }));
           $scope.people = _.sortBy(data, function(user) { return user.name; });
           $scope.people.push({"name":"Alias", "email_address":"me", "avatar_url":"/img/icon-search.png", "id":localStorage.userId});
           $scope.people.push({"name":"Search by creator", "email_address":"from:", "avatar_url":"/img/icon-search.png", "id":-1});
@@ -76,7 +76,7 @@ angular
     try {
       AllTodolists.query({basecampId: $scope.basecampId}, function(todolists, getResponseHeaders) {
         if(getResponseHeaders('Status') == "200 OK" || !$scope.assignedTodos) {
-          localStorage['updateBadge'] = true;
+          localStorage.updateBadge = true;
           var allTodos = [];
           var promise = asyncRequests(todolists);
           promise.then(function(allTodolists) {
@@ -86,8 +86,8 @@ angular
                 todo.project = todolist.project;
                 todo.project_id = todolist.project_id;
                 allTodos.push(todo);
-              })
-            })
+              });
+            });
 
             allTodos = _.chain(allTodos).sortBy(function(todo) { return todo.id; })
                         .sortBy(function(todo) { return todo.project_id; })
@@ -112,7 +112,7 @@ angular
   function asyncRequests(todolists) {
 
     function checkIfDone() {
-      if (--done == 0) {
+      if (--done === 0) {
         deferred.resolve(allTodolists);
       }
     }
@@ -127,7 +127,7 @@ angular
         $http({
           method: 'GET',
           url: 'https://basecamp.com/'+ $scope.basecampId + '/api/v1/projects/' + todolist.bucket.id + '/todolists/' + todolist.id + '.json',
-          headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}
+          headers:  {'Authorization':'Bearer ' + localStorage.basecampToken}
         })
         .success(function(data, status, headers) {
           data.project_id = todolist.bucket.id;
@@ -137,13 +137,13 @@ angular
         })
         .error(function() {
           console.log('ERROR: syncRequests - Unable to get one todolist');
-        })
-      })
+        });
+      });
       return deferred.promise;
     } catch(e) {
       console.log(e);
     }
-  };
+  }
 
   /**
    * Group assigned Todos by Project
@@ -169,7 +169,7 @@ angular
    * Custom sort function to compare date in string format as integer
    */
   $scope.sortByDate = function(assignedTodo) {
-    if (assignedTodo.due_at != null) return assignedTodo.due_at.replace(/-/g, "");
+    if (assignedTodo.due_at !== null) return assignedTodo.due_at.replace(/-/g, "");
     else return "99999999"; // Default value for undefined due date
   };
 
@@ -213,15 +213,15 @@ angular
   /**
    * Initialization
    */
-  if (localStorage["language"]) {
-    $scope.lang = localStorage["language"];
+  if (localStorage.language) {
+    $scope.lang = localStorage.language;
   } else {
     var userLang = (navigator.language) ? navigator.language : navigator.userLanguage;
     var lang = userLang.substring(0,2);
     $scope.lang = lang;
-    localStorage["language"] = lang;
+    localStorage.language = lang;
   }
-  if (localStorage["basecampToken"]) {
+  if (localStorage.basecampToken) {
     $scope.online = true;
   }
 })

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 angular.module('basecampExtension.directives', [])
   .directive('nicescroll', function($document, $location, $parse) {
@@ -155,5 +155,5 @@ angular.module('basecampExtension.directives', [])
                   '<span class="icon-link" ng-click="openTodo(assignedTodo.project_id, assignedTodo.id)" title="{{\'visitTodo\' | i18n}}"></span>' +
                 '</li>',
       controller: 'todoCtrl'
-    }
+    };
   });

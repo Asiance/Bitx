@@ -18,32 +18,28 @@ function countTodos(input, status) {
   switch (status) {
     case "no_due_date":
       return _.where(input, {due_at: null}).length;
-      break;
     case "today":
       return _.where(input, {due_at: dateToYMD(new Date())}).length;
-      break;
     case "upcoming":
       return _.countBy(input, function(todo) {
         return (dateToYMD(new Date(todo.due_at)) > dateToYMD(new Date()));
       }).true;
-      break;
     case "overdues":
       return _.countBy(input, function(todo) {
-        if (todo.due_at != null)
+        if (todo.due_at !== null)
           return (dateToYMD(new Date(todo.due_at)) < dateToYMD(new Date()));
       }).true;
-      break;
   }
 }
 
 /**
  * Draw the extension badge in Chrome based on the Todos counter
- * localStorage['myTodos'] must be set
+ * localStorage.myTodos must be set
  */
 function updateBadge(myTodos) {
   try {
     if (myTodos) {
-      var counter_todos = localStorage['counter_todos'];
+      var counter_todos = localStorage.counter_todos;
       var color;
       counter = countTodos(myTodos, counter_todos);
       if (!counter) counter = '';
@@ -53,7 +49,7 @@ function updateBadge(myTodos) {
       chrome.browserAction.setBadgeText({text: counter.toString()});
       chrome.browserAction.setIcon({path: "./icon.png"});
       console.log('LOG: updateBadge');
-      localStorage['updateBadge'] = false;
+      localStorage.updateBadge = false;
     } else {
       chrome.browserAction.setIcon({path: "./img/icon-inactive.png"});
       chrome.browserAction.setBadgeText({text: ""});

@@ -9,9 +9,9 @@ angular
 .factory('Authorization', function($resource) {
   return $resource('https://launchpad.37signals.com/authorization.json', {}, {
     query: {
-      method: 	'GET',
-      isArray: 	false,
-      headers: 	{'Authorization':'Bearer ' + localStorage['basecampToken']}}
+      method:   'GET',
+      isArray:  false,
+      headers:  {'Authorization':'Bearer ' + localStorage.basecampToken}}
   });
 })
 
@@ -21,9 +21,9 @@ angular
 .factory('User', function($resource) {
   return $resource('https://basecamp.com/:basecampId/api/v1/people/me.json', {}, {
     query: {
-      method: 	'GET',
-      isArray: 	false,
-      headers: 	{'Authorization':'Bearer ' + localStorage['basecampToken']}}
+      method:  'GET',
+      isArray:  false,
+      headers:  {'Authorization':'Bearer ' + localStorage.basecampToken}}
   });
 })
 
@@ -35,7 +35,7 @@ angular
     query: {
       method:   'GET',
       isArray:  true,
-      headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}}
+      headers:  {'Authorization':'Bearer ' + localStorage.basecampToken}}
   });
 })
 
@@ -47,7 +47,7 @@ angular
     query: {
       method:   'GET',
       isArray:  true,
-      headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}}
+      headers:  {'Authorization':'Bearer ' + localStorage.basecampToken}}
   });
 })
 
@@ -59,7 +59,7 @@ angular
     query: {
       method:   'GET',
       isArray:  true,
-      headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}
+      headers:  {'Authorization':'Bearer ' + localStorage.basecampToken}
     }
   });
 })
@@ -72,9 +72,9 @@ angular
     completeTodo: function(basecampId, projectId, todoId) {
       $http.put('https://basecamp.com/'+basecampId+'/api/v1/projects/'+projectId+'/todos/'+todoId+'.json',
       {completed:true},
-      {headers: {'Authorization':'Bearer ' + localStorage['basecampToken']}});
+      {headers: {'Authorization':'Bearer ' + localStorage.basecampToken}});
     }
-  }
+  };
 })
 
 /*
@@ -85,7 +85,7 @@ angular
     query: {
       method:   'GET',
       isArray:  true,
-      headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}}
+      headers:  {'Authorization':'Bearer ' + localStorage.basecampToken}}
   });
 })
 
@@ -97,7 +97,7 @@ angular
     query: {
       method:   'GET',
       isArray:  false,
-      headers:  {'Authorization':'Bearer ' + localStorage['basecampToken']}}
+      headers:  {'Authorization':'Bearer ' + localStorage.basecampToken}}
   });
 })
 
@@ -109,5 +109,5 @@ angular
           y = date.getFullYear();
       return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
     }
-  }
+  };
 });

@@ -15,7 +15,7 @@ files = [
   '../app/js/filters.js',
   '../app/js/services.js',
   '../app/js/lang/en.js',
-  '*Spec.js'
+  '*-spec.js'
 ];
 
 autoWatch = true;
