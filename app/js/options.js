@@ -1,15 +1,18 @@
 // Saves options to localStorage.
 function save_options() {
   var select = document.getElementById("refresh_period");
-  localStorage.refresh_period = select.children[select.selectedIndex].value;
+  localStorage["refresh_period"] = select.children[select.selectedIndex].value;
 
   select = document.getElementById("counter_todos");
-  localStorage.counter_todos = select.children[select.selectedIndex].value;
+  localStorage["counter_todos"] = select.children[select.selectedIndex].value;
 
   select = document.getElementById("language");
-  localStorage.language = select.children[select.selectedIndex].value;
+  localStorage["language"] = select.children[select.selectedIndex].value;
 
-  updateBadge(null);
+  if (localStorage['myTodos']) {
+    var myTodos = JSON.parse(localStorage['myTodos']);
+    updateBadge(myTodos);
+  }
 }
 
 function logout() {
