@@ -13,6 +13,10 @@ function save_options() {
     var myTodos = JSON.parse(localStorage['myTodos']);
     updateBadge(myTodos);
   }
+  var elm = document.getElementById("alert");
+  var newOne = elm.cloneNode(true);
+  newOne.className = "show";
+  elm.parentNode.replaceChild(newOne, elm);
 }
 
 function logout() {
@@ -50,5 +54,7 @@ function selectOption(variableString) {
 }
 
 document.addEventListener("DOMContentLoaded", restore_options);
-document.querySelector("#save").addEventListener("click", save_options);
+document.querySelector("#refresh_period").addEventListener("change", save_options);
+document.querySelector("#counter_todos").addEventListener("change", save_options);
+document.querySelector("#language").addEventListener("change", save_options);
 document.querySelector("#logout").addEventListener("click", logout);
