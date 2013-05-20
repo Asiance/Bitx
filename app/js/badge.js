@@ -79,6 +79,6 @@ function updateBadge(myTodos) {
   } catch(e) {
     console.log('ERROR: updateBadge ' + e);
     chrome.browserAction.setBadgeText({text: ''});
-    chrome.browserAction.setIcon({path : '../icon.png'});
+    chrome.browserAction.setIcon({path : '../icon-inactive.png'});
   }
 }
