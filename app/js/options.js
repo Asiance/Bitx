@@ -9,7 +9,10 @@ function save_options() {
   select = document.getElementById("language");
   localStorage["language"] = select.children[select.selectedIndex].value;
 
-  updateBadge(null);
+  if (localStorage['myTodos']) {
+    var myTodos = JSON.parse(localStorage['myTodos']);
+    updateBadge(myTodos);
+  }
 }
 
 function logout() {
