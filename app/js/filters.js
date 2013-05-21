@@ -127,7 +127,7 @@ angular
         if (fromUser !== null) {
           // Bind 'me' with the logged user identity
           if (fromUser === 'me') {
-            user = {'id': localStorage.userId};
+            user = {'id': parseInt(localStorage.userId)};
           } else {
             //Look for the user among employees of the company
             user = _.find(people, function(user) {
@@ -146,7 +146,8 @@ angular
         if (toUser !== null) {
           // Bind 'me' with the logged user identity
           if (toUser === 'me') {
-            user = {'id': localStorage.userId};
+            user = {'id': parseInt(localStorage.userId)};
+
           } else {
             //Look for the user among employees of the company
             user = _.find(people, function(user) {

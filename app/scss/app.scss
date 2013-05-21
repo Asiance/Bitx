@@ -47,6 +47,9 @@ body {
     text-indent: 38px;
     border-top: 1px solid $color-border;
     color: $color-gray-project;
+    span {
+      background: yellow;
+    }
   }
   background: $color-white;
   cursor: default;
