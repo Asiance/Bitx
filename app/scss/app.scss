@@ -268,10 +268,14 @@ dt,
       width: 24px;
     }
     .todo-text {
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      display: -webkit-box;
+      overflow: hidden;
       padding-left: 12px;
-      width: 325px;
-      display: table-cell;
+      text-overflow: ellipsis;
       vertical-align: middle;
+      width: 292px;
       word-break: break-word;
     }
   }

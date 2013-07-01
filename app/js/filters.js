@@ -127,7 +127,7 @@ angular
         if (fromUser !== null) {
           // Bind 'me' with the logged user identity
           if (fromUser === 'me') {
-            user = {'id': parseInt(localStorage.userId)};
+            user = {'id': parseInt(localStorage.userId, 10)};
           } else {
             //Look for the user among employees of the company
             user = _.find(people, function(user) {
@@ -146,7 +146,7 @@ angular
         if (toUser !== null) {
           // Bind 'me' with the logged user identity
           if (toUser === 'me') {
-            user = {'id': parseInt(localStorage.userId)};
+            user = {'id': parseInt(localStorage.userId, 10)};
 
           } else {
             //Look for the user among employees of the company
@@ -168,9 +168,7 @@ angular
           var realSearch = search.replace(/(from:|to:)\w+\s*/gi, "");
           if (realSearch.length > 0) {
             out = _.filter(out, function(item) {
-            return ( item.content.match(new RegExp(realSearch, "gi"))
-                || item.project.match(new RegExp(realSearch, "gi"))
-                || item.todolist.match(new RegExp(realSearch, "gi")) );
+              return ( item.content.match(new RegExp(realSearch, "gi")) || item.project.match(new RegExp(realSearch, "gi")) || item.todolist.match(new RegExp(realSearch, "gi")) );
             });
           }
           return out;
@@ -204,15 +202,11 @@ angular
         // Check if you are typing a name (after 'from:' or 'to:')
         if (new RegExp(/\b:([\s]*[\w]*)$\b/g).test(search) || new RegExp(/:$/).test(search)) {
           out = _.filter(input, function(item) {
-            return ( item.id != -1
-                && (item.name.match(new RegExp("^" + realSearch, "gi"))
-                  || item.email_address.match(new RegExp("^" + realSearch, "gi"))) );
+            return ( item.id != -1 && (item.name.match(new RegExp("^" + realSearch, "gi")) || item.email_address.match(new RegExp("^" + realSearch, "gi"))) );
           });
           if (_.isEmpty(out)) {
             out = _.filter(input, function(item) {
-              return ( item.id != -1
-                  && (item.name.match(new RegExp(realSearch, "gi"))
-                    || item.email_address.match(new RegExp(realSearch, "gi"))) );
+              return ( item.id != -1 && (item.name.match(new RegExp(realSearch, "gi")) || item.email_address.match(new RegExp(realSearch, "gi"))) );
             });
           }
           if (realSearch === $filter('removeDomain')(out[0].email_address)) {
