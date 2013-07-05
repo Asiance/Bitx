@@ -369,4 +369,16 @@ angular
   $scope.isFiltered = function() {
     return (new RegExp("from:", "gi").test($scope.search));
   };
-});
+})
+
+.controller('todosCtrl', function($scope, $element, $filter, $http) {
+  $scope.mostUrgent = function(todo) {
+    console.log(todo);
+    if (todo.days_late) {
+      return -todo.days_late;
+    } else if (todo.remaining_days) {
+      return todo.remaining_days;
+    }
+    else return todo.position;
+  };
+})

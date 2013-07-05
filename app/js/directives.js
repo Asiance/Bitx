@@ -114,10 +114,10 @@ angular.module('basecampExtension.directives', [])
       template: '<dd id="{{category}}_content" nicescroll="{scrollstep: 50}">' +
                   '<div class="content" ng-repeat="project in projects">' +
                     '<h2 class="project" ng-show="(project.assignedTodos | keywordSearch:search | status: category).length != 0" ng-bind-html-unsafe="project.name | highlight:realSearch | uppercase"></h2>' +
-                    '<ul><todo search="search" category={{category}} ng-repeat="assignedTodo in (project.assignedTodos | keywordSearch:search | status: category)"></todo></ul>' +
+                    '<ul><todo search="search" category={{category}} ng-repeat="assignedTodo in (project.assignedTodos | keywordSearch:search | status: category | orderBy:mostUrgent)"></todo></ul>' +
                   '</div>' +
                 '</dd>',
-      controller: 'todoCtrl'
+      controller: 'todosCtrl'
     };
   })
 
