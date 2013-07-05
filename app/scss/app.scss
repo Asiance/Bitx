@@ -40,13 +40,16 @@ body {
     font-size: 14px;
     font-weight: 700;
     line-height: 55px;
-    width: 360px;
+    width: 366px;
   }
   h2 {
     font-weight: 700;
     text-indent: 38px;
     border-top: 1px solid $color-border;
     color: $color-gray-project;
+    span {
+      background: yellow;
+    }
   }
   background: $color-white;
   cursor: default;
@@ -156,7 +159,7 @@ dt.disabled {
   }
 }
 
-#overdues_content, #today_content, #upcoming_content, #no-due-date_content {
+#overdues_content, #today_content, #upcoming_content, #noduedate_content {
   max-height: 306px;
   display: none;
 }
@@ -265,10 +268,14 @@ dt,
       width: 24px;
     }
     .todo-text {
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      display: -webkit-box;
+      overflow: hidden;
       padding-left: 12px;
-      width: 325px;
-      display: table-cell;
+      text-overflow: ellipsis;
       vertical-align: middle;
+      width: 292px;
       word-break: break-word;
     }
   }
@@ -357,8 +364,8 @@ dt,
 }
 
 /* Style applied to the found string */
-.highlight { background: yellow; }
-.strong { font-weight: 700; }
+.todo .ui-match { background: yellow; }
+.person .ui-match { font-weight: 700; }
 
 #suggestions {
   background: $color-close-white;
@@ -369,7 +376,6 @@ dt,
   max-height: 200px;
   position: absolute;
   width: 262px;
-  z-index: -1;
   li {
     &.active {
       background: #e4e4e4;

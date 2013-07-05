@@ -93,7 +93,7 @@
       xhr.addEventListener('readystatechange', function(event) {
         if(xhr.readyState == 4) {
           if(xhr.status == 200) {
-            that.finish(JSON.parse(xhr.responseText)['access_token']);
+            that.finish(JSON.parse(xhr.responseText).access_token);
           }
           else {
             chrome.tabs.getCurrent(function(tab) {
@@ -114,7 +114,7 @@
     finish: function(token) {
       console.log('finish');
       try {
-        window['localStorage'][this._key] = token;
+        window.localStorage[this._key] = token;
         chrome.tabs.create({url:'./views/auth-success.html'});
       }
       catch(error) {
@@ -133,7 +133,7 @@
 		 */
     getToken: function() {
       try {
-        return window['localStorage'][this._key];
+        return window.localStorage[this._key];
       }
       catch(error) {
         return null;
@@ -147,7 +147,7 @@
      */
     deleteToken: function() {
       try {
-        delete window['localStorage'][this._key];
+        delete window.localStorage[this._key];
         return true;
       }
       catch(error) {
