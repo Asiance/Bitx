@@ -13,7 +13,9 @@
       <a href="https://github.com/Asiance/Bitx" target="_blank"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png" alt="Fork me on GitHub"></a>
       <img id="logo" src="./img/logo-settings.png" alt="Logo Bitx Settings" height="101" width="185">
     </header>
+    <div class="container"><div id="alert" class="hide">Settings saved</div></div>
     <section>
+      <button id="logout">Logout</button>
       <form>
         <fieldset>
           <legend>Extension settings</legend>
@@ -28,7 +30,8 @@
           <p>
             <label for="counter_todos">To-dos counter in the icon</label>
             <select id="counter_todos">
-              <option value="overdues" id="overdues">Overdues (default)</option>
+              <option value="default" id="default">Most important</option>
+              <option value="overdues" id="overdues">Overdues</option>
               <option value="today" id="today">Today</option>
               <option value="upcoming" id="upcoming">Upcoming</option>
               <option value="no_due_date" id="noduedate">No due date</option>
@@ -45,8 +48,6 @@
             <option value="pt" id="por">Português</option>
           </select>
           </p>
-          <button id="save">Save</button>
-          <button id="logout">Logout</button>
         </fieldset>
       </form>
       <fieldset>
@@ -59,7 +60,7 @@
         </dl>
       </fieldset>
       <footer>
-        <P>
+        <p>
           Product Owner: <a href="https://github.com/laurent-le-graverend" target="_blank">Laurent Le Graverend</a>
           Scrum Master: <a href="https://github.com/AdrienFromToulouse" target="_blank">Adrien Desbiaux</a><br>
           Developer: <a href="https://github.com/pioug" target="_blank">Gilles Piou</a>
@@ -71,5 +72,6 @@
       </footer>
     </section>
     <script src="./js/options.js"></script>
+    <script src="./js/badge.js"></script>
   </body>
 </html>

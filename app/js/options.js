@@ -1,15 +1,22 @@
 // Saves options to localStorage.
 function save_options() {
   var select = document.getElementById("refresh_period");
-  localStorage["refresh_period"] = select.children[select.selectedIndex].value;
+  localStorage.refresh_period = select.children[select.selectedIndex].value;
 
   select = document.getElementById("counter_todos");
-  localStorage["counter_todos"] = select.children[select.selectedIndex].value;
+  localStorage.counter_todos = select.children[select.selectedIndex].value;
 
   select = document.getElementById("language");
-  localStorage["language"] = select.children[select.selectedIndex].value;
+  localStorage.language = select.children[select.selectedIndex].value;
 
-  updateBadge(null);
+  if (localStorage.myTodos) {
+    var myTodos = JSON.parse(localStorage.myTodos);
+    updateBadge(myTodos);
+  }
+  var elm = document.getElementById("alert");
+  var newOne = elm.cloneNode(true);
+  newOne.className = "show";
+  elm.parentNode.replaceChild(newOne, elm);
 }
 
 function logout() {
@@ -39,7 +46,7 @@ function selectOption(variableString) {
   var select = document.getElementById(variableString);
   for (var i = 0; i < select.children.length; i++) {
     child = select.children[i];
-    if (select.children[i].value == choice) {
+    if (select.children[i].value === choice) {
       child.selected = "true";
       break;
     }
@@ -47,5 +54,7 @@ function selectOption(variableString) {
 }
 
 document.addEventListener("DOMContentLoaded", restore_options);
-document.querySelector("#save").addEventListener("click", save_options);
+document.querySelector("#refresh_period").addEventListener("change", save_options);
+document.querySelector("#counter_todos").addEventListener("change", save_options);
+document.querySelector("#language").addEventListener("change", save_options);
 document.querySelector("#logout").addEventListener("click", logout);

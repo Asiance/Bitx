@@ -3,9 +3,12 @@
 angular
   .module('basecampExtension',
     ['basecampExtension.directives',
-    'basecampExtension.controllers',
+    'basecampExtension.filters',
     'basecampExtension.services',
-    'basecampExtension.filters'])
+    'basecampExtension.servicesCache',
+    'ui.highlight',
+    'ui.keypress',
+    'basecampExtension.controllers'])
 
   .config([
     '$routeProvider', '$locationProvider', '$httpProvider', '$resourceProvider', function($routeProvider) {

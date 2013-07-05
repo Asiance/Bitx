@@ -28,7 +28,10 @@ section {
   margin: 0 auto;
   max-width: 700px;
   padding: 60px 60px 20px 60px;
-  width: 60%;
+}
+.container {
+  max-width: 820px;
+  margin: 0 auto;
 }
 
 fieldset {
@@ -52,6 +55,7 @@ label {
 button {
   cursor: pointer;
   float: right;
+  padding: 3px 15px;
 }
 
 dt {
@@ -68,4 +72,28 @@ footer {
   font-size: 12px;
   line-height: 20px;
   text-align: center;
+}
+
+.hide {
+  display: none;
+}
+.show {
+  -webkit-animation: slideDown 2.5s 0s 1 forwards;
+  -webkit-animation-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000);
+  background: rgba(#232323,0.9);
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  color: white;
+  line-height: 40px;
+  overflow: hidden;
+  padding: 0 40px;
+  position: absolute;
+  text-align: center;
+  top: 0;
+  z-index: 10;
+}
+
+@-webkit-keyframes slideDown {
+  0%, 100% { -webkit-transform: translateY(-50px); }
+  10%, 90% { -webkit-transform: translateY(0px); }
 }

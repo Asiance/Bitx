@@ -2,10 +2,10 @@ window.ja = {
 
   "searchTodo":"タスクを検索",
 
-  "header_overdues": "期限超過",
-  "header_today": "今日",
-  "header_upcoming": "今後",
-  "header_noduedate": "期限なし",
+  "header-overdues": "期限超過",
+  "header-today": "今日",
+  "header-upcoming": "今後",
+  "header-noduedate": "期限なし",
 
   "createdDate": "作成",
 
@@ -23,10 +23,10 @@ window.ja = {
   "visitTodo": "Visit this todo",
   "assignedTo": "Asssigned to {x}",
 
-  "countOverdues":"-期限超過タスク",
-  "countToday":"-今日のタスク",
-  "countUpcoming":"-後のタスク",
-  "countNoDueDate":"-期限ないタスク",
+  "count-overdues":"-期限超過タスク",
+  "count-today":"-今日のタスク",
+  "count-upcoming":"-後のタスク",
+  "count-noduedate":"-期限ないタスク",
 
   "needAuth1":"ベースキャンプアカウントと同期するために、",
   "needAuth2":"をクリックしてください。",
