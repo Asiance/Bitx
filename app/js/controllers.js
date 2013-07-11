@@ -343,7 +343,7 @@ angular
         data: {completed:true},
         headers: {'Authorization':'Bearer ' + localStorage.basecampToken}})
       .success(function(data, status, headers, config) {
-        chrome.storage.local.set({'assignedTodos': angular.toJson($scope.assignedTodos)});
+        chrome.storage.local.set({'assignedTodos': angular.toJson($scope.$parent.$parent.$parent.assignedTodos)});
       })
       .error(function(data, status, headers, config) {
         console.log('ERROR: completeTodo request failed');
