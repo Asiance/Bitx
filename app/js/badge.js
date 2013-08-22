@@ -69,7 +69,7 @@ function updateBadge(myTodos) {
       }
       chrome.browserAction.setBadgeBackgroundColor(color);
       chrome.browserAction.setBadgeText({text: counter.toString()});
-      chrome.browserAction.setIcon({path: './icon.png'});
+      chrome.browserAction.setIcon({path: './img/icon-active.png'});
       console.log('LOG: updateBadge');
       localStorage.updateBadge = false;
     } else {
