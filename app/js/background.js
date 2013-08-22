@@ -20,7 +20,7 @@ window.onload = function() {
   }
   if (localStorage.myTodos) {
     var myTodos = JSON.parse(localStorage.myTodos);
-    updateBadge(myTodos);
+    badge.updateBadge(myTodos);
   }
   setInterval(getTodos, refresh_period);
 };
@@ -42,7 +42,7 @@ function getAuthorization() {
         console.log('LOG: getAuthorization XHR');
       } else if (xhr.readyState === 4) {
         localStorage.removeItem('myTodos');
-        updateBadge();
+        badge.updateBadge();
         console.log('ERROR: getAuthorization XHR');
       }
     };
@@ -142,7 +142,7 @@ function getTodos() {
 
         // Update localStorage
         localStorage.myTodos = JSON.stringify(myTodos);
-        updateBadge(myTodos);
+        badge.updateBadge(myTodos);
         console.log('LOG: getTodos updates cache of myTodos');
       });
     }

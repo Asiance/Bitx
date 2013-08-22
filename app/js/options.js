@@ -11,7 +11,7 @@ function save_options() {
 
   if (localStorage.myTodos) {
     var myTodos = JSON.parse(localStorage.myTodos);
-    updateBadge(myTodos);
+    badge.updateBadge(myTodos);
   }
   var elm = document.getElementById("alert");
   var newOne = elm.cloneNode(true);
