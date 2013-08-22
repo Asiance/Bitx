@@ -42,7 +42,6 @@ function getAuthorization() {
         console.log('LOG: getAuthorization XHR');
       } else if (xhr.readyState === 4) {
         localStorage.removeItem('myTodos');
-        localStorage.removeItem('basecampToken');
         updateBadge();
         console.log('ERROR: getAuthorization XHR');
       }

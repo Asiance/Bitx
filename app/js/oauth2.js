@@ -46,6 +46,7 @@
      */
     init: function() {
       this._key = "basecampToken";
+      this._refreshkey = "basecampRefreshToken";
       this._access_token_url = "https://launchpad.37signals.com/authorization/token"; // URL to api where token is request
       this._authorization_url = "https://launchpad.37signals.com/authorization/new"; // URL to api where user authorizes extension with
       this._client_id = "e41e44d7de71a7090bf36260b73dddabfa2f5ab7"; // Application ID
@@ -93,7 +94,7 @@
       xhr.addEventListener('readystatechange', function(event) {
         if(xhr.readyState == 4) {
           if(xhr.status == 200) {
-            that.finish(JSON.parse(xhr.responseText).access_token);
+            that.finish(JSON.parse(xhr.responseText).access_token, JSON.parse(xhr.responseText).refresh_token);
           }
           else {
             chrome.tabs.getCurrent(function(tab) {
@@ -111,10 +112,11 @@
      *
      * @param token The OAuth2 token given to the application from the provider.
      */
-    finish: function(token) {
+    finish: function(token, refresh_token) {
       console.log('finish');
       try {
         window.localStorage[this._key] = token;
+        window.localStorage[this._refreshkey] = refresh_token;
         chrome.tabs.create({url:'./views/auth-success.html'});
       }
       catch(error) {
@@ -127,13 +129,45 @@
 
 
     /**
-		 * Get Token
-		 *
-		 * @return OAuth2 access token if it exists, null if not.
-		 */
+     * Get Token
+     *
+     * @return OAuth2 access token if it exists, null if not.
+     */
     getToken: function() {
       try {
         return window.localStorage[this._key];
+      }
+      catch(error) {
+        return null;
+      }
+
+    },
+
+    /**
+     * Refresh Token
+     *
+     * @return a new token.
+     */
+    refreshToken: function() {
+      try {
+	var that = this;
+	var xhr = new XMLHttpRequest();
+	this.refresh_token = window.localStorage[this._refreshkey];
+
+	xhr.addEventListener('readystatechange', function(event) {
+          if(xhr.readyState == 4) {
+            if(xhr.status == 200) {
+              that.finish(JSON.parse(xhr.responseText).access_token, JSON.parse(xhr.responseText).refresh_token);
+            }
+            else {
+              chrome.tabs.getCurrent(function(tab) {
+		chrome.tabs.remove(tab.id, function(){});
+              });
+            }
+          }
+	});
+ 	xhr.open('POST', this._access_token_url + "?type=refresh&client_id=" + this._client_id + "&redirect_uri=" + this._redirect_url + "&client_secret=" + this._client_secret + "&refresh_token=" + this.refresh_token, true);
+	xhr.send();
       }
       catch(error) {
         return null;
@@ -166,5 +200,8 @@ function initOAuth2() {
    */
   if ((token = OAuth2.getToken()) === undefined ) {
     OAuth2.begin();
+  }
+  else{
+    OAuth2.refreshToken();
   }
 }
