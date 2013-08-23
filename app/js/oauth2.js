@@ -37,14 +37,14 @@
  * Methods to update the token and save the expiration date may also need to be added.
  *
  */
-(function() {
+(function () {
 
   window.OAuth2 = {
 
     /**
      * Initialize
      */
-    init: function() {
+    init: function () {
       this._key = "basecampToken";
       this._refreshkey = "basecampRefreshToken";
       this._refresh_token = "";
@@ -59,10 +59,13 @@
     /**
      * Begin
      */
-    begin: function() {
+    begin: function () {
       console.log('begin');
       var url = this._authorization_url + "?type=web_server&client_id=" + this._client_id + "&redirect_uri=" + this._redirect_url;
-      chrome.tabs.create({url: url, selected: true});
+      chrome.tabs.create({
+        url: url,
+        selected: true
+      });
     },
 
     /**
@@ -70,14 +73,13 @@
      *
      * @param url The url containing the access code.
      */
-    parseAccessCode: function(url) {
+    parseAccessCode: function (url) {
       console.log('parseAccessCode');
-      if(url.match(/\?error=(.+)/)) {
-        chrome.tabs.getCurrent(function(tab) {
-          chrome.tabs.remove(tab.id, function(){});
+      if (url.match(/\?error=(.+)/)) {
+        chrome.tabs.getCurrent(function (tab) {
+          chrome.tabs.remove(tab.id, function () {});
         });
-      }
-      else {
+      } else {
         this.requestToken(url.match(/\?code=([\w\/\-]+)/)[1]);
       }
     },
@@ -87,20 +89,19 @@
      *
      * @param code The access code returned by provider.
      */
-    requestToken: function(code) {
+    requestToken: function (code) {
       var that = this;
       var xhr = new XMLHttpRequest();
       console.log('requestToken');
 
-      xhr.addEventListener('readystatechange', function(event) {
-        if(xhr.readyState == 4) {
-          if(xhr.status == 200) {
+      xhr.addEventListener('readystatechange', function (event) {
+        if (xhr.readyState == 4) {
+          if (xhr.status == 200) {
             that.finish(JSON.parse(xhr.responseText).access_token);
-	    window.localStorage[that._refreshkey] = JSON.parse(xhr.responseText).refresh_token;
-          }
-          else {
-            chrome.tabs.getCurrent(function(tab) {
-              chrome.tabs.remove(tab.id, function(){});
+            window.localStorage[that._refreshkey] = JSON.parse(xhr.responseText).refresh_token;
+          } else {
+            chrome.tabs.getCurrent(function (tab) {
+              chrome.tabs.remove(tab.id, function () {});
             });
           }
         }
@@ -114,17 +115,18 @@
      *
      * @param token The OAuth2 token given to the application from the provider.
      */
-    finish: function(token) {
+    finish: function (token) {
       console.log('finish');
       try {
         window.localStorage[this._key] = token;
-        chrome.tabs.create({url:'./views/auth-success.html'});
-      }
-      catch(error) {
+        chrome.tabs.create({
+          url: './views/auth-success.html'
+        });
+      } catch (error) {
         return null;
       }
-      chrome.tabs.getCurrent(function(tab) {
-        chrome.tabs.remove(tab.id, function() {});
+      chrome.tabs.getCurrent(function (tab) {
+        chrome.tabs.remove(tab.id, function () {});
       });
     },
 
@@ -134,11 +136,10 @@
      *
      * @return OAuth2 access token if it exists, null if not.
      */
-    getToken: function() {
+    getToken: function () {
       try {
         return window.localStorage[this._key];
-      }
-      catch(error) {
+      } catch (error) {
         return null;
       }
     },
@@ -148,26 +149,24 @@
      *
      * @return a new token.
      */
-    refreshToken: function(callbacktask) {
+    refreshToken: function (callbacktask) {
       try {
-	var that = this;
-	var xhr = new XMLHttpRequest();
+        var that = this;
+        var xhr = new XMLHttpRequest();
 
-	xhr.addEventListener('readystatechange', function(event) {
-          if(xhr.readyState == 4) {
-            if(xhr.status == 200) {
-	      window.localStorage[that._key] = JSON.parse(xhr.responseText).access_token;
-	      callbacktask();
-	    }
-            else {
- 	      console.log("Error");
+        xhr.addEventListener('readystatechange', function (event) {
+          if (xhr.readyState == 4) {
+            if (xhr.status == 200) {
+              window.localStorage[that._key] = JSON.parse(xhr.responseText).access_token;
+              callbacktask();
+            } else {
+              console.log("Error");
             }
           }
-	});
- 	xhr.open('POST', this._access_token_url + "?type=refresh&client_id=" + this._client_id + "&redirect_uri=" + this._redirect_url + "&client_secret=" + this._client_secret + "&refresh_token=" + window.localStorage[that._refreshkey], true);
-	xhr.send();
-      }
-      catch(error) {
+        });
+        xhr.open('POST', this._access_token_url + "?type=refresh&client_id=" + this._client_id + "&redirect_uri=" + this._redirect_url + "&client_secret=" + this._client_secret + "&refresh_token=" + window.localStorage[that._refreshkey], true);
+        xhr.send();
+      } catch (error) {
         return null;
       }
     },
@@ -177,12 +176,11 @@
      *
      * @return True if token is removed from localStorage, false if not.
      */
-    deleteToken: function() {
+    deleteToken: function () {
       try {
         delete window.localStorage[this._key];
         return true;
-      }
-      catch(error) {
+      } catch (error) {
         return false;
       }
     }
@@ -196,7 +194,7 @@ function initOAuth2() {
   /**
    * Open signin page for Basecamp
    */
-  if ( ((token = OAuth2.getToken()) === undefined ) ) {
+  if (((token = OAuth2.getToken()) === undefined)) {
     OAuth2.begin();
   }
 }
