@@ -144,25 +144,11 @@
     },
 
     /**
-     * Get refresh token
-     *
-     * @return OAuth2 refresh token if it exists, null if not.
-     */
-    getRefreshToken: function() {
-      try {
-        return window.localStorage[this._refreshkey];
-      }
-      catch(error) {
-        return null;
-      }
-    },
-
-    /**
      * Refresh Token
      *
      * @return a new token.
      */
-    refreshToken: function() {
+    refreshToken: function(callbacktask) {
       try {
 	var that = this;
 	var xhr = new XMLHttpRequest();
@@ -171,11 +157,10 @@
           if(xhr.readyState == 4) {
             if(xhr.status == 200) {
 	      window.localStorage[that._key] = JSON.parse(xhr.responseText).access_token;
-            }
+	      callbacktask();
+	    }
             else {
-              chrome.tabs.getCurrent(function(tab) {
-		chrome.tabs.remove(tab.id, function(){});
-              });
+ 	      console.log("Error");
             }
           }
 	});
@@ -213,8 +198,5 @@ function initOAuth2() {
    */
   if ( ((token = OAuth2.getToken()) === undefined ) ) {
     OAuth2.begin();
-  }
-  else{
-    OAuth2.refreshToken();
   }
 }

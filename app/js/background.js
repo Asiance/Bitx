@@ -91,10 +91,14 @@ function getTodos() {
     headers:  {'Authorization':'Bearer ' + localStorage.basecampToken}
   })
   .fail(function(jqXHR, textStatus, errorThrown) {
-    getAuthorization();
+    if( (jqXHR.status == 401) || (JSON.parse(jqXHR.responseText).error === "token_expired" ) ) {
+      OAuth2.refreshToken(getTodos);
+    }
+    else {
+      getAuthorization();
+    }
   })
   .done(function(data, textStatus, jqXHR) {
-
     chrome.storage.local.get('assignedTodos', function(data) {
       if (_.isEmpty(data.assignedTodos)) {
         noCache = true;
