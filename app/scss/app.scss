@@ -24,8 +24,8 @@ $color-white: #ffffff;
 $first-column-width: 80px;
 
 $fonts_en: "Droid Sans", "Verdana", "Arial Unicode", "Arial", "Helvetica", "clean", "sans-serif";
-$fonts_ja: "Droid Sans", "Meiryo UI", 'Meiryo', 'MS UI Gothic', 'MS PGothic', 'MS Gothic','Microsoft YaHei',"Arial Unicode", "Arial", "sans-serif";
-$fonts_ko: "Droid Sans", "Nanum Gothic", "나눔고딕", "NanumGothic", "Malgun Gothic", '돋움', "Dotum", "AppleGothic", "Gulim", "Arial Unicode", "Arial", "sans-serif";
+$fonts_ja: "Droid Sans", "Meiryo UI", "Meiryo", "MS UI Gothic", "Microsoft YaHei", "Arial Unicode", "Arial", "sans-serif";
+$fonts_ko: "Droid Sans", "Nanum Gothic", "나눔고딕", "NanumGothic", "Malgun Gothic", "돋움", "Dotum", "AppleGothic", "Gulim", "Arial Unicode", "Arial", "sans-serif";
 
 ::-webkit-scrollbar {
   display: none;
@@ -93,7 +93,7 @@ header {
     }
   }
   .icon-clear {
-    background: url(/img/icon-clear.jpg) center no-repeat;
+    background: url(/img/ui/icon-close.png) center no-repeat;
     cursor: pointer;
     height: 16px;
     margin-left: 358px;
@@ -102,8 +102,8 @@ header {
     width: 16px;
   }
   .icon-settings {
-    &:hover { background: url(/img/icon-settings-hover.png) center no-repeat; }
-    background: url(/img/icon-settings.png) center no-repeat;
+    &:hover { background: url(/img/ui/icon-settings-hover.png) center no-repeat; }
+    background: url(/img/ui/icon-settings.png) center no-repeat;
     cursor: pointer;
     height: 21px;
     padding: 14px;
@@ -216,10 +216,10 @@ dt,
   }
 }
 .icon-today {
-  background: url(/img/icon-today.png) center 13px no-repeat;
+  background: url(/img/ui/icon-today.png) center 13px no-repeat;
 }
 .icon-coffee {
-  background: url(/img/icon-coffee.png) center 13px no-repeat;
+  background: url(/img/ui/icon-coffee.png) center 13px no-repeat;
 }
 
 .comments,
@@ -229,9 +229,9 @@ dt,
   width: 30px;
 }
 .comments {
-  background: url(/img/icon-comment.png) left no-repeat;
+  background: url(/img/ui/icon-comment.png) left no-repeat;
   &:hover {
-    background: url(/img/icon-comment-hover.png) left no-repeat;
+    background: url(/img/ui/icon-comment-hover.png) left no-repeat;
     p { color: $color-blue; }
   }
   color: $color-gray;
@@ -239,8 +239,8 @@ dt,
   text-align: right;
 }
 .icon-link {
-  background: url(/img/icon-link.png) center no-repeat;
-  &:hover { background: url(/img/icon-link-hover.png) center no-repeat; }
+  background: url(/img/ui/icon-link.png) center no-repeat;
+  &:hover { background: url(/img/ui/icon-link-hover.png) center no-repeat; }
   cursor: pointer;
   display: table-cell;
   margin-right: 20px;
@@ -261,8 +261,8 @@ dt,
     margin-left: -30px;
     width: 325px;
     .checkbox {
-      background: url(/img/icon-checkbox.png) center no-repeat;
-      &:hover { background: url(/img/icon-checkbox-hover.png) center no-repeat; }
+      background: url(/img/ui/icon-checkbox.png) center no-repeat;
+      &:hover { background: url(/img/ui/icon-checkbox-hover.png) center no-repeat; }
       cursor: pointer;
       display: table-cell;
       width: 24px;
