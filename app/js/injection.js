@@ -1,0 +1,1 @@
+window.location = chrome.extension.getURL('adapter.html') + window.location.href.substring(window.location.href.indexOf('?'));

@@ -1,1 +1,4 @@
 .sass-cache
+store/packages/**
+site/**
+bin/update_site.sh

@@ -28,7 +28,7 @@
   "content_scripts": [
     {
       "matches": ["http://www.google.com/basecamp-crx*"],
-      "js": ["lib/chrome-ex-oauth2/injection.js"],
+      "js": ["js/injection.js"],
       "run_at": "document_start"
     }
   ],

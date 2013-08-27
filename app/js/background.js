@@ -81,6 +81,7 @@ function getUser() {
  * Store data in Chrome storage
  */
 function getTodos() {
+  if (localStorage.basecampToken == undefined) return;
 
   var allTodos = [];
   var myTodos = [];
@@ -91,12 +92,7 @@ function getTodos() {
     headers:  {'Authorization':'Bearer ' + localStorage.basecampToken}
   })
   .fail(function(jqXHR, textStatus, errorThrown) {
-    if( (jqXHR.status == 401) || (JSON.parse(jqXHR.responseText).error === "token_expired" ) ) {
-      OAuth2.refreshToken(getTodos);
-    }
-    else {
-      getAuthorization();
-    }
+    getAuthorization();
   })
   .done(function(data, textStatus, jqXHR) {
     chrome.storage.local.get('assignedTodos', function(data) {
