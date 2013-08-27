@@ -1,60 +1,65 @@
-// Saves options to localStorage.
-function save_options() {
-  var select = document.getElementById("refresh_period");
-  localStorage.refresh_period = select.children[select.selectedIndex].value;
+var options = {
 
-  select = document.getElementById("counter_todos");
-  localStorage.counter_todos = select.children[select.selectedIndex].value;
+  save_options: function () {
+    var select = document.getElementById("refresh_period");
+    localStorage.refresh_period = select.children[select.selectedIndex].value;
 
-  select = document.getElementById("language");
-  localStorage.language = select.children[select.selectedIndex].value;
+    select = document.getElementById("counter_todos");
+    localStorage.counter_todos = select.children[select.selectedIndex].value;
 
-  if (localStorage.myTodos) {
-    var myTodos = JSON.parse(localStorage.myTodos);
-    badge.updateBadge(myTodos);
-  }
-  var elm = document.getElementById("alert");
-  var newOne = elm.cloneNode(true);
-  newOne.className = "show";
-  elm.parentNode.replaceChild(newOne, elm);
-}
+    select = document.getElementById("language");
+    localStorage.language = select.children[select.selectedIndex].value;
 
-function logout() {
-  localStorage.removeItem("basecampId");
-  localStorage.removeItem("basecampToken");
-  localStorage.removeItem("lastSearch");
-  localStorage.removeItem("myTodos");
-  localStorage.removeItem("people");
-  localStorage.removeItem("userId");
-  chrome.storage.local.set({"assignedTodos": null});
-  chrome.storage.local.set({"assignedTodosByProject": null});
-}
-
-// Restores select box state to saved value from localStorage.
-function restore_options() {
-  selectOption("refresh_period");
-  selectOption("counter_todos");
-  selectOption("language");
-}
-
-function selectOption(variableString) {
-  var child;
-  var choice = localStorage[variableString];
-  if (!choice) {
-    return;
-  }
-  var select = document.getElementById(variableString);
-  for (var i = 0; i < select.children.length; i++) {
-    child = select.children[i];
-    if (select.children[i].value === choice) {
-      child.selected = "true";
-      break;
+    if (localStorage.myTodos) {
+      var myTodos = JSON.parse(localStorage.myTodos);
+      badge.updateBadge(myTodos);
     }
-  }
+    var elm = document.getElementById("alert");
+    var newOne = elm.cloneNode(true);
+    newOne.className = "show";
+    elm.parentNode.replaceChild(newOne, elm);
+    
+    alert("Your preferences has been saved.");
+  },
+
+  logout: function () {
+    localStorage.clear();
+    chrome.storage.local.set({
+      "assignedTodos": null
+    });
+    chrome.storage.local.set({
+      "assignedTodosByProject": null
+    });
+    alert("You have been successfully logged out.");
+  },
+
+  restore_options: function () {
+    this.selectOption("refresh_period");
+    this.selectOption("counter_todos");
+    this.selectOption("language");
+  },
+
+  selectOption: function (variableString) {
+    var child;
+    var choice = localStorage[variableString];
+    if (!choice) {
+      return;
+    }
+    var select = document.getElementById(variableString);
+    for (var i = 0; i < select.children.length; i++) {
+      child = select.children[i];
+      if (select.children[i].value === choice) {
+        child.selected = "true";
+        break;
+      }
+    }
+  },
 }
 
-document.addEventListener("DOMContentLoaded", restore_options);
-document.querySelector("#refresh_period").addEventListener("change", save_options);
-document.querySelector("#counter_todos").addEventListener("change", save_options);
-document.querySelector("#language").addEventListener("change", save_options);
-document.querySelector("#logout").addEventListener("click", logout);
+window.onload = function () {
+  document.addEventListener("DOMContentLoaded", options.restore_options);
+  document.getElementById("refresh_period").addEventListener("change", options.save_options);
+  document.getElementById("counter_todos").addEventListener("change", options.save_options);
+  document.getElementById("language").addEventListener("change", options.save_options);
+  document.getElementById("logout").addEventListener("click", options.logout);
+};
