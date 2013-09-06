@@ -10,7 +10,7 @@ window.onload = function() {
     localStorage.language = locale;
   }
   if (!localStorage.counter_todos) {
-    localStorage.counter_todos = 'overdues';
+    localStorage.counter_todos = 'default';
   }
   if (localStorage.refresh_period) {
     refresh_period = localStorage.refresh_period;
@@ -36,14 +36,14 @@ function getAuthorization() {
     xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.basecampToken);
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4 && xhr.status === 200) {
-        data = JSON.parse(xhr.responseText);
+        var data = JSON.parse(xhr.responseText);
         localStorage.basecampId = _.findWhere(data.accounts, {product: "bcx"}).id;
         getUser();
         console.log('LOG: getAuthorization XHR');
       } else if (xhr.readyState === 4) {
-        localStorage.removeItem('myTodos');
-        badge.updateBadge();
-        console.log('ERROR: getAuthorization XHR');
+        // Token expired
+        console.log('ERROR: getAuthorization XHR - Token expired');
+        window.oauth2.renew();
       }
     };
     xhr.send();
@@ -63,7 +63,7 @@ function getUser() {
     xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.basecampToken);
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 304)) {
-        data = JSON.parse(xhr.responseText);
+        var data = JSON.parse(xhr.responseText);
         localStorage.userId = data.id;
         console.log('LOG: getUser XHR');
       } else if (xhr.readyState === 4) {

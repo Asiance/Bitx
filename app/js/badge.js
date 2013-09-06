@@ -1,5 +1,8 @@
 var badge = {
 
+  color_warning: "#F54E4A",
+  color_ok: "#5E9AC9",
+
   /**
    * Returns the date under the format "YYYY-MM-DD"
    * @param {date} a javascript date object
@@ -17,6 +20,7 @@ var badge = {
    * @param {string} input JSON string containing all myTodos
    */
   countTodos: function (input, status) {
+    var self = this;
     switch (status) {
     case 'no_due_date':
       return _.where(input, {
@@ -24,16 +28,16 @@ var badge = {
       }).length;
     case 'today':
       return _.where(input, {
-        due_at: badge.dateToYMD(new Date())
+        due_at: self.dateToYMD(new Date())
       }).length;
     case 'upcoming':
       return _.countBy(input, function (todo) {
-        return (badge.dateToYMD(new Date(todo.due_at)) > badge.dateToYMD(new Date()));
+        return (self.dateToYMD(new Date(todo.due_at)) > self.dateToYMD(new Date()));
       }).true;
     case 'overdues':
       return _.countBy(input, function (todo) {
         if (todo.due_at !== null)
-          return (badge.dateToYMD(new Date(todo.due_at)) < badge.dateToYMD(new Date()));
+          return (self.dateToYMD(new Date(todo.due_at)) < self.dateToYMD(new Date()));
       }).true;
     }
   },
@@ -50,32 +54,32 @@ var badge = {
         var counter;
         if (counter_todos === 'overdues') {
           color = {
-            color: '#F54E4A'
+            color: this.color_warning
           };
         } else {
           color = {
-            color: '#5e9ac9'
+            color: this.color_ok
           };
         }
         if (counter_todos === 'default') {
-          counter = badge.countTodos(myTodos, 'overdues');
+          counter = this.countTodos(myTodos, 'overdues');
           color = {
-            color: '#F54E4A'
+            color: this.color_warning
           };
           if (!counter) {
-            counter = badge.countTodos(myTodos, 'today');
+            counter = this.countTodos(myTodos, 'today');
             color = {
-              color: '#5e9ac9'
+              color: this.color_ok
             };
             if (!counter) {
-              counter = badge.countTodos(myTodos, 'upcoming');
+              counter = this.countTodos(myTodos, 'upcoming');
               if (!counter) {
-                counter = badge.countTodos(myTodos, 'no_due_date');
+                counter = this.countTodos(myTodos, 'no_due_date');
               }
             }
           }
         } else {
-          counter = badge.countTodos(myTodos, counter_todos);
+          counter = this.countTodos(myTodos, counter_todos);
         }
         if (!counter) {
           counter = '';
@@ -103,7 +107,7 @@ var badge = {
         text: ''
       });
       chrome.browserAction.setIcon({
-        path: '../icon-inactive.png'
+        path: './img/icon-inactive.png'
       });
     }
   }

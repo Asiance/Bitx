@@ -46,12 +46,7 @@
         removeTab();
       } else {
         var code = url.match(/\?code=([\w\/\-]+)/)[1];
-
         var that = this;
-        var data = new FormData();
-        data.append('client_id', this.client_id);
-        data.append('client_secret', this.client_secret);
-        data.append('code', code);
 
         // Send request for authorization token.
         var xhr = new XMLHttpRequest();
@@ -74,8 +69,30 @@
           }
         });
         xhr.open('POST', this.access_token_url + "?type=web_server&client_id=" + this.client_id + "&redirect_uri=" + this.redirect_url + "&client_secret=" + this.client_secret + "&code=" + code, true);
-        xhr.send(data);
+        xhr.send();
       }
+    },
+    
+    /**
+     * Renew the token, based on the refresh token
+     */
+    renew: function () {
+      var that = this
+      // Send request for authorization token.
+      var xhr = new XMLHttpRequest();
+      xhr.addEventListener('readystatechange', function (event) {
+        if (xhr.readyState == 4) {
+          if (xhr.status == 200) {
+            var jsonResponse = JSON.parse(xhr.responseText);
+            window.localStorage.setItem(that.key, jsonResponse.access_token);
+            console.log("LOG: OAuth - Token renewed");
+          } else {
+            that.start();
+          }
+        }
+      });
+      xhr.open('POST', this.access_token_url + "?type=refresh&client_id=" + this.client_id + "&redirect_uri=" + this.redirect_url + "&client_secret=" + this.client_secret + "&refresh_token=" + window.localStorage.basecampRefreshToken, true);
+      xhr.send();
     },
 
     /**

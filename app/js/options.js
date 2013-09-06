@@ -53,11 +53,11 @@ var options = {
         break;
       }
     }
-  },
+  }
 }
 
 window.onload = function () {
-  document.addEventListener("DOMContentLoaded", options.restore_options);
+  options.restore_options();
   document.getElementById("refresh_period").addEventListener("change", options.save_options);
   document.getElementById("counter_todos").addEventListener("change", options.save_options);
   document.getElementById("language").addEventListener("change", options.save_options);
