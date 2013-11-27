@@ -7,23 +7,22 @@
 
   var backgroundTasks = {
 
+    updatedCache: false,
     basecampToken: localStorage.basecampToken,
     basecampAccounts: [],
     userIDs: [],
     allTodos: [],
     allTodolists: [],
-    myTodos: [],
     oldMyTodos: [],
 
     getBasecampAccounts: function() {
-      var self = this,
-          xhr  = new XMLHttpRequest();
+      var xhr  = new XMLHttpRequest();
       xhr.open('GET', 'https://launchpad.37signals.com/authorization.json', false);
       xhr.setRequestHeader('Authorization', 'Bearer ' + this.basecampToken);
       xhr.send();
       if (xhr.readyState === 4 && xhr.status === 200) {
         var data = JSON.parse(xhr.responseText);
-        self.basecampAccounts = data.accounts;
+        this.basecampAccounts = data.accounts;
         console.log('LOG: getBasecampAccounts XHR');
       } else if (xhr.readyState === 4) {
         // Token expired
@@ -39,7 +38,7 @@
         xhr.open('GET', 'https://basecamp.com/' + basecampAccount.id + '/api/v1/people/me.json', false);
         xhr.setRequestHeader('Authorization', 'Bearer ' + self.basecampToken);
         xhr.send();
-        if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 304)) {
+        if (xhr.readyState === 4 && xhr.status === 200) {
           var data = JSON.parse(xhr.responseText);
           self.userIDs.push(data.id);
         } else if (xhr.readyState === 4) {
@@ -57,10 +56,10 @@
         xhr.setRequestHeader('Authorization', 'Bearer ' + self.basecampToken);
         xhr.send();
         if (xhr.readyState === 4 && xhr.status === 200) {
+          if (xhr.getResponseHeader('Status') === "304 Not Modified") return;
           var data = JSON.parse(xhr.responseText);
           self.allTodolists.push(data);
-        } else if (xhr.readyState === 4  && xhr.status === 304) {
-          return;
+          self.updatedCache = false;
         } else if (xhr.readyState === 4) {
           console.log('ERROR: getTodolists XHR');
         }
@@ -76,7 +75,7 @@
         xhr.open('GET', todolist.url, false);
         xhr.setRequestHeader('Authorization', 'Bearer ' + self.basecampToken);
         xhr.send();
-        if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 304)) {
+        if (xhr.readyState === 4 && xhr.status === 200) {
           var data = JSON.parse(xhr.responseText);
           self.allTodos.push(data.todos.remaining);
         } else if (xhr.readyState === 4) {
@@ -84,7 +83,7 @@
         }
       });
       console.log('LOG: getTodos XHR');
-      self.allTodos = _.flatten(self.allTodos, true);
+      this.allTodos = _.flatten(this.allTodos, true);
     },
 
     addTodosData: function() {
@@ -129,41 +128,54 @@
         notification.close();
       };
       notification.show();
-      setTimeout(function() { notification.cancel(); }, 15000); // Hide notificiation after 15 seconds
+      setTimeout(function() { notification.cancel(); }, 15000); // Hide notification after 15 seconds
+    },
+
+    pollTodolists: function(period) {
+      var self = this;
+      setTimeout(function() {
+        self.getTodolists();
+        if (!self.updatedCache) {
+          self.clean();
+          self.getTodos();
+          self.addTodosData();
+          self.saveTodos();
+          self.parseMyTodos();
+          self.updatedCache = true;
+        }
+        self.pollTodolists(localStorage.refresh_period);
+      }, period);
     },
 
     init: function() {
-      var userLang = navigator.language ? navigator.language : navigator.userLanguage,
-          locale   = userLang.substring(0, 2),
-          refresh_period,
-          myTodos;
       if (!localStorage.language) {
+        var userLang = navigator.language ? navigator.language : navigator.userLanguage,
+            locale   = userLang.substring(0, 2);
         localStorage.language = locale;
       }
       if (!localStorage.counter_todos) {
         localStorage.counter_todos = 'default';
       }
-      if (localStorage.refresh_period) {
-        refresh_period = localStorage.refresh_period;
-      } else {
-        refresh_period = 5000;
-        localStorage.refresh_period = refresh_period;
+      if (!localStorage.refresh_period) {
+        localStorage.refresh_period = 5000;
       }
       if (localStorage.myTodos) {
-        myTodos = JSON.parse(localStorage.myTodos);
-        badge.updateBadge(myTodos);
+        this.oldMyTodos = JSON.parse(localStorage.myTodos);
+        badge.updateBadge(this.oldMyTodos);
       }
+    },
+
+    clean: function() {
+      this.allTodos     = [],
+      this.allTodolists = [],
+      this.oldMyTodos   = [];
     },
 
     start: function() {
       this.init();
       this.getBasecampAccounts();
       this.getUserIDs();
-      this.getTodolists();
-      this.getTodos();
-      this.addTodosData();
-      this.saveTodos();
-      this.parseMyTodos();
+      this.pollTodolists(0);
     }
   };
 
