@@ -7,7 +7,7 @@
 
   var backgroundTasks = {
 
-    updatedCache: false,
+    renewCache: true,
     basecampToken: localStorage.basecampToken,
     basecampAccounts: [],
     userIDs: [],
@@ -49,6 +49,7 @@
     },
 
     getTodolists: function() {
+      this.allTodolists = [];
       var self = this;
       _.forEach(this.basecampAccounts, function(basecampAccount) {
         var xhr = new XMLHttpRequest();
@@ -56,10 +57,9 @@
         xhr.setRequestHeader('Authorization', 'Bearer ' + self.basecampToken);
         xhr.send();
         if (xhr.readyState === 4 && xhr.status === 200) {
-          if (xhr.getResponseHeader('Status') === "304 Not Modified") return;
+          if (xhr.getResponseHeader('Status') === '200 OK') self.renewCache = true;
           var data = JSON.parse(xhr.responseText);
           self.allTodolists.push(data);
-          self.updatedCache = false;
         } else if (xhr.readyState === 4) {
           console.log('ERROR: getTodolists XHR');
         }
@@ -69,6 +69,7 @@
     },
 
     getTodos: function() {
+      this.allTodos = [];
       var self = this;
       _.forEach(this.allTodolists, function(todolist) {
         var xhr = new XMLHttpRequest();
@@ -106,7 +107,7 @@
       }, this);
       this.oldMyTodos = localStorage.myTodos ? JSON.parse(localStorage.myTodos) : [];
       _.map(newMyTodos, function(todo) {
-        if (_.contains(this.oldMyTodos, todo)) return;
+        if (_.findWhere(this.oldMyTodos, { id: todo.id })) return;
         else this.createNotification(todo);
       }, this);
       localStorage.myTodos = JSON.stringify(newMyTodos);
@@ -135,13 +136,12 @@
       var self = this;
       setTimeout(function() {
         self.getTodolists();
-        if (!self.updatedCache) {
-          self.clean();
+        if (self.renewCache) {
           self.getTodos();
           self.addTodosData();
           self.saveTodos();
           self.parseMyTodos();
-          self.updatedCache = true;
+          self.renewCache = false;
         }
         self.pollTodolists(localStorage.refresh_period);
       }, period);
@@ -163,12 +163,6 @@
         this.oldMyTodos = JSON.parse(localStorage.myTodos);
         badge.updateBadge(this.oldMyTodos);
       }
-    },
-
-    clean: function() {
-      this.allTodos     = [],
-      this.allTodolists = [],
-      this.oldMyTodos   = [];
     },
 
     start: function() {
