@@ -146,23 +146,15 @@ angular
   }
 
   /**
-   * Group assigned Todos by Project
+   * Group todos by project name
+   * NOTE: Assume that project names are unique otherwise todos will be grouped
+   * under the same project
    */
   $scope.groupByProject = function() {
     console.log('LOG: groupByProject');
-    var projects = [];
-    var projectName = 'NO_PROJECT';
-    var assignedTodos = $scope.assignedTodos;
-    for (var i = 0; i < assignedTodos.length; i++) {
-      var assignedTodo = assignedTodos[i];
-      if (assignedTodo.project !== projectName) {
-        var project = {name: assignedTodo.project, id: assignedTodo.project_id, assignedTodos: []};
-        projectName = assignedTodo.project;
-        projects.push(project);
-      }
-      project.assignedTodos.push(assignedTodo);
-    }
-    $scope.projects = projects;
+    $scope.projects = _.groupBy($scope.assignedTodos, function(todo) {
+      return todo.project;
+    });
   };
 
   /**
