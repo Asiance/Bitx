@@ -48,7 +48,23 @@
 
     getPeople: function() {
       this.people = [];
-      var self = this;
+      var self = this,
+          metaElements = [{
+            id:            this.userIDs,
+            name:          "Alias",
+            email_address: "me",
+            avatar_url:    "/img/icon-search.png"
+          }, {
+            id:            -1,
+            name:          "Search by creator",
+            email_address: "from:",
+            avatar_url:    "/img/icon-search.png"
+          }, {
+            id:            -1,
+            name:          "Search by assignee",
+            email_address: "to:",
+            avatar_url:    "/img/icon-search.png"
+          }];
       _.forEach(this.basecampAccounts, function(basecampAccount) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', 'https://basecamp.com/' + basecampAccount.id + '/api/v1/people.json', false);
@@ -56,14 +72,13 @@
         xhr.send();
         if (xhr.readyState === 4 && xhr.status === 200) {
           var data = JSON.parse(xhr.responseText);
-          self.people.push(data);
+          self.people = self.people.concat(data);
         } else if (xhr.readyState === 4) {
           console.log('ERROR: getUserIDs XHR');
         }
       });
       console.log('LOG: getPeople XHR');
-      this.people = _.flatten(this.people, true);
-      this.saveCache('people');
+      this.saveCache('people', self.people.concat(metaElements));
     },
 
     getTodolists: function() {
@@ -77,13 +92,12 @@
         if (xhr.readyState === 4 && xhr.status === 200) {
           if (xhr.getResponseHeader('Status') === '200 OK') self.renewCache = true;
           var data = JSON.parse(xhr.responseText);
-          self.allTodolists.push(data);
+          self.allTodolists = self.allTodolists.concat(data);
         } else if (xhr.readyState === 4) {
           console.log('ERROR: getTodolists XHR');
         }
       });
       console.log('LOG: getTodolists XHR');
-      this.allTodolists = _.flatten(this.allTodolists, true);
     },
 
     getTodos: function() {
@@ -96,13 +110,12 @@
         xhr.send();
         if (xhr.readyState === 4 && xhr.status === 200) {
           var data = JSON.parse(xhr.responseText);
-          self.allTodos.push(data.todos.remaining);
+          self.allTodos = self.allTodos.concat(data.todos.remaining);
         } else if (xhr.readyState === 4) {
           console.log('ERROR: getTodos XHR');
         }
       });
       console.log('LOG: getTodos XHR');
-      this.allTodos = _.flatten(this.allTodos, true);
     },
 
     addTodosData: function() {
