@@ -8,12 +8,7 @@
   var backgroundTasks = {
 
     renewCache: true,
-    basecampToken: localStorage.basecampToken,
-    basecampAccounts: [],
-    userIDs: [],
-    allTodos: [],
-    allTodolists: [],
-    oldMyTodos: [],
+    basecampToken: localStorage.basecampToken, // @TODO: listen to storage event
 
     getBasecampAccounts: function() {
       var xhr  = new XMLHttpRequest();
@@ -23,6 +18,7 @@
       if (xhr.readyState === 4 && xhr.status === 200) {
         var data = JSON.parse(xhr.responseText);
         this.basecampAccounts = data.accounts;
+        this.saveCache('basecampAccounts');
         console.log('LOG: getBasecampAccounts XHR');
       } else if (xhr.readyState === 4) {
         // Token expired
@@ -32,6 +28,7 @@
     },
 
     getUserIDs: function() {
+      this.userIDs = [];
       var self = this;
       _.forEach(this.basecampAccounts, function(basecampAccount) {
         var xhr = new XMLHttpRequest();
@@ -45,6 +42,7 @@
           console.log('ERROR: getUserIDs XHR');
         }
       });
+      this.saveCache('userIDs');
       console.log('LOG: getUserIDs XHR');
     },
 
@@ -94,25 +92,43 @@
         todo.project       = parentTodolist.bucket.name;
         todo.project_id    = parentTodolist.bucket.id;
       }, this);
+      this.saveCache('allTodos');
     },
 
-    saveTodos: function() {
-      chrome.storage.local.set({ 'assignedTodos': JSON.stringify(this.allTodos) });
-      console.log('LOG: saveTodos updates cache of allTodos');
+    saveCache: function(key, value) {
+      var object = {};
+      if (!value) value = this[key];
+      object[key] = value;
+      chrome.storage.local.set(object);
+      console.log('LOG: save ' + key + ' in cache');
+    },
+
+    loadCache: function(key, callback) {
+      var self = this;
+      chrome.storage.local.get(key, function(data) {
+        if (chrome.runtime.lastError) return;
+        self[key] = data[key] ? data[key] : null;
+        console.log('LOG: load ' + key + ' from cache');
+        if (callback) callback();
+      });
     },
 
     parseMyTodos: function() {
-      var newMyTodos = _.filter(this.allTodos, function(todo) {
-        return todo.assignee && _.contains(this.userIDs, todo.assignee.id);
-      }, this);
-      this.oldMyTodos = localStorage.myTodos ? JSON.parse(localStorage.myTodos) : [];
-      _.map(newMyTodos, function(todo) {
-        if (_.findWhere(this.oldMyTodos, { id: todo.id })) return;
-        else this.createNotification(todo);
-      }, this);
-      localStorage.myTodos = JSON.stringify(newMyTodos);
-      badge.updateBadge(newMyTodos);
-      console.log('LOG: parseMyTodos updates cache of myTodos');
+      var self = this,
+          newMyTodos = _.filter(this.allTodos, function(todo) {
+            return todo.assignee && _.contains(this.userIDs, todo.assignee.id);
+          }, this);
+      this.loadCache('myTodos', function() {
+        if (self.myTodos !== null) {
+          _.map(newMyTodos, function(todo) {
+            if (_.findWhere(this.myTodos, { id: todo.id })) return;
+            else this.createNotification(todo);
+          }, self);
+        }
+        self.saveCache('myTodos', newMyTodos);
+        badge.updateBadge(newMyTodos);
+        console.log('LOG: parseMyTodos updates cache of myTodos');
+      });
     },
 
     createNotification: function(todo) {
@@ -139,7 +155,6 @@
         if (self.renewCache) {
           self.getTodos();
           self.addTodosData();
-          self.saveTodos();
           self.parseMyTodos();
           self.renewCache = false;
         }
@@ -148,6 +163,7 @@
     },
 
     init: function() {
+      var self = this;
       if (!localStorage.language) {
         var userLang = navigator.language ? navigator.language : navigator.userLanguage,
             locale   = userLang.substring(0, 2);
@@ -158,10 +174,6 @@
       }
       if (!localStorage.refresh_period) {
         localStorage.refresh_period = 5000;
-      }
-      if (localStorage.myTodos) {
-        this.oldMyTodos = JSON.parse(localStorage.myTodos);
-        badge.updateBadge(this.oldMyTodos);
       }
     },
 
