@@ -16,10 +16,10 @@
       xhr.setRequestHeader('Authorization', 'Bearer ' + this.basecampToken);
       xhr.send();
       if (xhr.readyState === 4 && xhr.status === 200) {
+        console.log('LOG: getBasecampAccounts XHR');
         var data = JSON.parse(xhr.responseText);
         this.basecampAccounts = data.accounts;
         this.saveCache('basecampAccounts');
-        console.log('LOG: getBasecampAccounts XHR');
       } else if (xhr.readyState === 4) {
         // Token expired
         console.log('ERROR: getBasecampAccounts XHR - Token expired');
@@ -42,8 +42,28 @@
           console.log('ERROR: getUserIDs XHR');
         }
       });
-      this.saveCache('userIDs');
       console.log('LOG: getUserIDs XHR');
+      this.saveCache('userIDs');
+    },
+
+    getPeople: function() {
+      this.people = [];
+      var self = this;
+      _.forEach(this.basecampAccounts, function(basecampAccount) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'https://basecamp.com/' + basecampAccount.id + '/api/v1/people.json', false);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + self.basecampToken);
+        xhr.send();
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var data = JSON.parse(xhr.responseText);
+          self.people.push(data);
+        } else if (xhr.readyState === 4) {
+          console.log('ERROR: getUserIDs XHR');
+        }
+      });
+      console.log('LOG: getPeople XHR');
+      this.people = _.flatten(this.people, true);
+      this.saveCache('people');
     },
 
     getTodolists: function() {
@@ -126,8 +146,8 @@
           }, self);
         }
         self.saveCache('myTodos', newMyTodos);
-        badge.updateBadge(newMyTodos);
         console.log('LOG: parseMyTodos updates cache of myTodos');
+        badge.updateBadge(newMyTodos);
       });
     },
 
@@ -181,6 +201,7 @@
       this.getBasecampAccounts();
       this.getUserIDs();
       this.pollTodolists(0);
+      this.getPeople();
     }
   };
 
