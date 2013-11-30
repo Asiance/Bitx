@@ -163,7 +163,6 @@
     },
 
     init: function() {
-      var self = this;
       if (!localStorage.language) {
         var userLang = navigator.language ? navigator.language : navigator.userLanguage,
             locale   = userLang.substring(0, 2);
