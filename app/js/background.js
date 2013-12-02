@@ -194,7 +194,7 @@
       }, period);
     },
 
-    init: function() {
+    initConfig: function() {
       if (!localStorage.language) {
         var userLang = navigator.language ? navigator.language : navigator.userLanguage,
             locale   = userLang.substring(0, 2);
@@ -206,25 +206,32 @@
       if (!localStorage.refresh_period) {
         localStorage.refresh_period = 5000;
       }
+      console.log('LOG: initConfig');
     },
 
     start: function() {
       console.log('LOG: start backgroundTasks');
-      this.init();
+      this.initConfig();
       this.getBasecampAccounts();
       this.getUserIDs();
       this.getTodolists();
       this.getTodos();
       this.addTodosData();
       this.parseMyTodos();
-      this.pollTodolists(localStorage.refresh_period);
       this.getPeople();
+      this.pollTodolists(localStorage.refresh_period);
     },
 
     stop: function() {
       console.log('LOG: stop backgroundTasks');
       clearInterval(this.pollingTask);
       badge.updateBadge(null);
+    },
+
+    restart: function() {
+      console.log('LOG: restart backgroundTasks');
+      clearInterval(this.pollingTask);
+      this.pollTodolists(localStorage.refresh_period);
     }
   };
 
@@ -232,12 +239,15 @@
 
   window.addEventListener('storage', eventStorage, false);
 
-  function eventStorage (e) {
+  function eventStorage(e) {
     if (e.key === '' && e.newValue === null) {
       backgroundTasks.stop();
     }
     else if (e.key === 'basecampToken' && e.newValue !== null) {
       backgroundTasks.start();
+    }
+    else if (e.key === 'refresh_period' && !isNaN(e.newValue)) {
+      backgroundTasks.restart();
     }
   }
 
