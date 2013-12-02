@@ -7,7 +7,7 @@
 
   var backgroundTasks = {
 
-    renewCache: true,
+    renewCache: false,
     basecampToken: localStorage.basecampToken, // @TODO: listen to storage event
 
     getBasecampAccounts: function() {
@@ -51,19 +51,19 @@
       var self = this,
           metaElements = [{
             id:            this.userIDs,
-            name:          "Alias",
-            email_address: "me",
-            avatar_url:    "/img/icon-search.png"
+            name:          'Alias',
+            email_address: 'me',
+            avatar_url:    '/img/icon-search.png'
           }, {
             id:            -1,
-            name:          "Search by creator",
-            email_address: "from:",
-            avatar_url:    "/img/icon-search.png"
+            name:          'Search by creator',
+            email_address: 'from:',
+            avatar_url:    '/img/icon-search.png'
           }, {
             id:            -1,
-            name:          "Search by assignee",
-            email_address: "to:",
-            avatar_url:    "/img/icon-search.png"
+            name:          'Search by assignee',
+            email_address: 'to:',
+            avatar_url:    '/img/icon-search.png'
           }];
       _.forEach(this.basecampAccounts, function(basecampAccount) {
         var xhr = new XMLHttpRequest();
@@ -183,7 +183,7 @@
 
     pollTodolists: function(period) {
       var self = this;
-      setTimeout(function() {
+      this.pollingTask = setInterval(function() {
         self.getTodolists();
         if (self.renewCache) {
           self.getTodos();
@@ -191,7 +191,6 @@
           self.parseMyTodos();
           self.renewCache = false;
         }
-        self.pollTodolists(localStorage.refresh_period);
       }, period);
     },
 
@@ -210,14 +209,36 @@
     },
 
     start: function() {
+      console.log('LOG: start backgroundTasks');
       this.init();
       this.getBasecampAccounts();
       this.getUserIDs();
-      this.pollTodolists(0);
+      this.getTodolists();
+      this.getTodos();
+      this.addTodosData();
+      this.parseMyTodos();
+      this.pollTodolists(localStorage.refresh_period);
       this.getPeople();
+    },
+
+    stop: function() {
+      console.log('LOG: stop backgroundTasks');
+      clearInterval(this.pollingTask);
+      badge.updateBadge(null);
     }
   };
 
   backgroundTasks.start();
+
+  window.addEventListener('storage', eventStorage, false);
+
+  function eventStorage (e) {
+    if (e.key === '' && e.newValue === null) {
+      backgroundTasks.stop();
+    }
+    else if (e.key === 'basecampToken' && e.newValue !== null) {
+      backgroundTasks.start();
+    }
+  }
 
 })();
