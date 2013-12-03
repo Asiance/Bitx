@@ -244,6 +244,7 @@
       backgroundTasks.stop();
     }
     else if (e.key === 'basecampToken' && e.newValue !== null) {
+      backgroundTasks.stop();
       backgroundTasks.start();
     }
     else if (e.key === 'refresh_period' && !isNaN(e.newValue)) {

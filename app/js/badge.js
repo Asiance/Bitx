@@ -9,8 +9,8 @@ var badge = {
    */
   dateToYMD: function (date) {
     var d = date.getDate(),
-      m = date.getMonth() + 1,
-      y = date.getFullYear();
+        m = date.getMonth() + 1,
+        y = date.getFullYear();
     return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
   },
 

@@ -16,7 +16,7 @@ describe('todos', function() {
     [{
       "name": "Asiance website, blogs and facebook",
       "id": 2120902,
-      "assignedTodos": [
+      "allTodos": [
       {
         "id": 39189314,
         "todolist_id": 5600913,
@@ -48,7 +48,7 @@ describe('todos', function() {
     {
       "name": "Basecamp Chrome Extension - Bitx",
       "id": 2155413,
-      "assignedTodos": [
+      "allTodos": [
       {
         "id": 38487794,
         "todolist_id": 6611252,
