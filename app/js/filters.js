@@ -138,7 +138,7 @@ angular
           // If 'someone' has been found, look for his todos'
           if (user) {
             out = _.filter(out, function(item) {
-              return item.creator && item.creator.id === user.id;
+              return item.creator && (item.creator.id === user.id || _.contains(user, item.creator.id));
             });
           } else return [];
         }
@@ -157,7 +157,7 @@ angular
           // If 'someone has been found, look for his todos'
           if (user) {
             out = _.filter(out, function(item) {
-              return item.assignee && item.assignee.id === user.id;
+              return item.assignee && (item.assignee.id === user.id || _.contains(user, item.assignee.id));
             });
           } else return [];
         }
