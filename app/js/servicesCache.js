@@ -1,5 +1,5 @@
 angular
-  .module('basecampExtension.servicesCache', ['ngResource'])
+  .module('basecampExtension.servicesCache', [])
   .factory('Cache', function () {
     // Load data from cache
     return {

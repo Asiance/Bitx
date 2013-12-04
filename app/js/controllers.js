@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-.module('basecampExtension.controllers', ['ngResource'])
+.module('basecampExtension.controllers', [])
 
 /**
  * Controller linked to todos.html
@@ -209,4 +209,4 @@ angular
     }
     else return todo.position;
   };
-})
+});

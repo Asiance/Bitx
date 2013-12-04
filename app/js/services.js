@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-  .module('basecampExtension.services', ['ngResource'])
+  .module('basecampExtension.services', [])
   .factory('Utils', function () {
     return {
       dateToYMD: function (date) {

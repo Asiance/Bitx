@@ -11,7 +11,7 @@ angular
     'basecampExtension.controllers'])
 
   .config([
-    '$routeProvider', '$locationProvider', '$httpProvider', '$resourceProvider', function($routeProvider) {
+    '$routeProvider', function($routeProvider) {
       $routeProvider
         .when('/', {
           controller: 'TodosController',

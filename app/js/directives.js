@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('basecampExtension.directives', [])
-  .directive('nicescroll', function($document, $location, $parse) {
+  .directive('nicescroll', function($document) {
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
@@ -17,7 +17,7 @@ angular.module('basecampExtension.directives', [])
     };
   })
 
-  .directive('unselectable', function($document, $parse) {
+  .directive('unselectable', function($document) {
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
@@ -26,7 +26,7 @@ angular.module('basecampExtension.directives', [])
     };
   })
 
-  .directive('searchSuggestions', function($document, $parse) {
+  .directive('searchSuggestions', function($document) {
     return {
       restrict: 'E',
       replace:  true,
@@ -52,7 +52,7 @@ angular.module('basecampExtension.directives', [])
     };
   })
 
-  .directive('toggleContent', function($document, $location, $parse, $filter) {
+  .directive('toggleContent', function($document, $filter) {
     return {
       restrict: 'E',
       replace:  true,
@@ -100,7 +100,7 @@ angular.module('basecampExtension.directives', [])
     };
   })
 
-  .directive('todos', function($document, $location, $parse, $filter) {
+  .directive('todos', function($document, $filter) {
     return {
       restrict: 'E',
       replace:  true,
@@ -121,7 +121,7 @@ angular.module('basecampExtension.directives', [])
     };
   })
 
-  .directive('todo', function($document, $location, $parse, $filter, $http) {
+  .directive('todo', function($document, $filter, $http) {
     return {
       restrict: 'E',
       replace:  true,
