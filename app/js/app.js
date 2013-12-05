@@ -8,18 +8,7 @@ angular
     'basecampExtension.servicesCache',
     'ui.highlight',
     'ui.keypress',
-    'basecampExtension.controllers'])
-
-  .config([
-    '$routeProvider', function($routeProvider) {
-      $routeProvider
-        .when('/', {
-          controller: 'TodosController',
-          templateUrl: 'views/todos.html'
-        })
-        .otherwise({redirectTo: '/'});
-    }
-  ]);
+    'basecampExtension.controllers']);
 
 // How do you use it? We want to learn how to improve it.
 var _gaq = _gaq || [];

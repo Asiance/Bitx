@@ -66,7 +66,7 @@ angular.module('basecampExtension.directives', [])
                     '<span ng-switch-default class="toggle"></span>' +
                   '</span>' +
                   '<h1>{{header}}</h1>' +
-                  '<span class="count-todos" title="{{todosCounter}} {{tooltip}}" ng-show=todosCounter>{{todosCounter}}</span>' +
+                  '<span class="count-todos" title="{{todosCounter}} {{tooltip}}" ng-show="todosCounter">{{todosCounter}}</span>' +
                 '</dt>',
       link: function(scope, element, attrs) {
         var uppercase = $filter('uppercase');

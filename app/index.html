@@ -7,12 +7,31 @@
 </head>
 
 <body ng-controller="MainController" class="{{lang}}">
-  <div>
-    <ng-view ng-show="online"></ng-view>
-    <div id="allow-access" ng-hide="online">
+  <div ng-switch="online">
+    <span ng-switch-when="true" ng-controller="TodosController">
+      <header>
+        <img id="logo" src="/img/logo-header.png" height="26" width="39">
+        <search-suggestions data="people" search="search"></search-suggestions>
+        <a ng-click="openOptions()"><span class="icon-settings"></span></a>
+      </header>
+
+      <section>
+        <dl id="todos">
+          <toggle-content category="overdues" todos-counter="{{getNumberTodos('overdues')}}"></toggle-content>
+          <todos category="overdues"  projects="projects" search="search" userids="userIDs" people="people"></todos>
+          <toggle-content category="today" todos-counter="{{getNumberTodos('today')}}"></toggle-content>
+          <todos category="today"     projects="projects" search="search" userids="userIDs" people="people"></todos>
+          <toggle-content category="upcoming" todos-counter="{{getNumberTodos('upcoming')}}"></toggle-content>
+          <todos category="upcoming"  projects="projects" search="search" userids="userIDs" people="people"></todos>
+          <toggle-content category="noduedate" todos-counter="{{getNumberTodos('noduedate')}}"></toggle-content>
+          <todos category="noduedate" projects="projects" search="search" userids="userIDs" people="people"></todos>
+        </dl>
+      </section>
+    </span>
+    <span id="allow-access" ng-switch-when="false">
       <img src="/img/logo-header.png" height="26" width="39">
       <p>{{'needAuth1' | i18n}} <span id="allow">"Yes, I'll allow access"</span> {{'needAuth2' | i18n}}</p>
-    </div>
+    </span>
   </div>
 
   <script src="lib/angular.min.js"></script>
