@@ -59,7 +59,7 @@ body {
   width: 500px;
   &.ja {
     font-family: $fonts_ja;
-  };
+  }
   &.ko {
     font-family: $fonts_ko;
     .date p { font-size: 12px; }
@@ -71,9 +71,9 @@ header {
   background: $color-close-white;
   height: 55px;
   #logo {
-    vertical-align: middle;
-    position: relative;
     left: 20px;
+    position: relative;
+    vertical-align: middle;
   }
   #search-input {
     background: $color-close-white;
@@ -106,10 +106,10 @@ header {
     background: url(/img/ui/icon-settings.png) center no-repeat;
     cursor: pointer;
     height: 21px;
+    left: 61px;
     padding: 14px;
     position:relative;
     top: 3px;
-    left: 61px;
     width: 20px;
   }
 }
@@ -160,8 +160,8 @@ dt.disabled {
 }
 
 #overdues_content, #today_content, #upcoming_content, #noduedate_content {
-  max-height: 306px;
   display: none;
+  max-height: 306px;
 }
 
 dt.active {
@@ -186,16 +186,15 @@ dt.active {
   padding: 8px;
   text-align: center;
   width: 15px;
-
 }
 
 /* Change background color on hover */
 dt,
 .count-todos,
 .icon-settings {
-  -webkit-transition-duration: 0.1s;
-  -webkit-transition-property: background border-bottom;
-  -webkit-transition-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000);
+  transition-duration: .1s;
+  transition-property: background, border-bottom;
+  transition-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000);
 }
 
 .day-number {
@@ -288,7 +287,7 @@ dt,
   position: relative;
   width: 1040px;
   &:first-child { border-top: 1px solid $color-border; }
-  &:last-child { border-bottom: 0;}
+  &:last-child  { border-bottom: 0; }
   &:hover {
     background-color: $color-light-gray;
     .todo {
@@ -297,7 +296,6 @@ dt,
       }
     }
   }
-
   .achievement {
     background: $color-green;
     color: $color-white;
@@ -318,9 +316,9 @@ dt,
 /* Slide to right to display check box on hover */
 #todos li:hover,
 .todo div {
-  -webkit-transition-property: margin-left;
-  -webkit-transition-duration: 0.5s;
-  -webkit-transition-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000);
+  transition-property: margin-left;
+  transition-duration: .5s;
+  transition-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000);
 }
 
 #allow-access {
@@ -351,13 +349,13 @@ dt,
 
 /* Define animation to display achievement */
 @-webkit-keyframes achievementSlide {
-  from { margin-left: 0px; }
-  to { margin-left: 520px; }
+  from { margin-left: 0;     }
+  to   { margin-left: 520px; }
 }
 
 /* Style applied when a todo is checked */
 .achieved {
-  -webkit-animation-duration: 0.5s;
+  -webkit-animation-duration: .5s;
   -webkit-animation-fill-mode: forwards;
   -webkit-animation-name: achievementSlide;
   -webkit-animation-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000); /* easeOutQuart */
@@ -379,13 +377,13 @@ dt,
   li {
     &.active {
       background: #e4e4e4;
-    };
-    border-bottom : 1px solid $color-border;
+    }
     &:last-child {
       border: none;
-    };
+    }
+    border-bottom : 1px solid $color-border;
     cursor: pointer;
-    padding: 8px 0px;
+    padding: 8px 0;
   }
   img {
     float: left;
