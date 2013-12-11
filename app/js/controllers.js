@@ -59,6 +59,10 @@ angular
     console.log('LOG: openOptions');
   };
 
+  $scope.startOauth = function() {
+    window.oauth2.start();
+  }
+
   /**
    * Initialization
    */

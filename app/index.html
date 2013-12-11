@@ -28,7 +28,7 @@
         </dl>
       </section>
     </span>
-    <span id="allow-access" ng-switch-when="false">
+    <span id="allow-access" ng-switch-when="false" ng-click="startOauth()">
       <img src="/img/logo-header.png" height="26" width="39">
       <p>{{'needAuth1' | i18n}} <span id="allow">"Yes, I'll allow access"</span> {{'needAuth2' | i18n}}</p>
     </span>
@@ -42,7 +42,6 @@
   <script src="lib/jquery.nicescroll.min.js"></script>
 
   <script src="js/oauth2.js"></script>
-  <script src="js/oauth2-onload.js"></script>
 
   <script src="js/controllers.js"></script>
   <script src="js/directives.js"></script>

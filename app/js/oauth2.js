@@ -18,7 +18,6 @@
      * Starts the authorization process.
      */
     start: function () {
-      window.close();
       var url = this.authorization_url + "?type=web_server&client_id=" + this.client_id + "&redirect_uri=" + this.redirect_url;
       chrome.tabs.create({
         url: url,
@@ -41,7 +40,6 @@
           chrome.tabs.remove(tab.id);
         });
       };
-
       if (url.match(/\?error=(.+)/)) {
         removeTab();
       } else {
@@ -60,8 +58,9 @@
                 var jsonResponse = JSON.parse(xhr.responseText);
                 window.localStorage.setItem(that.key, jsonResponse.access_token);
                 window.localStorage.setItem("basecampRefreshToken", jsonResponse.refresh_token);
-                chrome.tabs.create({url:'./views/auth-success.html'});
-                removeTab();
+                chrome.tabs.getCurrent(function (tab) {
+                  chrome.tabs.update(tab.id, {url:'./views/auth-success.html'});
+                });
               }
             } else {
               removeTab();
@@ -72,7 +71,7 @@
         xhr.send();
       }
     },
-    
+
     /**
      * Renew the token, based on the refresh token
      */

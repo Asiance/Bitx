@@ -8,7 +8,6 @@
   var backgroundTasks = {
 
     renewCache: false,
-    basecampToken: localStorage.basecampToken, // @TODO: listen to storage event
 
     getBasecampAccounts: function() {
       var xhr  = new XMLHttpRequest();
@@ -23,7 +22,6 @@
       } else if (xhr.readyState === 4) {
         // Token expired
         console.log('ERROR: getBasecampAccounts XHR - Token expired');
-        window.oauth2.renew();
       }
     },
 
@@ -82,6 +80,10 @@
     },
 
     getTodolists: function() {
+      if (_.isEmpty(this.basecampAccounts)) {
+        backgroundTasks.stop();
+        return;
+      }
       this.allTodolists = [];
       var self = this;
       _.forEach(this.basecampAccounts, function(basecampAccount) {
@@ -195,6 +197,7 @@
     },
 
     initConfig: function() {
+      if (!localStorage.basecampToken) return false;
       if (!localStorage.language) {
         var userLang = navigator.language ? navigator.language : navigator.userLanguage,
             locale   = userLang.substring(0, 2);
@@ -206,20 +209,23 @@
       if (!localStorage.refresh_period) {
         localStorage.refresh_period = 5000;
       }
+      this.basecampToken = localStorage.basecampToken;
       console.log('LOG: initConfig');
+      return true;
     },
 
     start: function() {
       console.log('LOG: start backgroundTasks');
-      this.initConfig();
-      this.getBasecampAccounts();
-      this.getUserIDs();
-      this.getTodolists();
-      this.getTodos();
-      this.addTodosData();
-      this.parseMyTodos();
-      this.getPeople();
-      this.pollTodolists(localStorage.refresh_period);
+      if (this.initConfig()) {
+        this.getBasecampAccounts();
+        this.getUserIDs();
+        this.getTodolists();
+        this.getTodos();
+        this.addTodosData();
+        this.parseMyTodos();
+        this.getPeople();
+        this.pollTodolists(localStorage.refresh_period);
+      }
     },
 
     stop: function() {
