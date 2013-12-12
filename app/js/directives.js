@@ -41,8 +41,8 @@ angular.module('basecampExtension.directives', [])
                     '<li class="person" ng-class="{active: navPosition == $index}" id="{{$index}}" ng-repeat="person in filteredData = (data | suggestionSearch:search)" ng-click="setSearch(person)" ng-mouseenter="setNavPosition($index)">' +
                       '<img class="username" ng-src="{{person.avatar_url}}">' +
                       '<span ng-switch="person.id" class="username">' +
-                        '<span ng-switch-when="-1" ng-bind-html-unsafe="person.email_address | highlight:realSearch"></span>' +
-                        '<span ng-switch-default ng-bind-html-unsafe="person.email_address | removeDomain | lowercase | highlight:realSearch"></span>' +
+                        '<span ng-switch-when="-1" ng-bind-html="person.email_address | highlight:realSearch"></span>' +
+                        '<span ng-switch-default ng-bind-html="person.email_address | removeDomain | lowercase | highlight:realSearch"></span>' +
                       '</span><br>' +
                       '<span class="fullname">{{person.name}}</span>' +
                     '</li>' +
@@ -113,7 +113,7 @@ angular.module('basecampExtension.directives', [])
       },
       template: '<dd id="{{category}}_content" nicescroll="{scrollstep: 50}">' +
                   '<div class="content" ng-repeat="(key, value) in projects">' +
-                    '<h2 class="project" ng-show="(value | keywordSearch:search:userIDs:people | status: category).length != 0" ng-bind-html-unsafe="key | highlight:realSearch | uppercase"></h2>' +
+                    '<h2 class="project" ng-show="(value | keywordSearch:search:userIDs:people | status: category).length != 0" ng-bind-html="key | highlight:realSearch | uppercase"></h2>' +
                     '<ul><todo search="search" category={{category}} ng-repeat="assignedTodo in (value | keywordSearch:search:userIDs:people | status: category | orderBy:mostUrgent)"></todo></ul>' +
                   '</div>' +
                 '</dd>',
@@ -146,7 +146,7 @@ angular.module('basecampExtension.directives', [])
                   '<div class="todo">' +
                     '<div>'+
                       '<span class="checkbox" ng-click="completeTodo(assignedTodo)"></span>' +
-                      '<span class="todo-text" title="{{assignedTodo.assignee.name | filterOn: isFiltered()}}" ng-bind-html-unsafe="assignedTodo.content | highlight:realSearch"></span>' +
+                      '<span class="todo-text" title="{{assignedTodo.assignee.name | filterOn: isFiltered()}}" ng-bind-html="assignedTodo.content | highlight:realSearch"></span>' +
                     '</div>'+
                   '</div>' +
                   '<span class="comments" ng-click="openTodo(assignedTodo)" ng-show="assignedTodo.comments_count" title="{{\'lastUpdate\' | i18n}} {{assignedTodo.updated_at | elapsedTime}}">' +

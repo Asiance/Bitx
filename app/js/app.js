@@ -8,7 +8,14 @@ angular
     'basecampExtension.servicesCache',
     'ui.highlight',
     'ui.keypress',
-    'basecampExtension.controllers']);
+    'basecampExtension.controllers',
+    'ngSanitize'])
+  .config( [
+    '$compileProvider',
+    function( $compileProvider ) {
+      $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file):|data:image\/|filesystem:chrome-extension:|\//);
+    }
+  ]);
 
 // How do you use it? We want to learn how to improve it.
 var _gaq = _gaq || [];

@@ -325,6 +325,10 @@ dt,
   background: $color-close-white;
   display: table-row;
   line-height: 14px;
+  cursor: pointer;
+  &:hover {
+    background: darken($color-close-white, 1%);
+  }
   img {
     border-right : 1px solid $color-gray;
     display: table-cell;
@@ -398,4 +402,8 @@ dt,
     font-size: 12px;
     color: gray;
   }
+}
+
+.ng-hide {
+  display: none !important;
 }

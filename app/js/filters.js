@@ -167,7 +167,6 @@ angular
           // Look in the todo description or in the project name or in the todolist title
           var realSearch = search.replace(/(from:|to:)[\w\.]+\s*/gi, '');
           if (realSearch.length > 0) {
-            console.log(realSearch);
             out = _.filter(out, function(item) {
               return item.content.match(new RegExp(realSearch, 'gi')) ||
                      item.project.match(new RegExp(realSearch, 'gi')) ||
