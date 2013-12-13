@@ -19,10 +19,12 @@
         var data = JSON.parse(xhr.responseText);
         this.basecampAccounts = data.accounts;
         this.saveCache('basecampAccounts');
+        return true;
       } else if (xhr.readyState === 4) {
         // Token expired
         console.log('ERROR: getBasecampAccounts XHR - Token expired');
       }
+      return false;
     },
 
     getUserIDs: function() {
@@ -97,6 +99,7 @@
           self.allTodolists = self.allTodolists.concat(data);
         } else if (xhr.readyState === 4) {
           console.log('ERROR: getTodolists XHR');
+          backgroundTasks.stop();
         }
       });
       console.log('LOG: getTodolists XHR');
@@ -210,14 +213,14 @@
         localStorage.refresh_period = 5000;
       }
       this.basecampToken = localStorage.basecampToken;
+      window.oauth2.renew();
       console.log('LOG: initConfig');
       return true;
     },
 
     start: function() {
       console.log('LOG: start backgroundTasks');
-      if (this.initConfig()) {
-        this.getBasecampAccounts();
+      if (this.initConfig() && this.getBasecampAccounts()) {
         this.getUserIDs();
         this.getTodolists();
         this.getTodos();
