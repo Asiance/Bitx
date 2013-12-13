@@ -23,6 +23,7 @@
       } else if (xhr.readyState === 4) {
         // Token expired
         console.log('ERROR: getBasecampAccounts XHR - Token expired');
+        if (xhr.status === 401) localStorage.removeItem('basecampToken');
       }
       return false;
     },
@@ -100,6 +101,7 @@
         } else if (xhr.readyState === 4) {
           console.log('ERROR: getTodolists XHR');
           backgroundTasks.stop();
+          if (xhr.status === 401) localStorage.removeItem('basecampToken');
         }
       });
       console.log('LOG: getTodolists XHR');
@@ -213,7 +215,6 @@
         localStorage.refresh_period = 5000;
       }
       this.basecampToken = localStorage.basecampToken;
-      window.oauth2.renew();
       console.log('LOG: initConfig');
       return true;
     },
@@ -228,7 +229,8 @@
         this.parseMyTodos();
         this.getPeople();
         this.pollTodolists(localStorage.refresh_period);
-      }
+        window.oauth2.renew();
+      } else backgroundTasks.stop();
     },
 
     stop: function() {
