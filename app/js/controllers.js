@@ -61,7 +61,7 @@ angular
 
   $scope.startOauth = function() {
     window.oauth2.start();
-  }
+  };
 
   /**
    * Initialization
@@ -201,16 +201,5 @@ angular
    */
   $scope.isFiltered = function() {
     return new RegExp('from:', 'gi').test($scope.search);
-  };
-})
-
-.controller('todosCtrl', function($scope) {
-  $scope.mostUrgent = function(todo) {
-    if (todo.days_late) {
-      return -todo.days_late;
-    } else if (todo.remaining_days) {
-      return todo.remaining_days;
-    }
-    else return todo.position;
   };
 });

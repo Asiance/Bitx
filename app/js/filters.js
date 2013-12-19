@@ -8,27 +8,18 @@ angular
    */
   .filter('status', function($filter, Utils) {
     return function(input, status) {
-      var out;
       switch (status) {
         case 'overdues':
-          out = _.filter(input, function(todo) {
+          return _.filter(input, function(todo) {
             if (todo.due_at !== null)
               return Utils.dateToYMD(new Date(todo.due_at)) < Utils.dateToYMD(new Date());
           });
-          _.each(out, function(todo) {
-            todo.days_late = $filter('daysLate')(todo.due_at);
-          });
-          return out;
         case 'today':
-          return _.where(input, {due_at: Utils.dateToYMD(new Date())});
+          return _.where(input, { due_at: Utils.dateToYMD(new Date()) });
         case 'upcoming':
-          out =  _.filter(input, function(todo) {
+          return _.filter(input, function(todo) {
             return Utils.dateToYMD(new Date(todo.due_at)) > Utils.dateToYMD(new Date());
           });
-          _.each(out, function(todo) {
-            todo.remaining_days = $filter('daysRemaining')(todo.due_at);
-          });
-          return out;
         case 'noduedate':
           return _.where(input, { due_at: null });
       }
@@ -68,22 +59,12 @@ angular
   })
 
   /**
-   * Determine number of days remaining
+   * Determine number of days late/remaining
    */
-  .filter('daysRemaining', function() {
+  .filter('daysDifference', function() {
     var today = new Date();
     return function(input) {
-      return Math.round((new Date(input) - today)/(1000*60*60*24));
-    };
-  })
-
-  /**
-   * Determine number of days late
-   */
-  .filter('daysLate', function() {
-    var today = new Date();
-    return function(input) {
-      return Math.round((today - new Date(input))/(1000*60*60*24));
+      return Math.round(Math.abs(new Date(input) - today)/(1000*60*60*24));
     };
   })
 

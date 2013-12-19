@@ -101,10 +101,9 @@ angular.module('basecampExtension.directives', [])
       template: '<dd id="{{category}}_content" nicescroll="{scrollstep: 50}">' +
                   '<div class="content" ng-repeat="(key, value) in projects">' +
                     '<h2 class="project" ng-show="(value | keywordSearch:search:userIDs:people | status: category).length != 0" ng-bind-html="key | highlight:realSearch | uppercase"></h2>' +
-                    '<ul><todo search="search" category={{category}} ng-repeat="assignedTodo in (value | keywordSearch:search:userIDs:people | status: category | orderBy:mostUrgent)"></todo></ul>' +
+                    '<ul><todo search="search" category={{category}} ng-repeat="assignedTodo in (value | keywordSearch:search:userIDs:people | status: category | orderBy: assignedTodo.due_at)"></todo></ul>' +
                   '</div>' +
-                '</dd>',
-      controller: 'todosCtrl'
+                '</dd>'
     };
   })
 
@@ -116,14 +115,14 @@ angular.module('basecampExtension.directives', [])
                   '<span class="achievement"><p><img src="/img/icon-check.png">{{congratulation}}</p></span>' +
                   '<span class="date" ng-class="{\'overdues\':category == \'overdues\', \'icon-today\':category == \'today\', \'icon-coffee\':category == \'noduedate\'}" title="{{\'createdDate\' | i18n}} {{assignedTodo.created_at | elapsedTime}}">' +
                     '<span ng-show="category ==\'overdues\'">' +
-                      '<span class="day-number">{{assignedTodo.due_at | daysLate}}</span><br>' +
+                      '<span class="day-number">{{assignedTodo.due_at | daysDifference}}</span><br>' +
                       '<p ng-switch="assignedTodo.days_late" class="username">' +
                         '<span ng-switch-when="1">{{\'dayLate\' | i18n}}</span>' +
                         '<span ng-switch-default>{{\'daysLate\' | i18n}}</span>' +
                       '</p>' +
                     '</span>' +
                     '<span ng-show="category ==\'upcoming\'">' +
-                      '<span class="day-number">{{assignedTodo.due_at | daysRemaining}}</span><br>' +
+                      '<span class="day-number">{{assignedTodo.due_at | daysDifference}}</span><br>' +
                       '<p ng-switch="assignedTodo.remaining_days" class="username">' +
                         '<span ng-switch-when="1">{{\'dayLeft\' | i18n}}</span>' +
                         '<span ng-switch-default>{{\'daysLeft\' | i18n}}</span>' +

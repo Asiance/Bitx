@@ -12,7 +12,7 @@ angular
     'ngSanitize'])
   .config( [
     '$compileProvider',
-    function( $compileProvider ) {
+    function($compileProvider) {
       $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file):|data:image\/|filesystem:chrome-extension:|\//);
     }
   ]);
