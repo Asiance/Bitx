@@ -130,13 +130,12 @@ dt {
   background: $color-dark;
   border-bottom: 1px solid $color-dark-border;
   color: $color-white;
-  vertical-align: middle;
-  .toggle:after {
-    content: '+';
-  }
-}
-dt.enabled {
   cursor: pointer;
+  pointer-events: none;
+  vertical-align: middle;
+  &.enabled {
+    pointer-events: all;
+  }
   &:hover {
     background: $color-blue;
     border-bottom: 1px solid $color-blue;
@@ -144,15 +143,14 @@ dt.enabled {
       background: $color-light-blue;
     }
   }
+  .toggle:after {
+    content: '+';
+  }
 }
-dt.disabled {
-  background: $color-dark !important;
-  border-bottom: 1px solid $color-dark-border !important;
-  cursor: default;
-}
+
 #overdues {
   .count-todos {
-    background: $color-red-counter !important;
+    background: $color-red-counter;
   }
   .date {
     color: $color-red;
