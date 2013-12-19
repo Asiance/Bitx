@@ -61,10 +61,6 @@ angular.module('basecampExtension.directives', [])
         todosCounter: '@'
       },
       template: '<dt id="{{category}}" ng-class="{enabled: todosCounter !== \'0\'}" unselectable>' +
-                  '<span ng-switch=todosCounter class="toggle-content">' +
-                    '<span ng-switch-when="0"></span>' +
-                    '<span ng-switch-default class="toggle"></span>' +
-                  '</span>' +
                   '<h1>{{header}}</h1>' +
                   '<span class="count-todos" title="{{todosCounter}} {{tooltip}}" ng-show="todosCounter">{{todosCounter}}</span>' +
                 '</dt>',

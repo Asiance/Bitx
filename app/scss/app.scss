@@ -36,11 +36,21 @@ $fonts_ko: "Droid Sans", "Nanum Gothic", "나눔고딕", "NanumGothic", "Malgun 
 
 body {
   h1 {
-    display: inline-block;
+    display: block;
     font-size: 14px;
     font-weight: 700;
     line-height: 55px;
-    width: 366px;
+    &:before {
+      bottom: 1px;
+      content: '';
+      display: inline-block;
+      font-size: 24px;
+      line-height: 1;
+      position: relative;
+      text-align: center;
+      vertical-align: middle;
+      width: $first-column-width;
+    }
   }
   h2 {
     font-weight: 700;
@@ -114,13 +124,6 @@ header {
   }
 }
 
-.toggle-content {
-  display: inline-block;
-  font-size: 24px;
-  line-height: 10px;
-  text-align: center;
-  width: $first-column-width;
-}
 .void {
   display: inline-block;
   width: $first-column-width;
@@ -133,8 +136,12 @@ dt {
   cursor: pointer;
   pointer-events: none;
   vertical-align: middle;
+  position: relative;
   &.enabled {
     pointer-events: all;
+    h1:before {
+      content: '+';
+    }
   }
   &:hover {
     background: $color-blue;
@@ -143,9 +150,7 @@ dt {
       background: $color-light-blue;
     }
   }
-  .toggle:after {
-    content: '+';
-  }
+
 }
 
 #overdues {
@@ -165,7 +170,7 @@ dt {
 dt.active {
   background: $color-blue;
   border-bottom: 1px solid $color-blue;
-  .toggle:after {
+  h1:before {
     content: '-';
     position: relative;
     top: -2px;
@@ -178,11 +183,15 @@ dt.active {
 .count-todos {
   background: $color-dark-gray;
   border-radius: 50%;
-  display: inline-block;
+  bottom: 0;
   height: 15px;
   line-height: 16px;
+  margin: auto 0;
   padding: 8px;
+  position: absolute;
+  right: 22px;
   text-align: center;
+  top: 0;
   width: 15px;
 }
 
