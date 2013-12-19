@@ -17,15 +17,6 @@ angular.module('basecampExtension.directives', [])
     };
   })
 
-  .directive('unselectable', function($document) {
-    return {
-      restrict: 'A',
-      link: function(scope, element, attrs) {
-        $(element).on('selectstart', false);
-      }
-    };
-  })
-
   .directive('searchSuggestions', function($document) {
     return {
       restrict: 'E',
@@ -60,7 +51,7 @@ angular.module('basecampExtension.directives', [])
         category:     '@',
         todosCounter: '@'
       },
-      template: '<dt id="{{category}}" ng-class="{enabled: todosCounter !== \'0\'}" unselectable>' +
+      template: '<dt id="{{category}}" ng-class="{enabled: todosCounter !== \'0\'}">' +
                   '<h1>{{header}}</h1>' +
                   '<span class="count-todos" title="{{todosCounter}} {{tooltip}}" ng-show="todosCounter">{{todosCounter}}</span>' +
                 '</dt>',

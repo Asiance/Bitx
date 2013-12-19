@@ -130,6 +130,7 @@ header {
 }
 
 dt {
+  -webkit-user-select: none;
   background: $color-dark;
   border-bottom: 1px solid $color-dark-border;
   color: $color-white;
@@ -385,6 +386,7 @@ dt,
   max-height: 200px;
   position: absolute;
   width: 262px;
+  z-index: 1;
   li {
     &.active {
       background: #e4e4e4;
