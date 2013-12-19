@@ -1,0 +1,38 @@
+<li>
+  <span class="achievement"><p><img src="/img/icon-check.png">{{ congratulation }}</p></span>
+  <span class="date"
+        ng-class="{ 'overdues': category === 'overdues', 'icon-today': category === 'today', 'icon-coffee': category === 'noduedate' }"
+        title="{{ 'createdDate' | i18n }} {{ assignedTodo.created_at | elapsedTime }}">
+    <span ng-show="category === 'overdues'">
+      <span class="day-number">{{ assignedTodo.due_at | daysDifference }}</span><br>
+      <p ng-switch="assignedTodo.days_late">
+        <span ng-switch-when="1">{{ 'dayLate' | i18n }}</span>
+        <span ng-switch-default>{{ 'daysLate' | i18n }}</span>
+      </p>
+    </span>
+    <span ng-show="category === 'upcoming'">
+      <span class="day-number">{{ assignedTodo.due_at | daysDifference }}</span><br>
+      <p ng-switch="assignedTodo.remaining_days">
+        <span ng-switch-when="1">{{ 'dayLeft' | i18n }}</span>
+        <span ng-switch-default>{{ 'daysLeft' | i18n }}</span>
+      </p>
+    </span>
+  </span>
+  <div class="todo">
+    <div>
+      <span class="checkbox" ng-click="completeTodo(assignedTodo)"></span>
+      <span class="todo-text"
+            title="{{ assignedTodo.assignee.name | filterOn: isFiltered() }}"
+            ng-bind-html="assignedTodo.content | highlight: realSearch">
+      </span>
+    </div>
+  </div>
+  <span class="comments"
+        title="{{ 'lastUpdate' | i18n }} {{ assignedTodo.updated_at | elapsedTime }}"
+        ng-click="openTodo(assignedTodo)"
+        ng-show="assignedTodo.comments_count">
+    <p>{{ assignedTodo.comments_count }}</p>
+  </span>
+  <span class="void" ng-hide="assignedTodo.comments_count"></span>
+  <span class="icon-link" ng-click="openTodo(assignedTodo)" title="{{ 'visitTodo' | i18n }}"></span>
+</li>
