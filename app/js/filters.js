@@ -5,20 +5,30 @@ angular
 
   /**
    * Filtering Todos by category
+   * Dates are ISO 8601, so they can be easily sorted chronologically as string
+   * See: http://en.wikipedia.org/wiki/Lexicographical_order
    */
-  .filter('status', function($filter, Utils) {
+   .filter('status', function($filter) {
+
+    function dateToYMD(date) {
+      var d = date.getDate(),
+      m = date.getMonth() + 1,
+      y = date.getFullYear();
+      return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+    }
+
+    var today = dateToYMD(new Date());
     return function(input, status) {
       switch (status) {
         case 'overdues':
           return _.filter(input, function(todo) {
-            if (todo.due_at !== null)
-              return Utils.dateToYMD(new Date(todo.due_at)) < Utils.dateToYMD(new Date());
+            return todo.due_at ? todo.due_at < today : false;
           });
         case 'today':
-          return _.where(input, { due_at: Utils.dateToYMD(new Date()) });
+          return _.where(input, { due_at: today });
         case 'upcoming':
           return _.filter(input, function(todo) {
-            return Utils.dateToYMD(new Date(todo.due_at)) > Utils.dateToYMD(new Date());
+            return todo.due_at ? todo.due_at > today : false;
           });
         case 'noduedate':
           return _.where(input, { due_at: null });

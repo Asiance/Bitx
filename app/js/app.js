@@ -4,7 +4,6 @@ angular
   .module('basecampExtension',
     ['basecampExtension.directives',
     'basecampExtension.filters',
-    'basecampExtension.services',
     'basecampExtension.servicesCache',
     'ui.highlight',
     'ui.keypress',
