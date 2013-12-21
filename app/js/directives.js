@@ -123,7 +123,7 @@ angular.module('basecampExtension.directives', [])
 
         element.bind('click', function() {
           if (attrs.todosCounter !== "0") {
-            $("#overdues_content, #today_content, #upcoming_content, #noduedate_content").getNiceScroll().hide();
+            $("dd").getNiceScroll().hide();
             if ($(element).hasClass('active')) {
               $(element).next().slideUp(300, 'easeOutQuad');
               $(element).removeClass('active');
@@ -136,8 +136,8 @@ angular.module('basecampExtension.directives', [])
                 duration: 300,
                 easing: 'easeOutQuad',
                 complete: function() {
-                  $('#' + attrs.category + '_content').getNiceScroll().show();
-                  $('#' + attrs.category + '_content').getNiceScroll().resize();
+                  $(element).next().getNiceScroll().show();
+                  $(element).next().getNiceScroll().resize();
                 }
               });
             }

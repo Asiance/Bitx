@@ -138,12 +138,6 @@ dt {
   pointer-events: none;
   vertical-align: middle;
   position: relative;
-  &.enabled {
-    pointer-events: all;
-    h1:before {
-      content: '+';
-    }
-  }
   &:hover {
     background: $color-blue;
     border-bottom: 1px solid $color-blue;
@@ -151,7 +145,29 @@ dt {
       background: $color-light-blue;
     }
   }
+  &.enabled {
+    pointer-events: all;
+    h1:before {
+      content: '+';
+    }
+  }
+  &.active {
+    background: $color-blue;
+    border-bottom: 1px solid $color-blue;
+    h1:before {
+      content: '-';
+      position: relative;
+      top: -2px;
+    }
+    .count-todos {
+      background: $color-light-blue;
+    }
+  }
+}
 
+dd {
+  display: none;
+  max-height: 306px;
 }
 
 #overdues {
@@ -160,24 +176,6 @@ dt {
   }
   .date {
     color: $color-red;
-  }
-}
-
-#overdues_content, #today_content, #upcoming_content, #noduedate_content {
-  display: none;
-  max-height: 306px;
-}
-
-dt.active {
-  background: $color-blue;
-  border-bottom: 1px solid $color-blue;
-  h1:before {
-    content: '-';
-    position: relative;
-    top: -2px;
-  }
-  .count-todos {
-    background: $color-light-blue;
   }
 }
 
