@@ -39,10 +39,6 @@ angular.module('basecampExtension.directives', [])
           scope.navPosition = -1;
         });
 
-        scope.keypressHandler = function($event) {
-          console.log($event);
-        }
-
         scope.completeSearch = function($event) {
           if (scope.navPosition === -1) {
             scope.setSearch(scope.filteredData[0]);
@@ -124,14 +120,14 @@ angular.module('basecampExtension.directives', [])
         element.bind('click', function() {
           if (attrs.todosCounter !== "0") {
             $("dd").getNiceScroll().hide();
-            if ($(element).hasClass('active')) {
+            if (element.hasClass('active')) {
               $(element).next().slideUp(300, 'easeOutQuad');
-              $(element).removeClass('active');
+              element.removeClass('active');
             }
             else {
               $('#todos').find('dt').removeClass('active');
-              $(element).addClass('active');
               $('#todos').find('dd').slideUp(300, 'easeOutQuad');
+              element.addClass('active');
               $(element).next().slideDown({
                 duration: 300,
                 easing: 'easeOutQuad',

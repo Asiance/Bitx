@@ -108,9 +108,9 @@ angular
     .error(function(data, status, headers, config) {
       console.log('ERROR: completeTodo request failed');
     });
-    $($element).addClass('achieved');
+    $element.addClass('achieved');
     $($element).delay(500).slideUp();
-    if ($($element).parent().children().length === $($element).parent().children('.achieved').length) {
+    if ($element.parent().children().length === $($element).parent().children('.achieved').length) {
       $($element).parent().prev().delay(1000).slideUp();
     }
     $scope.congratulation = $filter('i18n')('achievement' + random);
