@@ -92,7 +92,6 @@ var badge = {
           path: './img/icon-active.png'
         });
         console.log('LOG: updateBadge');
-        localStorage.updateBadge = false;
       } else {
         chrome.browserAction.setIcon({
           path: './img/icon-inactive.png'
