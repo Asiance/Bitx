@@ -21,7 +21,7 @@ window.ja = {
   "daysAgo":"日前",
 
   "visitTodo": "Visit this todo",
-  "assignedTo": "Asssigned to {x}",
+  "assignedTo": "Assigned to {x}",
 
   "count-overdues":"-期限超過タスク",
   "count-today":"-今日のタスク",

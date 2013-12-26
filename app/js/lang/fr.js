@@ -21,7 +21,7 @@ window.fr = {
   "daysAgo":"jour(s)",
 
   "visitTodo": "Visiter la todo",
-  "assignedTo": "Asssignée à {x}",
+  "assignedTo": "Assignée à {x}",
 
   "count-overdues":"todo(s) en retard",
   "count-today":"todo(s) aujourd'hui",

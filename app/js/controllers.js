@@ -49,7 +49,7 @@ angular
 /**
  * Controller linked to all views
  */
-.controller('MainController', function($scope) {
+.controller('MainController', function($scope, Language) {
 
   /**
    * Open options page in a new tab
@@ -66,7 +66,7 @@ angular
   /**
    * Initialization
    */
-  $scope.lang   = localStorage.language;
+  $scope.lang   = Language;
   $scope.online = localStorage.basecampToken ? true : false;
 })
 

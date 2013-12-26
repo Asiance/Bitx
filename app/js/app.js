@@ -4,10 +4,10 @@ angular
   .module('basecampExtension',
     ['basecampExtension.directives',
     'basecampExtension.filters',
-    'basecampExtension.servicesCache',
+    'basecampExtension.services',
+    'basecampExtension.controllers',
     'ui.highlight',
     'ui.keypress',
-    'basecampExtension.controllers',
     'ngSanitize'])
   .config( [
     '$compileProvider',

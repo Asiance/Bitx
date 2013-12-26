@@ -39,32 +39,24 @@ angular
   /**
    * Look for the translated string
    */
-  .filter('i18n', function() {
-    var lang = localStorage.language;
+  .filter('i18n', function(Language) {
     return function(input) {
-      if(window[lang] && window[lang][input]) return window[lang][input];
-      else return window.en[input];
+      return window[Language] && window[Language][input] ? window[Language][input] : window.en[input];
     };
   })
 
   /**
    * Determine elapsed time
    */
-  .filter('elapsedTime', function() {
+  .filter('elapsedTime', function(Language) {
     var today = new Date();
-    var lang = localStorage.language;
-    if (!window[lang]) {
-      lang = 'en';
-    }
     return function(input) {
-      if(input) {
-        var diff = today - new Date(input);
-        if (diff/(1000*60*60*24) < 1) // If last update is less than one day ago
-          if (diff/(1000*60*60) < 1) // If last update is less than one hour ago
-            return Math.round(diff/(1000*60)) + ' ' + window[lang].minutesAgo;
-          else return Math.round(diff/(1000*60*60)) + ' ' + window[lang].hoursAgo;
-        else return Math.round(diff/(1000*60*60*24)) + ' ' + window[lang].daysAgo;
-      } else return '';
+      var diff = today - new Date(input);
+      if (diff/(1000*60*60*24) < 1) // If last update is less than one day ago
+        if (diff/(1000*60*60) < 1) // If last update is less than one hour ago
+          return Math.round(diff/(1000*60)) + ' ' + (window[Language].minutesAgo ? window[Language].minutesAgo : window.en.minutesAgo);
+        else return Math.round(diff/(1000*60*60)) + ' ' + (window[Language].hoursAgo ? window[Language].hoursAgo : window.en.hoursAgo);
+      else return Math.round(diff/(1000*60*60*24)) + ' ' + (window[Language].daysAgo ? window[Language].daysAgo : window.en.hoursAgo);
     };
   })
 
@@ -81,11 +73,11 @@ angular
   /**
    * Print tooltip if filter 'createdby:' is on
    */
-  .filter('filterOn', function() {
-    var lang = localStorage.language;
+  .filter('filterOn', function(Language) {
     return function(input, isFilter) {
-      if (isFilter) return window[lang].assignedTo.replace(/\{x\}/g, input);
-      else return null;
+      if (!isFilter) return '';
+      return window[Language] && window[Language].assignedTo ?
+             window[Language].assignedTo.replace(/\{x\}/g, input) : window.en.assignedTo.replace(/\{x\}/g, input);
     };
   })
 
@@ -104,7 +96,7 @@ angular
    */
   .filter('keywordSearch', function($filter) {
     return function(input, search, userIDs, people) {
-      if(search && input) {
+      if (search) {
         var out = input;
         var user;
         var fromUser = search.match(/\bfrom:([\s]*[\w\.]*)\b/g);                  // Look for the keyword
@@ -187,7 +179,7 @@ angular
   .filter('suggestionSearch', function($filter) {
     var out = [];
     return function(input, search) {
-      if(search && input) {
+      if (search) {
         var realSearch = search.match(/[^ |^:]*$/)[0];
 
         // User suggestions

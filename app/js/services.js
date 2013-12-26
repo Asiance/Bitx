@@ -1,5 +1,6 @@
 angular
-  .module('basecampExtension.servicesCache', [])
+  .module('basecampExtension.services', [])
+  .value('Language', localStorage.language ? localStorage.language : 'en')
   .factory('Cache', function () {
     // Load data from cache
     return {
