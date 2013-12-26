@@ -4,14 +4,13 @@
   font-family: 'Droid Sans';
   font-style: normal;
   font-weight: 400;
-  src: local('Droid Sans'), local('DroidSans'), url(./fonts/DroidSans.woff) format('woff');
+  src: url(./fonts/DroidSans.woff) format('woff');
 }
-
 @font-face {
   font-family: 'Droid Sans';
   font-style: normal;
   font-weight: 700;
-  src: local('Droid Sans Bold'), local('DroidSans-Bold'), url(./fonts/DroidSans-Bold.woff) format('woff');
+  src: url(./fonts/DroidSans-Bold.woff) format('woff');
 }
 
 @font-face {
