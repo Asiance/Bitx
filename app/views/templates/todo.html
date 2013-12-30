@@ -30,9 +30,8 @@
   <span class="comments"
         title="{{ 'lastUpdate' | i18n }} {{ assignedTodo.updated_at | elapsedTime }}"
         ng-click="openTodo(assignedTodo)"
-        ng-show="assignedTodo.comments_count">
+        ng-class="{ hidden : assignedTodo.comments_count === 0 }">
     <p>{{ assignedTodo.comments_count }}</p>
   </span>
-  <span class="void" ng-hide="assignedTodo.comments_count"></span>
   <span class="icon-link" ng-click="openTodo(assignedTodo)" title="{{ 'visitTodo' | i18n }}"></span>
 </li>

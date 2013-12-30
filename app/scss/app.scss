@@ -153,11 +153,6 @@ header {
   }
 }
 
-.void {
-  display: inline-block;
-  width: $first-column-width;
-}
-
 dt {
   -webkit-user-select: none;
   background: $color-dark;
@@ -255,21 +250,21 @@ dt,
   background: url(/img/ui/icon-coffee.png) center 13px no-repeat;
 }
 
-.comments,
-.void {
-  display: table-cell;
-  padding-right: 8px;
-  width: 30px;
-}
 .comments {
   background: url(/img/ui/icon-comment.png) left no-repeat;
+  color: $color-gray;
+  cursor: pointer;
+  display: table-cell;
+  padding-right: 8px;
+  text-align: right;
+  width: 30px;
   &:hover {
     background: url(/img/ui/icon-comment-hover.png) left no-repeat;
     p { color: $color-blue; }
   }
-  color: $color-gray;
-  cursor: pointer;
-  text-align: right;
+  &.hidden {
+    visibility: hidden;
+  }
 }
 .icon-link {
   background: url(/img/ui/icon-link.png) center no-repeat;
