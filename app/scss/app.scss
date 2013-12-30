@@ -136,12 +136,11 @@ header {
     cursor: pointer;
     height: 16px;
     margin-left: 358px;
-    position: absolute;
     margin-top: -30px;
+    position: absolute;
     width: 16px;
   }
   .icon-settings {
-    &:hover { background: url(/img/ui/icon-settings-hover.png) center no-repeat; }
     background: url(/img/ui/icon-settings.png) center no-repeat;
     cursor: pointer;
     height: 21px;
@@ -150,6 +149,10 @@ header {
     position:relative;
     top: 3px;
     width: 20px;
+    &:hover {
+      /* background-image: url(/img/ui/icon-settings-hover.png); */
+      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAVCAMAAABxCz6aAAAAKlBMVEVdmchZkr9YkL1emslemslemslemslemslalMFemslemskAAABYkb1emsmBFKlrAAAADHRSTlOh3O+QYBBAMMhQgADocXDiAAAAfElEQVR42nWQWw7AIAgEsVYQ0PtftxA0sa3O12Z8rYAG3A3UYMrsUt6SmstGU5Igiju3QpzJZO0fqgL3HwzXXBeZZy5IEW417sgAJS1lZNwZtUvI4plNogcdeMbTzvq9MxWA/+tp23P7o/3flTIvU0IUOs1zKZP1LTFqBw+93RJEXLgLkAAAAABJRU5ErkJggg==);
+    }
   }
 }
 
@@ -238,10 +241,10 @@ dt,
   text-align: center;
   top: -5px;
   width: $first-column-width;
-  p { font-size: 9px; }
   &.overdues {
     color: $color-red;
   }
+  p { font-size: 9px; }
 }
 .icon-today {
   background: url(/img/ui/icon-today.png) center 13px no-repeat;
@@ -259,16 +262,18 @@ dt,
   text-align: right;
   width: 30px;
   &:hover {
-    background: url(/img/ui/icon-comment-hover.png) left no-repeat;
+    /* background-image: url(/img/ui/icon-comment-hover.png); */
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAAOCAMAAAD+MweGAAAAllBMVEUAAADm8PfG2+z3+vzh7PVnoMyxzuWCsdW10eZ1qNFvpc/0+PuvzeSixeDS4vCgxN9gm8ru9Pnf6/SLt9jj7fX7/f7M3+7q8vhinMp6rNPd6vSkxuHC2etemsl8rdOqyuLo8fe/1+mRutq30udpoc1ros3X5vLT5PDk7vZxps+zz+Z+rtRmn8xtpM7V5fH9/v7E2uvb6POy+k0ZAAAAAXRSTlMAQObYZgAAAIRJREFUeNpVzkUSwlAABNHGXeJO3PXf/3KQUJXA23fNMMqcuvGa+pbxJV5l1RUUXVW+BMDQun1vh3egH9oB5FQl9POAiZrKRDG+wSyOSKROZyE1NKuNxsJIUPbAX7Xd5SyK1Ia1eWU0r4OwHDQIPg8twcRV9LPpPevH3B9OScYv0R4vLN6l0w0bO+J3zQAAAABJRU5ErkJggg==);
     p { color: $color-blue; }
   }
-  &.hidden {
-    visibility: hidden;
-  }
+  &.hidden { visibility: hidden; }
 }
 .icon-link {
   background: url(/img/ui/icon-link.png) center no-repeat;
-  &:hover { background: url(/img/ui/icon-link-hover.png) center no-repeat; }
+  &:hover {
+    /* background-image: url(/img/ui/icon-link-hover.png); */
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAMAAAAolt3jAAAALVBMVEUAAACawN3r8viGs9b1+fyuzOSQudq40+ekxuHh7PXM3+7X5vFnoMzC2etemslhaINpAAAAAXRSTlMAQObYZgAAAFlJREFUeNo9ykkOwDAIBEGyeAX6/8+NcRL6wKgk5M8N+p0i6imb2iA1RPTjDO3ZrBS3cxgen3pRKkd7RTuohUtf2TjNC1UiY647YiLQLZePTWdKOkBK7mVLPf15BNmhYhWMAAAAAElFTkSuQmCC);
+  }
   cursor: pointer;
   display: table-cell;
   margin-right: 20px;
@@ -290,10 +295,13 @@ dt,
     width: 325px;
     .checkbox {
       background: url(/img/ui/icon-checkbox.png) center no-repeat;
-      &:hover { background: url(/img/ui/icon-checkbox-hover.png) center no-repeat; }
       cursor: pointer;
       display: table-cell;
       width: 24px;
+      &:hover {
+        /* background-image: url(/img/ui/icon-checkbox-hover.png); */
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABlBMVEUAAAAzmmPcX7B0AAAAAXRSTlMAQObYZgAAACBJREFUeNrVzyEKAAAAwkD9/6etIoLZxWsDowaw3mHcCjyQAHFIRoQGAAAAAElFTkSuQmCC);
+      }
     }
     .todo-text {
       -webkit-box-orient: vertical;
@@ -319,10 +327,8 @@ dd li {
   &:last-child  { border-bottom: 0; }
   &:hover {
     background-color: $color-light-gray;
-    .todo {
-      div {
-        margin-left: 0px;
-      }
+    .todo div {
+      margin-left: 0px;
     }
   }
   .achievement {
