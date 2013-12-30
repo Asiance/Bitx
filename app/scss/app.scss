@@ -109,12 +109,12 @@ body {
 header {
   background: $color-close-white;
   height: 55px;
-  #logo {
+  & > img {
     left: 20px;
     position: relative;
     vertical-align: middle;
   }
-  #search-input {
+  input {
     background: $color-close-white;
     border: 1px solid #e4e4e4;
     color : $color-gray;
@@ -192,20 +192,19 @@ dt {
       background: $color-light-blue;
     }
   }
+  &:first-of-type {
+    .count-todos {
+      background: $color-red-counter;
+    }
+    .date {
+      color: $color-red;
+    }
+  }
 }
 
 dd {
   display: none;
   max-height: 306px;
-}
-
-#overdues {
-  .count-todos {
-    background: $color-red-counter;
-  }
-  .date {
-    color: $color-red;
-  }
 }
 
 .count-todos {
@@ -314,7 +313,7 @@ dt,
     }
   }
 }
-#todos li {
+dd li {
   border-bottom: 1px solid $color-border;
   height: 50px;
   left: -520px;
@@ -349,14 +348,14 @@ dt,
 }
 
 /* Slide to right to display check box on hover */
-#todos li:hover,
+dd li:hover,
 .todo div {
   transition-property: margin-left;
   transition-duration: .5s;
   transition-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000);
 }
 
-#allow-access {
+.allow-access {
   background: $color-close-white;
   display: table-row;
   line-height: 14px;
@@ -370,7 +369,7 @@ dt,
     margin : 24px;
     padding-right: 24px;
   }
-  #allow {
+  em {
     color: #68bb4f;
     font-weight: bold;
   }
@@ -404,7 +403,7 @@ dt,
 .todo .ui-match { background: yellow; }
 .person .ui-match { font-weight: 700; }
 
-#suggestions {
+.suggestions ul {
   background: $color-close-white;
   box-shadow: 2px 2px 2px $color-gray;
   line-height: 16px;

@@ -1,6 +1,5 @@
-<span>
-  <input id="search-input"
-         type="text"
+<span class="suggestions">
+  <input type="text"
          placeholder="{{ 'searchTodo' | i18n }}"
          ng-model="search"
          ui-keypress="{ 'enter': 'completeSearch($event)' }"
@@ -9,8 +8,7 @@
        ng-show="search"
        ng-click="clearSearch()">
   </div>
-  <ul id="suggestions"
-      nicescroll="{ scrollstep: 20 }">
+  <ul nicescroll="{ scrollstep: 20 }">
     <li id="{{ $index }}"
         class="person"
         ng-class="{ active: navPosition == $index }"

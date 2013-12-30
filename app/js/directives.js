@@ -34,8 +34,9 @@ angular.module('basecampExtension.directives', [])
           if (scope.search) {
             scope.realSearch = scope.search.match(/[^ ||^:]*$/);
           }
-          $('#suggestions').getNiceScroll().resize();
-          $('#suggestions').getNiceScroll().show();
+          var cacheEl = $('.suggestions ul');
+          cacheEl.getNiceScroll().resize();
+          cacheEl.getNiceScroll().show();
           scope.navPosition = -1;
         });
 
@@ -49,7 +50,7 @@ angular.module('basecampExtension.directives', [])
         };
 
         scope.navigateUp = function($event) {
-          var frameOffset = document.getElementById('suggestions').scrollTop;
+          var frameOffset = element.find('ul').scrollTop;
           if (scope.navPosition > -1) {
             scope.navPosition--;
             var framePosition = (scope.navPosition + 1) - (frameOffset-50)/50;
@@ -62,7 +63,7 @@ angular.module('basecampExtension.directives', [])
         };
 
         scope.navigateDown = function($event) {
-          var frameOffset = document.getElementById('suggestions').scrollTop;
+          var frameOffset = element.find('ul').scrollTop;
           if (scope.navPosition < scope.filteredData.length - 1) {
             scope.navPosition += 1;
             var framePosition = (scope.navPosition+1) - (frameOffset+50)/50;
@@ -87,7 +88,7 @@ angular.module('basecampExtension.directives', [])
           if (person) {
             scope.search = scope.search.replace(/(\w+)$/gi, '');
             scope.search += $filter('removeDomain')(person.email_address);
-            $('#suggestions').getNiceScroll().hide();
+            $('.suggestions ul').getNiceScroll().hide();
           }
         };
 
@@ -96,7 +97,7 @@ angular.module('basecampExtension.directives', [])
          */
         scope.clearSearch = function(person) {
           scope.search = '';
-          $('#suggestions').getNiceScroll().hide();
+          $('.suggestions ul').getNiceScroll().hide();
         };
       }
     };
@@ -125,8 +126,8 @@ angular.module('basecampExtension.directives', [])
               element.removeClass('active');
             }
             else {
-              $('#todos').find('dt').removeClass('active');
-              $('#todos').find('dd').slideUp(300, 'easeOutQuad');
+              element.parent().find('dt').removeClass('active');
+              $(element).parent().find('dd').slideUp(300, 'easeOutQuad');
               element.addClass('active');
               $(element).next().slideDown({
                 duration: 300,
