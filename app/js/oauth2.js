@@ -79,7 +79,14 @@
       var that = this
       // Send request for authorization token.
       var xhr = new XMLHttpRequest();
-      xhr.addEventListener('readystatechange', function (event) {
+      var params = "type=refresh" +
+                   "&client_id="     + encodeURIComponent(this.client_id) +
+                   "&redirect_uri="  + encodeURIComponent(this.redirect_url) +
+                   "&client_secret=" + encodeURIComponent(this.client_secret) +
+                   "&refresh_token=" + encodeURIComponent(window.localStorage.basecampRefreshToken);
+      xhr.open("POST", this.access_token_url, true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=utf-8");
+      xhr.addEventListener("readystatechange", function (event) {
         if (xhr.readyState == 4) {
           if (xhr.status == 200) {
             var jsonResponse = JSON.parse(xhr.responseText);
@@ -90,8 +97,7 @@
           }
         }
       });
-      xhr.open('POST', this.access_token_url + "?type=refresh&client_id=" + this.client_id + "&redirect_uri=" + this.redirect_url + "&client_secret=" + this.client_secret + "&refresh_token=" + window.localStorage.basecampRefreshToken, true);
-      xhr.send();
+      xhr.send(params);
     },
 
     /**
