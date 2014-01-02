@@ -92,6 +92,7 @@
             var jsonResponse = JSON.parse(xhr.responseText);
             window.localStorage.setItem(that.key, jsonResponse.access_token);
             console.log("LOG: OAuth - Token renewed");
+            window.backgroundTasks.start();
           } else {
             that.start();
           }
@@ -101,7 +102,7 @@
     },
 
     /**
-     * Retreives the authorization token from local storage.
+     * Retrieves the authorization token from local storage.
      *
      * @return Authorization token if it exists, null if not.
      */

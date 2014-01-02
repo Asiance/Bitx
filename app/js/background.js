@@ -5,7 +5,7 @@
 (function() {
   'use strict';
 
-  var backgroundTasks = {
+  window.backgroundTasks = {
 
     renewCache: false,
 
