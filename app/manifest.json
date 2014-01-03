@@ -17,7 +17,9 @@
     "tabs",
     "storage",
     "notifications",
-    "https://*/*"
+    "https://basecamp.com/",
+    "https://launchpad.37signals.com/",
+    "http://www.google.com/basecamp-crx"
   ],
   "web_accessible_resources": [
     "adapter.html",
