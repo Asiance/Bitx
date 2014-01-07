@@ -17,7 +17,7 @@
       if (xhr.readyState === 4 && xhr.status === 200) {
         console.log('LOG: getBasecampAccounts XHR');
         var data = JSON.parse(xhr.responseText);
-        this.basecampAccounts = _.findWhere(data.accounts, {product: "bcx"});
+        this.basecampAccounts = _.where(data.accounts, {product: "bcx"});
         this.saveCache('basecampAccounts');
         return true;
       } else if (xhr.readyState === 4) {
