@@ -50,22 +50,23 @@
     getPeople: function() {
       this.people = [];
       var self = this,
-          metaElements = [{
-            id:            this.userIDs,
-            name:          'Alias',
-            email_address: 'me',
-            avatar_url:    '/img/icon-search.png'
-          }, {
-            id:            -1,
-            name:          'Search by creator',
-            email_address: 'from:',
-            avatar_url:    '/img/icon-search.png'
-          }, {
-            id:            -1,
-            name:          'Search by assignee',
-            email_address: 'to:',
-            avatar_url:    '/img/icon-search.png'
-          }];
+      metaElements = [{
+        id:            this.userIDs,
+        name:          'Alias',
+        email_address: 'me',
+        avatar_url:    '/img/icon-search.png'
+      }, {
+        id:            -1,
+        name:          'Search by creator',
+        email_address: 'from:',
+        avatar_url:    '/img/icon-search.png'
+      }, {
+        id:            -1,
+        name:          'Search by assignee',
+        email_address: 'to:',
+        avatar_url:    '/img/icon-search.png'
+      }];
+      
       _.forEach(this.basecampAccounts, function(basecampAccount) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', 'https://basecamp.com/' + basecampAccount.id + '/api/v1/people.json', false);
@@ -82,12 +83,12 @@
       this.saveCache('people', self.people.concat(metaElements));
     },
 
-    getTodolists: function() {
+    getTodoLists: function() {
       if (_.isEmpty(this.basecampAccounts)) {
         backgroundTasks.stop();
         return;
       }
-      this.allTodolists = [];
+      this.allTodoLists = [];
       var self = this;
       _.forEach(this.basecampAccounts, function(basecampAccount) {
         var xhr = new XMLHttpRequest();
@@ -97,37 +98,47 @@
         if (xhr.readyState === 4 && xhr.status === 200) {
           if (xhr.getResponseHeader('Status') === '200 OK') self.renewCache = true;
           var data = JSON.parse(xhr.responseText);
-          self.allTodolists = self.allTodolists.concat(data);
+          self.allTodoLists = self.allTodoLists.concat(data);
         } else if (xhr.readyState === 4) {
-          console.log('ERROR: getTodolists XHR');
+          console.log('ERROR: getTodoLists XHR');
           backgroundTasks.stop();
           if (xhr.status === 401) window.oauth2.renew();
         }
       });
-      console.log('LOG: getTodolists XHR');
+      console.log('LOG: getTodoLists XHR');
     },
 
-    getTodos: function() {
+    getTodos: function(callback) {
       this.allTodos = [];
       var self = this;
-      _.forEach(this.allTodolists, function(todolist) {
+      var nbTodosFetched = 0;
+      _.forEach(this.allTodoLists, function(todolist) {
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', todolist.url, false);
+        xhr.open('GET', todolist.url, true);
         xhr.setRequestHeader('Authorization', 'Bearer ' + self.basecampToken);
+        xhr.onload = function(e) {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              var data = JSON.parse(xhr.responseText);
+              self.allTodos = self.allTodos.concat(data.todos.remaining);
+              nbTodosFetched++;
+              if (nbTodosFetched === self.allTodoLists.length) {
+                console.log('LOG: finished getting all todos');
+                callback();
+              }
+            } else {
+              console.log('ERROR: getTodos XHR');
+            }
+          }
+        };
         xhr.send();
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          var data = JSON.parse(xhr.responseText);
-          self.allTodos = self.allTodos.concat(data.todos.remaining);
-        } else if (xhr.readyState === 4) {
-          console.log('ERROR: getTodos XHR');
-        }
       });
       console.log('LOG: getTodos XHR');
     },
 
     addTodosData: function() {
       _.map(this.allTodos, function(todo) {
-        var parentTodolist = _.findWhere(this.allTodolists, { id: todo.todolist_id });
+        var parentTodolist = _.findWhere(this.allTodoLists, { id: todo.todolist_id });
         todo.todolist      = parentTodolist.name ;
         todo.project       = parentTodolist.bucket.name;
         todo.project_id    = parentTodolist.bucket.id;
@@ -191,12 +202,13 @@
     pollTodolists: function(period) {
       var self = this;
       this.pollingTask = setInterval(function() {
-        self.getTodolists();
+        self.getTodoLists();
         if (self.renewCache) {
-          self.getTodos();
-          self.addTodosData();
-          self.parseMyTodos();
-          self.renewCache = false;
+          self.getTodos(function() {
+            self.addTodosData();
+            self.parseMyTodos();
+            self.renewCache = false;
+          });
         }
       }, period);
     },
@@ -221,14 +233,16 @@
 
     start: function() {
       console.log('LOG: start backgroundTasks');
+      var self = this;
       if (this.initConfig() && this.getBasecampAccounts()) {
         this.getUserIDs();
-        this.getTodolists();
-        this.getTodos();
-        this.addTodosData();
-        this.parseMyTodos();
-        this.getPeople();
-        this.pollTodolists(localStorage.refresh_period);
+        this.getTodoLists();
+        this.getTodos(function() {
+          self.addTodosData();
+          self.parseMyTodos();
+          self.getPeople();
+          self.pollTodolists(localStorage.refresh_period);
+        });
       } else backgroundTasks.stop();
     },
 
