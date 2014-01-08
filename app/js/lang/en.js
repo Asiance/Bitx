@@ -21,7 +21,7 @@ window.en = {
   "daysAgo":"day(s) ago",
 
   "visitTodo": "Visit this todo",
-  "assignedTo": "Asssigned to {x}",
+  "assignedTo": "Assigned to {x}",
 
   "count-overdues": "overdue todo(s)",
   "count-today": "todo(s) for today",

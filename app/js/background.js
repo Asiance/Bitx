@@ -2,180 +2,278 @@
  * Background script of the Chrome extension
  * Loaded by background.html
  */
-window.onload = function() {
-  var userLang = (navigator.language) ? navigator.language : navigator.userLanguage;
-  var locale = userLang.substring(0,2);
-  var refresh_period;
-  if (!localStorage.language) {
-    localStorage.language = locale;
-  }
-  if (!localStorage.counter_todos) {
-    localStorage.counter_todos = 'default';
-  }
-  if (localStorage.refresh_period) {
-    refresh_period = localStorage.refresh_period;
-  } else {
-    refresh_period = 5000;
-    localStorage.refresh_period = refresh_period;
-  }
-  if (localStorage.myTodos) {
-    var myTodos = JSON.parse(localStorage.myTodos);
-    badge.updateBadge(myTodos);
-  }
-  setInterval(getTodos, refresh_period);
-};
+(function() {
+  'use strict';
 
-/*
- * Retrieve the Basecamp account that supports the last APIs
- * Store data in localStorage
- */
-function getAuthorization() {
-  try {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://launchpad.37signals.com/authorization.json', true);
-    xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.basecampToken);
-    xhr.onreadystatechange = function () {
+  window.backgroundTasks = {
+
+    renewCache: false,
+
+    getBasecampAccounts: function() {
+      var xhr  = new XMLHttpRequest();
+      xhr.open('GET', 'https://launchpad.37signals.com/authorization.json', false);
+      xhr.setRequestHeader('Authorization', 'Bearer ' + this.basecampToken);
+      xhr.send();
       if (xhr.readyState === 4 && xhr.status === 200) {
+        console.log('LOG: getBasecampAccounts XHR');
         var data = JSON.parse(xhr.responseText);
-        localStorage.basecampId = _.findWhere(data.accounts, {product: "bcx"}).id;
-        getUser();
-        console.log('LOG: getAuthorization XHR');
+        this.basecampAccounts = _.where(data.accounts, { product: 'bcx' });
+        this.saveCache('basecampAccounts');
+        return true;
       } else if (xhr.readyState === 4) {
         // Token expired
-        console.log('ERROR: getAuthorization XHR - Token expired');
-        window.oauth2.renew();
+        console.log('ERROR: getBasecampAccounts XHR - Token expired');
+        if (xhr.status === 401) window.oauth2.renew();
       }
-    };
-    xhr.send();
-  } catch(e) {
-    console.log(e);
-  }
-}
+      return false;
+    },
 
-/*
- * Retrieve the User ID within the Basecamp organization
- * Store data in localStorage
- */
-function getUser() {
-  try {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://basecamp.com/' + localStorage.basecampId + '/api/v1/people/me.json', true);
-    xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.basecampToken);
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 304)) {
-        var data = JSON.parse(xhr.responseText);
-        localStorage.userId = data.id;
-        console.log('LOG: getUser XHR');
-      } else if (xhr.readyState === 4) {
-        console.log('ERROR: getUser XHR');
+    getUserIDs: function() {
+      this.userIDs = [];
+      var self = this;
+      _.forEach(this.basecampAccounts, function(basecampAccount) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'https://basecamp.com/' + basecampAccount.id + '/api/v1/people/me.json', false);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + self.basecampToken);
+        xhr.send();
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var data = JSON.parse(xhr.responseText);
+          self.userIDs.push(data.id);
+        } else if (xhr.readyState === 4) {
+          console.log('ERROR: getUserIDs XHR');
+        }
+      });
+      console.log('LOG: getUserIDs XHR');
+      this.saveCache('userIDs');
+    },
+
+    getPeople: function() {
+      this.people = [];
+      var self = this,
+      metaElements = [{
+        id:            this.userIDs,
+        name:          'Alias',
+        email_address: 'me',
+        avatar_url:    '/img/icon-search.png'
+      }, {
+        id:            -1,
+        name:          'Search by creator',
+        email_address: 'from:',
+        avatar_url:    '/img/icon-search.png'
+      }, {
+        id:            -1,
+        name:          'Search by assignee',
+        email_address: 'to:',
+        avatar_url:    '/img/icon-search.png'
+      }];
+      
+      _.forEach(this.basecampAccounts, function(basecampAccount) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'https://basecamp.com/' + basecampAccount.id + '/api/v1/people.json', false);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + self.basecampToken);
+        xhr.send();
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var data = JSON.parse(xhr.responseText);
+          self.people = self.people.concat(data);
+        } else if (xhr.readyState === 4) {
+          console.log('ERROR: getUserIDs XHR');
+        }
+      });
+      console.log('LOG: getPeople XHR');
+      this.saveCache('people', self.people.concat(metaElements));
+    },
+
+    getTodoLists: function() {
+      if (_.isEmpty(this.basecampAccounts)) {
+        backgroundTasks.stop();
+        return;
       }
-    };
-    xhr.send();
-  } catch(e) {
-    console.log(e);
-  }
-}
+      this.allTodoLists = [];
+      var self = this;
+      _.forEach(this.basecampAccounts, function(basecampAccount) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'https://basecamp.com/' + basecampAccount.id + '/api/v1/todolists.json', false);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + self.basecampToken);
+        xhr.send();
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          if (xhr.getResponseHeader('Status') === '200 OK') self.renewCache = true;
+          var data = JSON.parse(xhr.responseText);
+          self.allTodoLists = self.allTodoLists.concat(data);
+        } else if (xhr.readyState === 4) {
+          console.log('ERROR: getTodoLists XHR');
+          backgroundTasks.stop();
+          if (xhr.status === 401) window.oauth2.renew();
+        }
+      });
+      console.log('LOG: getTodoLists XHR');
+    },
 
-/*
- * Retrieve the all Todos from projects where user is involved
- * Store data in Chrome storage
- */
-function getTodos() {
-  if (localStorage.basecampToken == undefined) return;
-
-  var allTodos = [];
-  var myTodos = [];
-  var noCache;
-
-  $.ajax({
-    url: 'https://basecamp.com/' + localStorage.basecampId + '/api/v1/todolists.json',
-    headers:  {'Authorization':'Bearer ' + localStorage.basecampToken}
-  })
-  .fail(function(jqXHR, textStatus, errorThrown) {
-    getAuthorization();
-  })
-  .done(function(data, textStatus, jqXHR) {
-    chrome.storage.local.get('assignedTodos', function(data) {
-      if (_.isEmpty(data.assignedTodos)) {
-        noCache = true;
-      }
-    });
-    if (jqXHR.getResponseHeader('Status') == '200 OK' || noCache || !localStorage.myTodos || localStorage.updateBadge == 'true') {
-      $.when(asyncEvent(data)).done(function(allTodolists) {
-        _.forEach(allTodolists, function (todolist) {
-          _.forEach(todolist.todos.remaining, function(todo) {
-            todo.todolist = todolist.name;
-            todo.project = todolist.project;
-            todo.project_id = todolist.project_id;
-            allTodos.push(todo);
-            if (todo.assignee && todo.assignee.id == localStorage.userId)
-              myTodos.push(todo);
-          });
-        });
-
-        allTodos = _.chain(allTodos).sortBy(function(todo) { return todo.id; })
-                    .sortBy(function(todo) { return todo.project_id; })
-                    .value();
-        console.log('LOG: getTodos updates cache of allTodos');
-        chrome.storage.local.set({'assignedTodos': JSON.stringify(allTodos)});
-
-        // Create notification
-        if (localStorage.myTodos) {
-          var localMyTodos = JSON.parse(localStorage.myTodos);
-          _.each(myTodos, function(item) {
-            if (!_.findWhere(localMyTodos, {id: item.id})) { // Check each todo whether it is new or not
-              var projectName = _.findWhere(data, {id: item.todolist_id}).bucket.name;
-              var notification = webkitNotifications.createNotification(
-                item.creator.avatar_url, // Icon
-                projectName, // Title
-                item.content // Body
-              );
-              notification.onclick = function () {
-                window.open('https://basecamp.com/' + localStorage.basecampId + '/projects/' + item.project_id + '/todos/' + item.id);
-                notification.close();
-              };
-              notification.show();
-              setTimeout(function() { notification.cancel(); }, 15000); // Hide notificiation after 15 seconds
+    getTodos: function(callback) {
+      this.allTodos = [];
+      var self = this;
+      var nbTodosFetched = 0;
+      _.forEach(this.allTodoLists, function(todolist) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', todolist.url, true);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + self.basecampToken);
+        xhr.onload = function(e) {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              var data = JSON.parse(xhr.responseText);
+              self.allTodos = self.allTodos.concat(data.todos.remaining);
+              nbTodosFetched++;
+              if (nbTodosFetched === self.allTodoLists.length) {
+                console.log('LOG: finished getting all todos');
+                callback();
+              }
+            } else {
+              console.log('ERROR: getTodos XHR');
             }
+          }
+        };
+        xhr.send();
+      });
+      console.log('LOG: getTodos XHR');
+    },
+
+    addTodosData: function() {
+      _.map(this.allTodos, function(todo) {
+        var parentTodolist = _.findWhere(this.allTodoLists, { id: todo.todolist_id });
+        todo.todolist      = parentTodolist.name ;
+        todo.project       = parentTodolist.bucket.name;
+        todo.project_id    = parentTodolist.bucket.id;
+      }, this);
+      this.saveCache('allTodos');
+    },
+
+    saveCache: function(key, value) {
+      var object = {};
+      if (!value) value = this[key];
+      object[key] = value;
+      chrome.storage.local.set(object);
+      console.log('LOG: save ' + key + ' in cache');
+    },
+
+    loadCache: function(key, callback) {
+      var self = this;
+      chrome.storage.local.get(key, function(data) {
+        if (chrome.runtime.lastError) return;
+        self[key] = data[key] ? data[key] : null;
+        console.log('LOG: load ' + key + ' from cache');
+        if (callback) callback();
+      });
+    },
+
+    parseMyTodos: function() {
+      var self = this,
+          newMyTodos = _.filter(this.allTodos, function(todo) {
+            return todo.assignee && _.contains(this.userIDs, todo.assignee.id);
+          }, this);
+      this.loadCache('myTodos', function() {
+        if (self.myTodos !== null) {
+          _.map(newMyTodos, function(todo) {
+            if (_.findWhere(this.myTodos, { id: todo.id })) return;
+            else this.createNotification(todo);
+          }, self);
+        }
+        self.saveCache('myTodos', newMyTodos);
+        console.log('LOG: parseMyTodos updates cache of myTodos');
+        badge.updateBadge(newMyTodos);
+      });
+    },
+
+    createNotification: function(todo) {
+      var notification = webkitNotifications.createNotification(
+        todo.creator.avatar_url, // Icon
+        todo.project, // Title
+        todo.content // Body
+      );
+      notification.onclick = function () {
+        // Example of what the replace-regex do:
+        // https://basecamp.com/2457428/api/v1/projects/4324139-explore-basecamp/todos/70309999-click-the-invite.json
+        // https://basecamp.com/2457428/projects/4324139-explore-basecamp/todos/70309999-click-the-invite
+        window.open(todo.url.replace(/[\/]api[\/]v1|[\.]json/gi, ''));
+        notification.close();
+      };
+      notification.show();
+      setTimeout(function() { notification.cancel(); }, 15000); // Hide notification after 15 seconds
+    },
+
+    pollTodolists: function(period) {
+      var self = this;
+      this.pollingTask = setInterval(function() {
+        self.getTodoLists();
+        if (self.renewCache) {
+          self.getTodos(function() {
+            self.addTodosData();
+            self.parseMyTodos();
+            self.renewCache = false;
           });
         }
+      }, period);
+    },
 
-        // Update localStorage
-        localStorage.myTodos = JSON.stringify(myTodos);
-        badge.updateBadge(myTodos);
-        console.log('LOG: getTodos updates cache of myTodos');
-      });
+    initConfig: function() {
+      if (!localStorage.basecampToken) return false;
+      if (!localStorage.language) {
+        var userLang = navigator.language ? navigator.language : navigator.userLanguage,
+            locale   = userLang.substring(0, 2);
+        localStorage.language = locale;
+      }
+      if (!localStorage.counter_todos) {
+        localStorage.counter_todos = 'default';
+      }
+      if (!localStorage.refresh_period) {
+        localStorage.refresh_period = 5000;
+      }
+      this.basecampToken = localStorage.basecampToken;
+      console.log('LOG: initConfig');
+      return true;
+    },
+
+    start: function() {
+      console.log('LOG: start backgroundTasks');
+      var self = this;
+      if (this.initConfig() && this.getBasecampAccounts()) {
+        this.getUserIDs();
+        this.getTodoLists();
+        this.getTodos(function() {
+          self.addTodosData();
+          self.parseMyTodos();
+          self.getPeople();
+          self.pollTodolists(localStorage.refresh_period);
+        });
+      } else backgroundTasks.stop();
+    },
+
+    stop: function() {
+      console.log('LOG: stop backgroundTasks');
+      clearInterval(this.pollingTask);
+      badge.updateBadge(null);
+    },
+
+    restart: function() {
+      console.log('LOG: restart backgroundTasks');
+      clearInterval(this.pollingTask);
+      this.pollTodolists(localStorage.refresh_period);
     }
-  });
-}
+  };
 
-function asyncEvent(todolists) {
+  backgroundTasks.start();
 
-  function checkIfModified(status) {
-    if (--done === 0) {
-      return deferred.resolve(allTodolists);
+  window.addEventListener('storage', eventStorage, false);
+
+  function eventStorage(e) {
+    if (e.key === '' && e.newValue === null) {
+      backgroundTasks.stop();
+    }
+    else if (e.key === 'basecampToken' && e.newValue !== null) {
+      backgroundTasks.stop();
+      backgroundTasks.start();
+    }
+    else if (e.key === 'refresh_period' && !isNaN(e.newValue)) {
+      backgroundTasks.restart();
     }
   }
 
-  var deferred = new jQuery.Deferred();
-  var done = todolists.length;
-  var allTodolists = [];
-
-  _.each(todolists, function(todolist) {
-    $.ajax({
-      url: todolist.url,
-      headers:  {'Authorization':'Bearer ' + localStorage.basecampToken}
-    }).done(function(data, textStatus, jqXHR) {
-      data.project_id = todolist.bucket.id;
-      data.project = todolist.bucket.name;
-      allTodolists.push(data);
-      checkIfModified();
-    }).fail(function(jqXHR, textStatus, errorThrown) {
-      console.log('ERROR: GET request failed');
-      chrome.storage.local.remove('assignedTodos');
-    });
-  });
-
-  return deferred.promise();
-
-}
+})();

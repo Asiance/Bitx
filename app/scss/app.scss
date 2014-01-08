@@ -1,7 +1,36 @@
-@import "compass/css3";
 @import "compass/reset";
-@import url(http://fonts.googleapis.com/css?family=Droid+Sans:400,700);
-@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+
+@font-face {
+  font-family: 'Droid Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url(./fonts/DroidSans.woff) format('woff');
+}
+@font-face {
+  font-family: 'Droid Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url(./fonts/DroidSans-Bold.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Nanum Gothic';
+  font-style: normal;
+  font-weight: 700;
+  src: url(./fonts/NanumGothic-Bold.woff) format('woff');
+}
+@font-face {
+  font-family: 'Nanum Gothic';
+  font-style: normal;
+  font-weight: 400;
+  src: url(./fonts/NanumGothic-Regular.woff) format('woff');
+}
+@font-face {
+  font-family: 'Nanum Gothic';
+  font-style: normal;
+  font-weight: 800;
+  src: url(.fonts/NanumGothic-ExtraBold.woff) format('woff');
+}
 
 $color-blue: #5e9ac9;
 $color-border: #f4f4f4;
@@ -36,11 +65,21 @@ $fonts_ko: "Droid Sans", "Nanum Gothic", "나눔고딕", "NanumGothic", "Malgun 
 
 body {
   h1 {
-    display: inline-block;
+    display: block;
     font-size: 14px;
     font-weight: 700;
     line-height: 55px;
-    width: 366px;
+    &:before {
+      bottom: 1px;
+      content: '';
+      display: inline-block;
+      font-size: 24px;
+      line-height: 1;
+      position: relative;
+      text-align: center;
+      vertical-align: middle;
+      width: $first-column-width;
+    }
   }
   h2 {
     font-weight: 700;
@@ -59,7 +98,7 @@ body {
   width: 500px;
   &.ja {
     font-family: $fonts_ja;
-  };
+  }
   &.ko {
     font-family: $fonts_ko;
     .date p { font-size: 12px; }
@@ -70,12 +109,12 @@ body {
 header {
   background: $color-close-white;
   height: 55px;
-  #logo {
-    vertical-align: middle;
-    position: relative;
+  & > img {
     left: 20px;
+    position: relative;
+    vertical-align: middle;
   }
-  #search-input {
+  input {
     background: $color-close-white;
     border: 1px solid #e4e4e4;
     color : $color-gray;
@@ -97,46 +136,35 @@ header {
     cursor: pointer;
     height: 16px;
     margin-left: 358px;
-    position: absolute;
     margin-top: -30px;
+    position: absolute;
     width: 16px;
   }
   .icon-settings {
-    &:hover { background: url(/img/ui/icon-settings-hover.png) center no-repeat; }
     background: url(/img/ui/icon-settings.png) center no-repeat;
     cursor: pointer;
     height: 21px;
+    left: 61px;
     padding: 14px;
     position:relative;
     top: 3px;
-    left: 61px;
     width: 20px;
+    &:hover {
+      /* background-image: url(/img/ui/icon-settings-hover.png); */
+      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAVCAMAAABxCz6aAAAAKlBMVEVdmchZkr9YkL1emslemslemslemslemslalMFemslemskAAABYkb1emsmBFKlrAAAADHRSTlOh3O+QYBBAMMhQgADocXDiAAAAfElEQVR42nWQWw7AIAgEsVYQ0PtftxA0sa3O12Z8rYAG3A3UYMrsUt6SmstGU5Igiju3QpzJZO0fqgL3HwzXXBeZZy5IEW417sgAJS1lZNwZtUvI4plNogcdeMbTzvq9MxWA/+tp23P7o/3flTIvU0IUOs1zKZP1LTFqBw+93RJEXLgLkAAAAABJRU5ErkJggg==);
+    }
   }
-}
-
-.toggle-content {
-  display: inline-block;
-  font-size: 24px;
-  line-height: 10px;
-  text-align: center;
-  width: $first-column-width;
-}
-.void {
-  display: inline-block;
-  width: $first-column-width;
 }
 
 dt {
+  -webkit-user-select: none;
   background: $color-dark;
   border-bottom: 1px solid $color-dark-border;
   color: $color-white;
-  vertical-align: middle;
-  .toggle:after {
-    content: '+';
-  }
-}
-dt.enabled {
   cursor: pointer;
+  pointer-events: none;
+  vertical-align: middle;
+  position: relative;
   &:hover {
     background: $color-blue;
     border-bottom: 1px solid $color-blue;
@@ -144,58 +172,61 @@ dt.enabled {
       background: $color-light-blue;
     }
   }
-}
-dt.disabled {
-  background: $color-dark !important;
-  border-bottom: 1px solid $color-dark-border !important;
-  cursor: default;
-}
-#overdues {
-  .count-todos {
-    background: $color-red-counter !important;
+  &.enabled {
+    pointer-events: all;
+    h1:before {
+      content: '+';
+    }
   }
-  .date {
-    color: $color-red;
+  &.active {
+    background: $color-blue;
+    border-bottom: 1px solid $color-blue;
+    h1:before {
+      content: '-';
+      position: relative;
+      top: -2px;
+    }
+    .count-todos {
+      background: $color-light-blue;
+    }
+  }
+  &:first-of-type {
+    .count-todos {
+      background: $color-red-counter;
+    }
+    .date {
+      color: $color-red;
+    }
   }
 }
 
-#overdues_content, #today_content, #upcoming_content, #noduedate_content {
-  max-height: 306px;
+dd {
   display: none;
-}
-
-dt.active {
-  background: $color-blue;
-  border-bottom: 1px solid $color-blue;
-  .toggle:after {
-    content: '-';
-    position: relative;
-    top: -2px;
-  }
-  .count-todos {
-    background: $color-light-blue;
-  }
+  max-height: 306px;
 }
 
 .count-todos {
   background: $color-dark-gray;
   border-radius: 50%;
-  display: inline-block;
+  bottom: 0;
   height: 15px;
   line-height: 16px;
+  margin: auto 0;
   padding: 8px;
+  position: absolute;
+  right: 22px;
   text-align: center;
+  top: 0;
   width: 15px;
-
 }
 
 /* Change background color on hover */
 dt,
 .count-todos,
 .icon-settings {
-  -webkit-transition-duration: 0.1s;
-  -webkit-transition-property: background border-bottom;
-  -webkit-transition-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000);
+  transition-duration: .1s;
+  transition-property: background, border-bottom;
+  transition-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000);
 }
 
 .day-number {
@@ -210,10 +241,10 @@ dt,
   text-align: center;
   top: -5px;
   width: $first-column-width;
-  p { font-size: 9px; }
   &.overdues {
     color: $color-red;
   }
+  p { font-size: 9px; }
 }
 .icon-today {
   background: url(/img/ui/icon-today.png) center 13px no-repeat;
@@ -222,25 +253,27 @@ dt,
   background: url(/img/ui/icon-coffee.png) center 13px no-repeat;
 }
 
-.comments,
-.void {
-  display: table-cell;
-  padding-right: 8px;
-  width: 30px;
-}
 .comments {
   background: url(/img/ui/icon-comment.png) left no-repeat;
-  &:hover {
-    background: url(/img/ui/icon-comment-hover.png) left no-repeat;
-    p { color: $color-blue; }
-  }
   color: $color-gray;
   cursor: pointer;
+  display: table-cell;
+  padding-right: 8px;
   text-align: right;
+  width: 30px;
+  &:hover {
+    /* background-image: url(/img/ui/icon-comment-hover.png); */
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAAOCAMAAAD+MweGAAAAllBMVEUAAADm8PfG2+z3+vzh7PVnoMyxzuWCsdW10eZ1qNFvpc/0+PuvzeSixeDS4vCgxN9gm8ru9Pnf6/SLt9jj7fX7/f7M3+7q8vhinMp6rNPd6vSkxuHC2etemsl8rdOqyuLo8fe/1+mRutq30udpoc1ros3X5vLT5PDk7vZxps+zz+Z+rtRmn8xtpM7V5fH9/v7E2uvb6POy+k0ZAAAAAXRSTlMAQObYZgAAAIRJREFUeNpVzkUSwlAABNHGXeJO3PXf/3KQUJXA23fNMMqcuvGa+pbxJV5l1RUUXVW+BMDQun1vh3egH9oB5FQl9POAiZrKRDG+wSyOSKROZyE1NKuNxsJIUPbAX7Xd5SyK1Ia1eWU0r4OwHDQIPg8twcRV9LPpPevH3B9OScYv0R4vLN6l0w0bO+J3zQAAAABJRU5ErkJggg==);
+    p { color: $color-blue; }
+  }
+  &.hidden { visibility: hidden; }
 }
 .icon-link {
   background: url(/img/ui/icon-link.png) center no-repeat;
-  &:hover { background: url(/img/ui/icon-link-hover.png) center no-repeat; }
+  &:hover {
+    /* background-image: url(/img/ui/icon-link-hover.png); */
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAMAAAAolt3jAAAALVBMVEUAAACawN3r8viGs9b1+fyuzOSQudq40+ekxuHh7PXM3+7X5vFnoMzC2etemslhaINpAAAAAXRSTlMAQObYZgAAAFlJREFUeNo9ykkOwDAIBEGyeAX6/8+NcRL6wKgk5M8N+p0i6imb2iA1RPTjDO3ZrBS3cxgen3pRKkd7RTuohUtf2TjNC1UiY647YiLQLZePTWdKOkBK7mVLPf15BNmhYhWMAAAAAElFTkSuQmCC);
+  }
   cursor: pointer;
   display: table-cell;
   margin-right: 20px;
@@ -262,10 +295,13 @@ dt,
     width: 325px;
     .checkbox {
       background: url(/img/ui/icon-checkbox.png) center no-repeat;
-      &:hover { background: url(/img/ui/icon-checkbox-hover.png) center no-repeat; }
       cursor: pointer;
       display: table-cell;
       width: 24px;
+      &:hover {
+        /* background-image: url(/img/ui/icon-checkbox-hover.png); */
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABlBMVEUAAAAzmmPcX7B0AAAAAXRSTlMAQObYZgAAACBJREFUeNrVzyEKAAAAwkD9/6etIoLZxWsDowaw3mHcCjyQAHFIRoQGAAAAAElFTkSuQmCC);
+      }
     }
     .todo-text {
       -webkit-box-orient: vertical;
@@ -280,7 +316,7 @@ dt,
     }
   }
 }
-#todos li {
+dd li {
   border-bottom: 1px solid $color-border;
   height: 50px;
   left: -520px;
@@ -288,16 +324,13 @@ dt,
   position: relative;
   width: 1040px;
   &:first-child { border-top: 1px solid $color-border; }
-  &:last-child { border-bottom: 0;}
+  &:last-child  { border-bottom: 0; }
   &:hover {
     background-color: $color-light-gray;
-    .todo {
-      div {
-        margin-left: 0px;
-      }
+    .todo div {
+      margin-left: 0px;
     }
   }
-
   .achievement {
     background: $color-green;
     color: $color-white;
@@ -316,24 +349,28 @@ dt,
 }
 
 /* Slide to right to display check box on hover */
-#todos li:hover,
+dd li:hover,
 .todo div {
-  -webkit-transition-property: margin-left;
-  -webkit-transition-duration: 0.5s;
-  -webkit-transition-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000);
+  transition-property: margin-left;
+  transition-duration: .5s;
+  transition-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000);
 }
 
-#allow-access {
+.allow-access {
   background: $color-close-white;
   display: table-row;
   line-height: 14px;
+  cursor: pointer;
+  &:hover {
+    background: darken($color-close-white, 1%);
+  }
   img {
     border-right : 1px solid $color-gray;
     display: table-cell;
     margin : 24px;
     padding-right: 24px;
   }
-  #allow {
+  em {
     color: #68bb4f;
     font-weight: bold;
   }
@@ -351,13 +388,13 @@ dt,
 
 /* Define animation to display achievement */
 @-webkit-keyframes achievementSlide {
-  from { margin-left: 0px; }
-  to { margin-left: 520px; }
+  from { margin-left: 0;     }
+  to   { margin-left: 520px; }
 }
 
 /* Style applied when a todo is checked */
 .achieved {
-  -webkit-animation-duration: 0.5s;
+  -webkit-animation-duration: .5s;
   -webkit-animation-fill-mode: forwards;
   -webkit-animation-name: achievementSlide;
   -webkit-animation-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000); /* easeOutQuart */
@@ -367,7 +404,7 @@ dt,
 .todo .ui-match { background: yellow; }
 .person .ui-match { font-weight: 700; }
 
-#suggestions {
+.suggestions ul {
   background: $color-close-white;
   box-shadow: 2px 2px 2px $color-gray;
   line-height: 16px;
@@ -376,16 +413,17 @@ dt,
   max-height: 200px;
   position: absolute;
   width: 262px;
+  z-index: 1;
   li {
     &.active {
       background: #e4e4e4;
-    };
-    border-bottom : 1px solid $color-border;
+    }
     &:last-child {
       border: none;
-    };
+    }
+    border-bottom : 1px solid $color-border;
     cursor: pointer;
-    padding: 8px 0px;
+    padding: 8px 0;
   }
   img {
     float: left;
@@ -400,4 +438,8 @@ dt,
     font-size: 12px;
     color: gray;
   }
+}
+
+.ng-hide {
+  display: none !important;
 }

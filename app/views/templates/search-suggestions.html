@@ -1,0 +1,26 @@
+<span class="suggestions">
+  <input type="text"
+         placeholder="{{ 'searchTodo' | i18n }}"
+         ng-model="search"
+         ui-keypress="{ 'enter': 'completeSearch($event)' }"
+         ui-keydown="{ 'up': 'navigateUp($event)', 'down': 'navigateDown($event)' }" autofocus>
+  <div class="icon-clear"
+       ng-show="search"
+       ng-click="clearSearch()">
+  </div>
+  <ul nicescroll="{ scrollstep: 20 }">
+    <li id="{{ $index }}"
+        class="person"
+        ng-class="{ active: navPosition == $index }"
+        ng-repeat="person in filteredData = (data | suggestionSearch: search)"
+        ng-click="setSearch(person)"
+        ng-mouseenter="setNavPosition($index)">
+      <img class="username" ng-src="{{ person.avatar_url }}">
+      <span ng-switch="person.id" class="username">
+        <span ng-switch-when="-1" ng-bind-html="person.email_address | highlight: realSearch"></span>
+        <span ng-switch-default   ng-bind-html="person.email_address | removeDomain | lowercase | highlight: realSearch"></span>
+      </span><br>
+      <span class="fullname">{{ person.name }}</span>
+    </li>
+  </ul>
+</span>

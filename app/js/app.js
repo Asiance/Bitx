@@ -5,19 +5,14 @@ angular
     ['basecampExtension.directives',
     'basecampExtension.filters',
     'basecampExtension.services',
-    'basecampExtension.servicesCache',
+    'basecampExtension.controllers',
     'ui.highlight',
     'ui.keypress',
-    'basecampExtension.controllers'])
-
-  .config([
-    '$routeProvider', '$locationProvider', '$httpProvider', '$resourceProvider', function($routeProvider) {
-      $routeProvider
-        .when('/', {
-          controller: 'TodosController',
-          templateUrl: 'views/todos.html'
-        })
-        .otherwise({redirectTo: '/'});
+    'ngSanitize'])
+  .config( [
+    '$compileProvider',
+    function($compileProvider) {
+      $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file):|data:image\/|filesystem:chrome-extension:|\//);
     }
   ]);
 

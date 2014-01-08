@@ -1,0 +1,14 @@
+<dd nicescroll="{ scrollstep: 50 }">
+  <div class="content" ng-repeat="(key, value) in projects">
+    <h2 class="project"
+        ng-show="(value | keywordSearch:search:userIDs:people | status: category).length !== 0"
+        ng-bind-html="key | highlight:realSearch | uppercase">
+    </h2>
+    <ul>
+      <todo search="search"
+            category="{{ category }}"
+            ng-repeat="assignedTodo in (value | keywordSearch:search:userIDs:people | status: category | orderBy: assignedTodo.due_at)">
+      </todo>
+    </ul>
+  </div>
+</dd>

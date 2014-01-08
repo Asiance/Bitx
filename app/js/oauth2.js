@@ -18,7 +18,6 @@
      * Starts the authorization process.
      */
     start: function () {
-      window.close();
       var url = this.authorization_url + "?type=web_server&client_id=" + this.client_id + "&redirect_uri=" + this.redirect_url;
       chrome.tabs.create({
         url: url,
@@ -41,7 +40,6 @@
           chrome.tabs.remove(tab.id);
         });
       };
-
       if (url.match(/\?error=(.+)/)) {
         removeTab();
       } else {
@@ -60,8 +58,9 @@
                 var jsonResponse = JSON.parse(xhr.responseText);
                 window.localStorage.setItem(that.key, jsonResponse.access_token);
                 window.localStorage.setItem("basecampRefreshToken", jsonResponse.refresh_token);
-                chrome.tabs.create({url:'./views/auth-success.html'});
-                removeTab();
+                chrome.tabs.getCurrent(function (tab) {
+                  chrome.tabs.update(tab.id, {url:'./views/auth-success.html'});
+                });
               }
             } else {
               removeTab();
@@ -72,7 +71,7 @@
         xhr.send();
       }
     },
-    
+
     /**
      * Renew the token, based on the refresh token
      */
@@ -80,23 +79,30 @@
       var that = this
       // Send request for authorization token.
       var xhr = new XMLHttpRequest();
-      xhr.addEventListener('readystatechange', function (event) {
+      var params = "type=refresh" +
+                   "&client_id="     + encodeURIComponent(this.client_id) +
+                   "&redirect_uri="  + encodeURIComponent(this.redirect_url) +
+                   "&client_secret=" + encodeURIComponent(this.client_secret) +
+                   "&refresh_token=" + encodeURIComponent(window.localStorage.basecampRefreshToken);
+      xhr.open("POST", this.access_token_url, true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=utf-8");
+      xhr.addEventListener("readystatechange", function (event) {
         if (xhr.readyState == 4) {
           if (xhr.status == 200) {
             var jsonResponse = JSON.parse(xhr.responseText);
             window.localStorage.setItem(that.key, jsonResponse.access_token);
             console.log("LOG: OAuth - Token renewed");
+            window.backgroundTasks.start();
           } else {
             that.start();
           }
         }
       });
-      xhr.open('POST', this.access_token_url + "?type=refresh&client_id=" + this.client_id + "&redirect_uri=" + this.redirect_url + "&client_secret=" + this.client_secret + "&refresh_token=" + window.localStorage.basecampRefreshToken, true);
-      xhr.send();
+      xhr.send(params);
     },
 
     /**
-     * Retreives the authorization token from local storage.
+     * Retrieves the authorization token from local storage.
      *
      * @return Authorization token if it exists, null if not.
      */
