@@ -12,7 +12,6 @@
   font-weight: 700;
   src: url(./fonts/DroidSans-Bold.woff) format('woff');
 }
-
 @font-face {
   font-family: 'Nanum Gothic';
   font-style: normal;
@@ -24,12 +23,6 @@
   font-style: normal;
   font-weight: 400;
   src: url(./fonts/NanumGothic-Regular.woff) format('woff');
-}
-@font-face {
-  font-family: 'Nanum Gothic';
-  font-style: normal;
-  font-weight: 800;
-  src: url(.fonts/NanumGothic-ExtraBold.woff) format('woff');
 }
 
 $color-blue: #5e9ac9;
