@@ -40,7 +40,11 @@
           var data = JSON.parse(xhr.responseText);
           self.userIDs.push(data.id);
         } else if (xhr.readyState === 4) {
-          console.log('ERROR: getUserIDs XHR');
+          if (xhr.getResponseHeader('Reason') === 'Account Inactive') {
+            basecampAccount.inactive = true;
+            console.log('WARNING: getUserIDs XHR - Basecamp account ' + basecampAccount.name + ' inactive')
+          }
+          else console.log('ERROR: getUserIDs XHR');
         }
       });
       console.log('LOG: getUserIDs XHR');
@@ -66,8 +70,9 @@
         email_address: 'to:',
         avatar_url:    '/img/icon-search.png'
       }];
-      
+
       _.forEach(this.basecampAccounts, function(basecampAccount) {
+        if (basecampAccount.inactive) return;
         var xhr = new XMLHttpRequest();
         xhr.open('GET', 'https://basecamp.com/' + basecampAccount.id + '/api/v1/people.json', false);
         xhr.setRequestHeader('Authorization', 'Bearer ' + self.basecampToken);
@@ -91,6 +96,7 @@
       this.allTodoLists = [];
       var self = this;
       _.forEach(this.basecampAccounts, function(basecampAccount) {
+        if (basecampAccount.inactive) return;
         var xhr = new XMLHttpRequest();
         xhr.open('GET', 'https://basecamp.com/' + basecampAccount.id + '/api/v1/todolists.json', false);
         xhr.setRequestHeader('Authorization', 'Bearer ' + self.basecampToken);
