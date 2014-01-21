@@ -83,11 +83,13 @@ body {
       background: yellow;
     }
   }
+  -webkit-font-smoothing: antialiased;
   background: $color-white;
   cursor: default;
   font-family: $fonts_en;
   font-size: 12px;
   line-height: 50px;
+  text-rendering: geometricPrecision;
   width: 500px;
   &.ja {
     font-family: $fonts_ja;
