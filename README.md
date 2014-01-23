@@ -12,6 +12,7 @@ Features
   - Use badge as todos counters
   - Notification on new todo
   - Instant search through todos
+  - Support multiple Basecamp accounts
 
 Advanced filters for searching todos
 --------------------
@@ -44,13 +45,6 @@ Installation
 3. Check **Developer Mode** in the top right-hand corner
 4. Click **Load unpacked extension…**
 5. Select the directory in which you unzip the extension files
-
-Default configuration
---------------------
-
-*  The extension is preconfigured to choose the **first** Basecamp account that matches `{"product": "bcx"}`. In `js/background.js` and `js/controller.js`:
-
-        localStorage['basecampId'] = _.findWhere(data.accounts, {product: "bcx"}).id;
 
 Settings
 --------------------
