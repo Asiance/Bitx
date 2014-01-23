@@ -18,14 +18,11 @@ var options = {
     var newOne = elm.cloneNode(true);
     newOne.className = 'show';
     elm.parentNode.replaceChild(newOne, elm);
-
-    alert('Your preferences has been saved.');
   },
 
   logout: function () {
     localStorage.clear();
     chrome.storage.local.clear();
-    alert('You have been successfully logged out.');
   },
 
   restore_options: function () {
