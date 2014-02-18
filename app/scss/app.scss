@@ -102,10 +102,14 @@ body {
 header {
   background: $color-close-white;
   height: 55px;
-  & > a > img {
-    left: 20px;
-    position: relative;
-    vertical-align: middle;
+  & > a {
+    text-decoration: none;
+    & > img {
+      left: 10px;
+      position: relative;
+      vertical-align: middle;
+      padding: 10px;
+    }
   }
   input {
     background: $color-close-white;
