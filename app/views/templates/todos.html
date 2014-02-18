@@ -2,7 +2,7 @@
   <div class="content" ng-repeat="(key, value) in projects">
     <h2 class="project"
         ng-show="(value | keywordSearch:search:userIDs:people | status: category).length !== 0"
-        ng-bind-html="key | highlight:realSearch | uppercase">
+        ng-bind-html="key | highlight:search | uppercase">
     </h2>
     <ul>
       <todo search="search"
