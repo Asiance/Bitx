@@ -102,7 +102,7 @@ body {
 header {
   background: $color-close-white;
   height: 55px;
-  & > img {
+  & > a > img {
     left: 20px;
     position: relative;
     vertical-align: middle;

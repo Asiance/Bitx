@@ -1,6 +1,6 @@
 window.it = {
 
-  "searchTodo":"Cercando ToDo...",
+  "searchTodo": "Cercando ToDo...",
 
   "header-overdues": "Tardato",
   "header-today": "Oggi",
@@ -16,26 +16,28 @@ window.it = {
   "daysLeft": "giorni rimasti",
 
   "lastUpdate": "Ultimi aggiornamenti:",
-  "minutesAgo":"minuti fa",
-  "hoursAgo":"ore fa",
-  "daysAgo":"giorni fa",
+  "minutesAgo": "minuti fa",
+  "hoursAgo": "ore fa",
+  "daysAgo": "giorni fa",
 
   "visitTodo": "Visita questo todo",
   "assignedTo": "Assegnato a {x}",
 
-  "count-overdues":"ToDo(s) in ritardo",
-  "count-today":"ToDo(s) per oggi",
-  "count-upcoming":"ToDo(s) a venire",
-  "count-noduedate":"ToDo(s) nessuna scadenza",
+  "count-overdues": "ToDo(s) in ritardo",
+  "count-today": "ToDo(s) per oggi",
+  "count-upcoming": "ToDo(s) a venire",
+  "count-noduedate": "ToDo(s) nessuna scadenza",
 
-  "needAuth1":"Cliccate su",
-  "needAuth2":"per sincronizzare vostro account Basecamp con l'estensione.",
+  "needAuth1": "Cliccate su",
+  "needAuth2": "per sincronizzare vostro account Basecamp con l'estensione.",
 
-  "thankYou":"Grazie!",
-  "syncMess":"La vostra estensione ToDo-Basecamp è collegata con vostro account! Siete pronti per iniziare l'uso di vostra estensione.",
+  "thankYou": "Grazie!",
+  "syncMess": "La vostra estensione ToDo-Basecamp è collegata con vostro account! Siete pronti per iniziare l'uso di vostra estensione.",
 
-  "achievement1":"Ben fatto !",
-  "achievement2":"Buon lavoro !",
-  "achievement3":"Eccellente!"
+  "achievement1": "Ben fatto !",
+  "achievement2": "Buon lavoro !",
+  "achievement3": "Eccellente !",
+
+  "rate_bitx": "Help us to improve Bitx and rate it!"
 
 };

@@ -1,6 +1,6 @@
 window.en = {
 
-  "searchTodo":"Search todo...",
+  "searchTodo": "Search todo...",
 
   "header-overdues": "Overdues",
   "header-today": "Today",
@@ -16,9 +16,9 @@ window.en = {
   "daysLeft": "days left",
 
   "lastUpdate": "Last update:",
-  "minutesAgo":"minute(s) ago",
-  "hoursAgo":"hour(s) ago",
-  "daysAgo":"day(s) ago",
+  "minutesAgo": "minute(s) ago",
+  "hoursAgo": "hour(s) ago",
+  "daysAgo": "day(s) ago",
 
   "visitTodo": "Visit this todo",
   "assignedTo": "Assigned to {x}",
@@ -34,8 +34,10 @@ window.en = {
   "thankYou": "Thank you!",
   "syncMess": "Your Todo Basecamp Extension is now connected to your account! You can start using it.",
 
-  "achievement1":"Good work!",
-  "achievement2":"Well done!",
-  "achievement3":"Excellent!"
+  "achievement1": "Good work!",
+  "achievement2": "Well done!",
+  "achievement3": "Excellent!",
+
+  "rate_bitx": "Help us to improve Bitx and rate it!"
 
 };

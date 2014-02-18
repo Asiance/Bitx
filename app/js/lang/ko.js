@@ -1,6 +1,6 @@
 window.ko = {
 
-  "searchTodo":"일정을  검색하세요.",
+  "searchTodo": "일정을  검색하세요.",
 
   "header-overdues": "기한 지난 일정",
   "header-today": "오늘의 일정",
@@ -16,9 +16,9 @@ window.ko = {
   "daysLeft": "일 남음",
 
   "lastUpdate": "마지막 업데이트",
-  "minutesAgo":"분 전",
-  "hoursAgo":"시간 전",
-  "daysAgo":"일 전",
+  "minutesAgo": "분 전",
+  "hoursAgo": "시간 전",
+  "daysAgo": "일 전",
 
   "visitTodo": "Visit this todo",
   "assignedTo": "{x}에 할당",
@@ -34,8 +34,10 @@ window.ko = {
   "thankYou": "감사합니다!",
   "syncMess": "당신의 계정이 Todo Basecamp Extension에 성공적으로 연결되었습니다. 이제 Extension을 사용할 수 있습니다.",
 
-  "achievement1":"수고하셨습니다!",
-  "achievement2":"참 잘했어요!",
-  "achievement3":"대단합니다!"
+  "achievement1": "수고하셨습니다!",
+  "achievement2": "참 잘했어요!",
+  "achievement3": "대단합니다!",
+
+  "rate_bitx": "Help us to improve Bitx and rate it!"
 
 };
