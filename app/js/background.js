@@ -8,6 +8,7 @@
   window.backgroundTasks = {
 
     renewCache: false,
+    jobDone: true,
 
     getBasecampAccounts: function() {
       var xhr  = new XMLHttpRequest();
@@ -88,13 +89,14 @@
       this.saveCache('people', self.people.concat(metaElements));
     },
 
-    getTodoLists: function() {
+    getTodoLists: function(callback) {
       if (_.isEmpty(this.basecampAccounts)) {
         backgroundTasks.stop();
         return;
       }
       this.allTodoLists = [];
       var self = this;
+      var nbTodosListFetched = 0;
       _.forEach(this.basecampAccounts, function(basecampAccount) {
         if (basecampAccount.inactive) return;
         var xhr = new XMLHttpRequest();
@@ -102,16 +104,21 @@
         xhr.setRequestHeader('Authorization', 'Bearer ' + self.basecampToken);
         xhr.send();
         if (xhr.readyState === 4 && xhr.status === 200) {
+          // The answer is not "304 Not Modified", renew the cache
           if (xhr.getResponseHeader('Status') === '200 OK') self.renewCache = true;
+          console.log('LOG: getTodoLists XHR, Basecamp account: ' + basecampAccount.id + ", status: " + xhr.getResponseHeader('Status'));
           var data = JSON.parse(xhr.responseText);
           self.allTodoLists = self.allTodoLists.concat(data);
+          nbTodosListFetched++;
+          if (nbTodosListFetched === self.basecampAccounts.length) {
+            callback();
+          }
         } else if (xhr.readyState === 4) {
           console.log('ERROR: getTodoLists XHR');
           backgroundTasks.stop();
           if (xhr.status === 401) window.oauth2.renew();
         }
       });
-      console.log('LOG: getTodoLists XHR');
     },
 
     getTodos: function(callback) {
@@ -144,10 +151,10 @@
 
     addTodosData: function() {
       _.map(this.allTodos, function(todo) {
-        var parentTodolist = _.findWhere(this.allTodoLists, { id: todo.todolist_id });
-        todo.todolist      = parentTodolist.name ;
-        todo.project       = parentTodolist.bucket.name;
-        todo.project_id    = parentTodolist.bucket.id;
+        var parentTodoList = _.findWhere(this.allTodoLists, { id: todo.todolist_id });
+        todo.todolist      = parentTodoList.name ;
+        todo.project       = parentTodoList.bucket.name;
+        todo.project_id    = parentTodoList.bucket.id;
       }, this);
       this.saveCache('allTodos');
     },
@@ -208,13 +215,24 @@
     pollTodolists: function(period) {
       var self = this;
       this.pollingTask = setInterval(function() {
-        self.getTodoLists();
-        if (self.renewCache) {
-          self.getTodos(function() {
-            self.addTodosData();
-            self.parseMyTodos();
-            self.renewCache = false;
-          });
+        // Make sure that the previous job is done
+        if (self.jobDone == true) {
+          self.jobDone = false;
+          if (self.renewCache) {
+            self.getTodoLists(function() {
+              self.getTodos(function() {
+                self.addTodosData();
+                self.parseMyTodos();
+                self.getPeople();
+                self.renewCache = false;
+                self.jobDone = true;
+              });
+            });
+          } else {
+            self.getTodoLists(function() {
+              self.jobDone = true;
+            });
+          }
         }
       }, period);
     },
@@ -230,7 +248,7 @@
         localStorage.counter_todos = 'default';
       }
       if (!localStorage.refresh_period) {
-        localStorage.refresh_period = 5000;
+        localStorage.refresh_period = 30000;
       }
       this.basecampToken = localStorage.basecampToken;
       console.log('LOG: initConfig');
@@ -242,12 +260,13 @@
       var self = this;
       if (this.initConfig() && this.getBasecampAccounts()) {
         this.getUserIDs();
-        this.getTodoLists();
-        this.getTodos(function() {
-          self.addTodosData();
-          self.parseMyTodos();
-          self.getPeople();
-          self.pollTodolists(localStorage.refresh_period);
+        this.getTodoLists(function() {
+          self.getTodos(function() {
+            self.addTodosData();
+            self.parseMyTodos();
+            self.getPeople();
+            self.pollTodolists(localStorage.refresh_period);
+          });
         });
       } else backgroundTasks.stop();
     },
@@ -270,6 +289,8 @@
   window.addEventListener('storage', eventStorage, false);
 
   function eventStorage(e) {
+    console.log(e);
+    console.log(e.newValue);
     if (e.key === '' && e.newValue === null) {
       backgroundTasks.stop();
     }
