@@ -96,7 +96,7 @@
       }
       this.allTodoLists = [];
       var self = this;
-      var nbTodosListFetched = 0;
+      var nbBasecampAccountFetched = 0;
       _.forEach(this.basecampAccounts, function(basecampAccount) {
         if (basecampAccount.inactive) return;
         var xhr = new XMLHttpRequest();
@@ -109,8 +109,8 @@
           console.log('LOG: getTodoLists XHR, Basecamp account: ' + basecampAccount.id + ", status: " + xhr.getResponseHeader('Status'));
           var data = JSON.parse(xhr.responseText);
           self.allTodoLists = self.allTodoLists.concat(data);
-          nbTodosListFetched++;
-          if (nbTodosListFetched === self.basecampAccounts.length) {
+          nbBasecampAccountFetched++;
+          if (nbBasecampAccountFetched === self.basecampAccounts.length) {
             callback();
           }
         } else if (xhr.readyState === 4) {
@@ -218,6 +218,7 @@
         // Make sure that the previous job is done
         if (self.jobDone == true) {
           self.jobDone = false;
+          self.checkNewVersion();
           if (self.renewCache) {
             self.getTodoLists(function() {
               self.getTodos(function() {
@@ -255,6 +256,25 @@
       return true;
     },
 
+    checkNewVersion: function() {
+      if (chrome.app.getDetails().version != localStorage.app_version && localStorage.app_version != undefined) {
+        console.log('LOG: New version! Let\'s notify and restart!');
+        var notification = webkitNotifications.createNotification(
+          "./img/icon_48x48.png", // Icon
+          "Bitx just got better! (v"+chrome.app.getDetails().version +")", // Title
+          "Help us to improve it; click here to submit your feedback!" // Body
+        )
+        notification.onclick = function () {
+          window.open('http://goo.gl/fUXs2M')
+        };
+        notification.show();
+        this.restart()
+        return true;
+      } else {
+        return false;
+      }
+    },
+
     start: function() {
       console.log('LOG: start backgroundTasks');
       var self = this;
@@ -279,6 +299,12 @@
 
     restart: function() {
       console.log('LOG: restart backgroundTasks');
+      localStorage.app_version = chrome.app.getDetails().version;
+      // Bitx v. 3.3.0, we are increasing the refresh period
+      // See https://github.com/Asiance/Bitx/issues/11
+      if (localStorage.refresh_period < 10000) {
+        localStorage.refresh_period = 30000;
+      }
       clearInterval(this.pollingTask);
       this.pollTodolists(localStorage.refresh_period);
     }
@@ -289,8 +315,6 @@
   window.addEventListener('storage', eventStorage, false);
 
   function eventStorage(e) {
-    console.log(e);
-    console.log(e.newValue);
     if (e.key === '' && e.newValue === null) {
       backgroundTasks.stop();
     }
