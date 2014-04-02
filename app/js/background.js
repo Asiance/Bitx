@@ -10,23 +10,27 @@
     renewCache: false,
     jobDone: true,
 
-    getBasecampAccounts: function() {
+    getBasecampAccounts: function(callback) {
       var xhr  = new XMLHttpRequest();
       xhr.open('GET', 'https://launchpad.37signals.com/authorization.json', false);
       xhr.setRequestHeader('Authorization', 'Bearer ' + this.basecampToken);
-      xhr.send();
+      try {
+        xhr.send();
+      } catch ( e ) {
+        console.log('Exception: getBasecampAccounts XHR' + e);
+        throw e;
+      }
       if (xhr.readyState === 4 && xhr.status === 200) {
         console.log('LOG: getBasecampAccounts XHR');
         var data = JSON.parse(xhr.responseText);
         this.basecampAccounts = _.where(data.accounts, { product: 'bcx' });
         this.saveCache('basecampAccounts');
-        return true;
+        callback();
       } else if (xhr.readyState === 4) {
         // Token expired
         console.log('ERROR: getBasecampAccounts XHR - Token expired');
         if (xhr.status === 401) window.oauth2.renew();
       }
-      return false;
     },
 
     getUserIDs: function() {
@@ -238,8 +242,15 @@
       }, period);
     },
 
+    hasAccessToken: function() {
+      if (!localStorage.basecampToken) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+
     initConfig: function() {
-      if (!localStorage.basecampToken) return false;
       if (!localStorage.language) {
         var userLang = navigator.language ? navigator.language : navigator.userLanguage,
             locale   = userLang.substring(0, 2);
@@ -253,7 +264,6 @@
       }
       this.basecampToken = localStorage.basecampToken;
       console.log('LOG: initConfig');
-      return true;
     },
 
     checkNewVersion: function() {
@@ -276,19 +286,25 @@
     },
 
     start: function() {
-      console.log('LOG: start backgroundTasks');
       var self = this;
-      if (this.initConfig() && this.getBasecampAccounts()) {
-        this.getUserIDs();
-        this.getTodoLists(function() {
-          self.getTodos(function() {
-            self.addTodosData();
-            self.parseMyTodos();
-            self.getPeople();
-            self.pollTodolists(localStorage.refresh_period);
+      if (self.hasAccessToken()) {
+        console.log('LOG: start backgroundTasks');
+        self.initConfig()
+        self.getBasecampAccounts(function () {
+          self.getUserIDs();
+          self.getTodoLists(function() {
+            self.getTodos(function() {
+              self.addTodosData();
+              self.parseMyTodos();
+              self.getPeople();
+              self.pollTodolists(localStorage.refresh_period);
+            });
           });
         });
-      } else backgroundTasks.stop();
+      } else {
+        console.log('LOG: Access token missing, cannot start yet.');
+        self.stop();
+      }
     },
 
     stop: function() {
