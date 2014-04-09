@@ -7,7 +7,7 @@
     <ul>
       <todo search="search"
             category="{{ category }}"
-            ng-repeat="assignedTodo in (value | keywordSearch:search:userIDs:people | status: category | orderBy: assignedTodo.due_at)">
+            ng-repeat="assignedTodo in (value | keywordSearch:search:userIDs:people | status:category | orderBy:'due_at')">
       </todo>
     </ul>
   </div>
