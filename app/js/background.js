@@ -11,25 +11,27 @@
     jobDone: true,
 
     getBasecampAccounts: function(callback) {
+      var self = this;
       var xhr  = new XMLHttpRequest();
       xhr.open('GET', 'https://launchpad.37signals.com/authorization.json', false);
-      xhr.setRequestHeader('Authorization', 'Bearer ' + this.basecampToken);
+      xhr.setRequestHeader('Authorization', 'Bearer ' + self.basecampToken);
+      xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          console.log('LOG: getBasecampAccounts XHR');
+          var data = JSON.parse(xhr.responseText);
+          self.basecampAccounts = _.where(data.accounts, { product: 'bcx' });
+          self.saveCache('basecampAccounts');
+          callback();
+        } else if (xhr.readyState === 4) {
+          // Token expired
+          console.log('ERROR: getBasecampAccounts XHR - Token expired');
+          if (xhr.status === 401) window.oauth2.renew();
+        }
+      }
       try {
         xhr.send();
       } catch ( e ) {
-        console.log('Exception: getBasecampAccounts XHR' + e);
-        throw e;
-      }
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        console.log('LOG: getBasecampAccounts XHR');
-        var data = JSON.parse(xhr.responseText);
-        this.basecampAccounts = _.where(data.accounts, { product: 'bcx' });
-        this.saveCache('basecampAccounts');
-        callback();
-      } else if (xhr.readyState === 4) {
-        // Token expired
-        console.log('ERROR: getBasecampAccounts XHR - Token expired');
-        if (xhr.status === 401) window.oauth2.renew();
+        self.handleXHRErrors('getBasecampAccounts', e);
       }
     },
 
@@ -40,16 +42,22 @@
         var xhr = new XMLHttpRequest();
         xhr.open('GET', 'https://basecamp.com/' + basecampAccount.id + '/api/v1/people/me.json', false);
         xhr.setRequestHeader('Authorization', 'Bearer ' + self.basecampToken);
-        xhr.send();
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          var data = JSON.parse(xhr.responseText);
-          self.userIDs.push(data.id);
-        } else if (xhr.readyState === 4) {
-          if (xhr.getResponseHeader('Reason') === 'Account Inactive') {
-            basecampAccount.inactive = true;
-            console.log('WARNING: getUserIDs XHR - Basecamp account ' + basecampAccount.name + ' inactive')
+        xhr.onload = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            var data = JSON.parse(xhr.responseText);
+            self.userIDs.push(data.id);
+          } else if (xhr.readyState === 4) {
+            if (xhr.getResponseHeader('Reason') === 'Account Inactive') {
+              basecampAccount.inactive = true;
+              console.log('WARNING: getUserIDs XHR - Basecamp account ' + basecampAccount.name + ' inactive')
+            }
+            else console.log('ERROR: getUserIDs XHR');
           }
-          else console.log('ERROR: getUserIDs XHR');
+        }
+        try {
+          xhr.send();
+        } catch ( e ) {
+          self.handleXHRErrors('getUserIDs', e);
         }
       });
       console.log('LOG: getUserIDs XHR');
@@ -81,12 +89,18 @@
         var xhr = new XMLHttpRequest();
         xhr.open('GET', 'https://basecamp.com/' + basecampAccount.id + '/api/v1/people.json', false);
         xhr.setRequestHeader('Authorization', 'Bearer ' + self.basecampToken);
-        xhr.send();
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          var data = JSON.parse(xhr.responseText);
-          self.people = self.people.concat(data);
-        } else if (xhr.readyState === 4) {
-          console.log('ERROR: getUserIDs XHR');
+        xhr.onload = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            var data = JSON.parse(xhr.responseText);
+            self.people = self.people.concat(data);
+          } else if (xhr.readyState === 4) {
+            console.log('ERROR: getUserIDs XHR');
+          }
+        }
+        try {
+          xhr.send();
+        } catch ( e ) {
+          self.handleXHRErrors('getPeople', e);
         }
       });
       console.log('LOG: getPeople XHR');
@@ -106,21 +120,27 @@
         var xhr = new XMLHttpRequest();
         xhr.open('GET', 'https://basecamp.com/' + basecampAccount.id + '/api/v1/todolists.json', false);
         xhr.setRequestHeader('Authorization', 'Bearer ' + self.basecampToken);
-        xhr.send();
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          // The answer is not "304 Not Modified", renew the cache
-          if (xhr.getResponseHeader('Status') === '200 OK') self.renewCache = true;
-          console.log('LOG: getTodoLists XHR, Basecamp account: ' + basecampAccount.id + ", status: " + xhr.getResponseHeader('Status'));
-          var data = JSON.parse(xhr.responseText);
-          self.allTodoLists = self.allTodoLists.concat(data);
-          nbBasecampAccountFetched++;
-          if (nbBasecampAccountFetched === self.basecampAccounts.length) {
-            callback();
+        xhr.onload = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            // The answer is not "304 Not Modified", renew the cache
+            if (xhr.getResponseHeader('Status') === '200 OK') self.renewCache = true;
+            console.log('LOG: getTodoLists XHR, Basecamp account: ' + basecampAccount.id + ", status: " + xhr.getResponseHeader('Status'));
+            var data = JSON.parse(xhr.responseText);
+            self.allTodoLists = self.allTodoLists.concat(data);
+            nbBasecampAccountFetched++;
+            if (nbBasecampAccountFetched === self.basecampAccounts.length) {
+              callback();
+            }
+          } else if (xhr.readyState === 4) {
+            console.log('ERROR: getTodoLists XHR');
+            backgroundTasks.stop();
+            if (xhr.status === 401) window.oauth2.renew();
           }
-        } else if (xhr.readyState === 4) {
-          console.log('ERROR: getTodoLists XHR');
-          backgroundTasks.stop();
-          if (xhr.status === 401) window.oauth2.renew();
+        }
+        try {
+          xhr.send();
+        } catch ( e ) {
+          self.handleXHRErrors('getTodoLists', e);
         }
       });
     },
@@ -148,7 +168,11 @@
             }
           }
         };
-        xhr.send();
+        try {
+          xhr.send();
+        } catch ( e ) {
+          self.handleXHRErrors('getTodos', e);
+        }
       });
       console.log('LOG: getTodos XHR');
     },
@@ -161,6 +185,7 @@
         todo.project_id    = parentTodoList.bucket.id;
       }, this);
       this.saveCache('allTodos');
+      this.parseMyTodos();
     },
 
     saveCache: function(key, value) {
@@ -249,6 +274,25 @@
         return true;
       }
     },
+    
+    handleXHRErrors: function(fn_name, e) {
+      var self = this;
+      console.log("Exception: " + fn_name + "getUserIDs XHR: " + e);
+      if (e == "NetworkError: A network error occurred.") {
+        self.stop();
+        console.log("Stopping Bitx, Internet connection lost");
+        // Let's restart after 30 seconds
+        setTimeout(function() {
+          backgroundTasks.start();
+        }, 30000);
+      } else {
+        self.stop();
+        console.log("Unsupported error, let's try again later...");
+        setTimeout(function() {
+          backgroundTasks.start();
+        }, 30000);
+      }
+    },
 
     initConfig: function() {
       if (!localStorage.language) {
@@ -316,12 +360,8 @@
     restart: function() {
       console.log('LOG: restart backgroundTasks');
       localStorage.app_version = chrome.app.getDetails().version;
-      // Bitx v. 3.3.0, we are increasing the refresh period
-      // See https://github.com/Asiance/Bitx/issues/11
-      if (localStorage.refresh_period < 10000) {
-        localStorage.refresh_period = 30000;
-      }
       clearInterval(this.pollingTask);
+      this.jobDone = true;
       this.pollTodolists(localStorage.refresh_period);
     }
   };
@@ -340,6 +380,9 @@
     }
     else if (e.key === 'refresh_period' && !isNaN(e.newValue)) {
       backgroundTasks.restart();
+    }
+    else if (e.key === 'lastTodoCompleted' && e.newValue !== null) {
+      //TODO: should find a way to refresh the badge without waiting the refresh
     }
   }
 

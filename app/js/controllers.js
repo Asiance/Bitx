@@ -104,6 +104,7 @@ angular
     })
     .success(function(data, status, headers, config) {
       chrome.storage.local.set({ 'allTodos': angular.fromJson(angular.toJson(allTodos)) });
+      localStorage.lastTodoCompleted = JSON.stringify(todo);
     })
     .error(function(data, status, headers, config) {
       console.log('ERROR: completeTodo request failed');
