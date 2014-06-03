@@ -185,7 +185,6 @@
         todo.project_id    = parentTodoList.bucket.id;
       }, this);
       this.saveCache('allTodos');
-      this.parseMyTodos();
     },
 
     saveCache: function(key, value) {
@@ -225,20 +224,20 @@
     },
 
     createNotification: function(todo) {
-      var notification = webkitNotifications.createNotification(
-        todo.creator.avatar_url, // Icon
-        todo.project, // Title
-        todo.content // Body
-      );
-      notification.onclick = function () {
-        // Example of what the replace-regex do:
-        // https://basecamp.com/2457428/api/v1/projects/4324139-explore-basecamp/todos/70309999-click-the-invite.json
-        // https://basecamp.com/2457428/projects/4324139-explore-basecamp/todos/70309999-click-the-invite
-        window.open(todo.url.replace(/[\/]api[\/]v1|[\.]json/gi, ''));
-        notification.close();
+      var options = {
+        type: "basic",
+        title: todo.project,
+        message: todo.content,
+        iconUrl: todo.creator.avatar_url
       };
-      notification.show();
-      setTimeout(function() { notification.cancel(); }, 15000); // Hide notification after 15 seconds
+      var d = new Date();
+      d = d.getTime().toString();
+      var notification = chrome.notifications.create(d, options, function() { });
+      chrome.notifications.onClicked.addListener(function (id) {
+        if (id === d) {
+          window.open(todo.url.replace(/[\/]api[\/]v1|[\.]json/gi, ''));
+        }
+      });
     },
 
     pollTodolists: function(period) {
@@ -313,15 +312,20 @@
     checkNewVersion: function() {
       if (chrome.app.getDetails().version != localStorage.app_version && localStorage.app_version != undefined) {
         console.log('LOG: New version! Let\'s notify and restart!');
-        var notification = webkitNotifications.createNotification(
-          "./img/icon_48x48.png", // Icon
-          "Bitx just got better! (v"+chrome.app.getDetails().version +")", // Title
-          "Help us to improve it; click here to submit your feedback!" // Body
-        )
-        notification.onclick = function () {
-          window.open('http://goo.gl/fUXs2M')
+        var options = {
+          type: "basic",
+          title: "Bitx just got better! (v" + chrome.app.getDetails().version + ")",
+          message: "Help us to improve it; click here to submit your feedback!",
+          iconUrl: "./img/icon_250x250.png"
         };
-        notification.show();
+        var d = new Date();
+        d = d.getTime().toString();
+        var notification = chrome.notifications.create(d, options, function() { });
+        chrome.notifications.onClicked.addListener(function (id) {
+          if (id === d) {
+            window.open('http://goo.gl/fUXs2M');
+          }
+        });
         this.restart()
         return true;
       } else {

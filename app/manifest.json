@@ -5,7 +5,7 @@
   "name": "__MSG_extName__",
   "short_name": "BITX",
   "description": "__MSG_extDesc__",
-  "version": "3.4.0",
+  "version": "3.4.1",
   "icons": { "16": "/img/icon_16x16.png",
              "48": "/img/icon_48x48.png",
             "128": "/img/icon_128x128.png" },
@@ -19,7 +19,8 @@
     "notifications",
     "https://basecamp.com/",
     "https://launchpad.37signals.com/",
-    "http://www.google.com/basecamp-crx"
+    "http://www.google.com/basecamp-crx",
+    "http://dge9rmgqjs8m1.cloudfront.net/"
   ],
   "web_accessible_resources": [
     "adapter.html",
