@@ -116,7 +116,7 @@
       var self = this;
       var nbBasecampAccountFetched = 0;
       _.forEach(this.basecampAccounts, function(basecampAccount) {
-        if (basecampAccount.inactive) return;
+        if (basecampAccount.inactive) return nbBasecampAccountFetched++;
         var xhr = new XMLHttpRequest();
         xhr.open('GET', 'https://basecamp.com/' + basecampAccount.id + '/api/v1/todolists.json', false);
         xhr.setRequestHeader('Authorization', 'Bearer ' + self.basecampToken);
@@ -273,7 +273,7 @@
         return true;
       }
     },
-    
+
     handleXHRErrors: function(fn_name, e) {
       var self = this;
       console.log("Exception: " + fn_name + "getUserIDs XHR: " + e);
