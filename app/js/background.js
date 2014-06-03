@@ -149,6 +149,7 @@
       this.allTodos = [];
       var self = this;
       var nbTodosFetched = 0;
+      if (this.allTodoLists.length === 0) return callback();
       _.forEach(this.allTodoLists, function(todolist) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', todolist.url, true);
