@@ -45,9 +45,9 @@ $color-red: #e56c69;
 $color-white: #ffffff;
 $first-column-width: 80px;
 
-$fonts_en: "Droid Sans", "Verdana", "Arial Unicode", "Arial", "Helvetica", "clean", "sans-serif";
-$fonts_ja: "Droid Sans", "Meiryo UI", "Meiryo", "MS UI Gothic", "Microsoft YaHei", "Arial Unicode", "Arial", "sans-serif";
-$fonts_ko: "Droid Sans", "Nanum Gothic", "나눔고딕", "NanumGothic", "Malgun Gothic", "돋움", "Dotum", "AppleGothic", "Gulim", "Arial Unicode", "Arial", "sans-serif";
+$fonts_en: "Droid Sans", "sans-serif";
+$fonts_ja: "Meiryo UI", "Meiryo", "MS UI Gothic", "Arial Unicode", "Arial", "sans-serif";
+$fonts_ko: "Nanum Gothic", "sans-serif";
 
 ::-webkit-scrollbar {
   display: none;
@@ -56,47 +56,58 @@ $fonts_ko: "Droid Sans", "Nanum Gothic", "나눔고딕", "NanumGothic", "Malgun 
   background: $color-blue;
 }
 
+h1 {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 55px;
+  &:before {
+    bottom: 1px;
+    content: '';
+    display: inline-block;
+    font-family: $fonts_en;
+    font-size: 24px;
+    line-height: 1;
+    position: relative;
+    text-align: center;
+    vertical-align: middle;
+    width: $first-column-width;
+  }
+}
+
+h2 {
+  font-weight: 700;
+  text-indent: 38px;
+  border-top: 1px solid $color-border;
+  color: $color-gray-project;
+  span {
+    background: yellow;
+  }
+}
+
+.ja {
+  h1,
+  .date p { font-family: $fonts_ja; }
+  .date p { font-size: 12px; }
+  h1 { font-size: 15px; }
+}
+
+.ko {
+  h1,
+  .date p { font-family: $fonts_ko; }
+  .date p { font-size: 12px; }
+  h1 { font-size: 15px; }
+}
+
 body {
-  h1 {
-    display: block;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 55px;
-    &:before {
-      bottom: 1px;
-      content: '';
-      display: inline-block;
-      font-size: 24px;
-      line-height: 1;
-      position: relative;
-      text-align: center;
-      vertical-align: middle;
-      width: $first-column-width;
-    }
-  }
-  h2 {
-    font-weight: 700;
-    text-indent: 38px;
-    border-top: 1px solid $color-border;
-    color: $color-gray-project;
-    span {
-      background: yellow;
-    }
-  }
+  -webkit-font-smoothing: antialiased;
   background: $color-white;
   cursor: default;
   font-family: $fonts_en;
   font-size: 12px;
   line-height: 50px;
+  text-rendering: geometricPrecision;
   width: 500px;
-  &.ja {
-    font-family: $fonts_ja;
-  }
-  &.ko {
-    font-family: $fonts_ko;
-    .date p { font-size: 12px; }
-    h1 { font-size: 15px; }
-  }
 }
 
 header {
